@@ -17,7 +17,7 @@ ts_season <- ts_monit_season(ts_date, StartMonth=4, EndMonth=9, StartDay=1, EndD
                       CompltSeason=TRUE, Anchor=TRUE, AnchorLength=7, AnchorLag=7)
 
 ts_season_visit <- ts_monit_site(m_visit, ts_season)
-m_count[order(SPECIES),unique(SPECIES)]
+
 ts_season_count <- ts_monit_count_site(ts_season_visit, m_count, sp=2)
 
 system.time(ts_flight_curve <- flight_curve(ts_season_count, NbrSample=100, MinVisit=3, MinOccur=2, MinNbrSite=1,

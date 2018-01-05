@@ -11,6 +11,7 @@ build()
 install()
 
 library(rbms)
+
 m_visit <- data.table::fread("data/m_visit.csv", header=TRUE)
 m_count <- data.table::fread("data/m_count.csv", header=TRUE)
 devtools::use_data(m_visit,m_count)

@@ -311,7 +311,7 @@ fit_glm.nb <- function(sp_count_flight_y, non_zero){
                 print(paste("Computation of abundance indices for year", sp_count_flight_y[1, M_YEAR, ], "failed with the RegionalGAM, verify the data you provided for that year"))
                 next()
             }else{
-                sp_count_flight_y[SITE_ID %in% non_zero, FITTED := predict.glm(glm_obj_site, newdata=sp_count_flight_y[SITE_ID %in% non_zero, ], type = "response")]
+                sp_count_flight_y[SITE_ID %in% non_zero, FITTED := predict(glm_obj_site, newdata=sp_count_flight_y[SITE_ID %in% non_zero, ], type = "response")]
             }
 
             sp_count_flight_mod_y <- list(sp_count_flight_y=sp_count_flight_y, glm_obj_site=glm_obj_site)

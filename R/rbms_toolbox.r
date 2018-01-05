@@ -12,6 +12,10 @@
 ##
 ##==========================================
 
+.onAttach <- function(libname, pkgname) {
+  packageStartupMessage(" Welcome to rbms, version 0.0.9 \n This package replaces the regionalGAM package that is no longer maintained.")
+}
+
 #' check_package
 #' Internal function to verified the required package is installed
 #' @param pkgName A string with the package name

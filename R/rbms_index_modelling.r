@@ -170,6 +170,8 @@ flight_curve <- function(ts_season_count, NbrSample=100, MinVisit=3, MinOccur=2,
                 f_curve <- dataset_y[, NM := NA]
                 data.table::setkey(f_curve, SPECIES, DAY_SINCE)
                 f_curve <- unique(f_curve)
+                f_curve_mod <- list(f_curve=f_curve, f_model=NA)
+
                 print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(dataset_y$SPECIES[1]), "in", dataset_y$M_YEAR[1]))
             }else{
                 if(FcMethod=='regionalGAM'){

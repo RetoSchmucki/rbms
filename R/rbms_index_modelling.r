@@ -524,9 +524,9 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
         }
 
     if(!is.null(SelectYear)){
-        return(list(sp_ts_season_count=sp_ts_season_count[M_YEAR %in% SelectYear, ], glm_model=imp_glm_model))
+        return(sp_ts_season_count=sp_ts_season_count[M_YEAR %in% SelectYear, ])
     } else {
-        return(list(sp_ts_season_count=sp_ts_season_count, glm_model = imp_glm_model))
+        return(sp_ts_season_count=sp_ts_season_count)
     }
 } 
 

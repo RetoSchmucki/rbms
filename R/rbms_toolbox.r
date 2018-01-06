@@ -55,8 +55,9 @@ check_package <- function(pkgName=NULL, message1='you need to install the packag
 
 check_names <- function(x, y){
         dt_names <- y %in% names(x)
-        if(sum(dt_names)!=length(y)) {
-            stop(paste('You need to have a variable named -', paste(y[!dt_names],collapse=' & '), '- in table',deparse(substitute(x)),'\n'))
+
+        if(sum(dt_names) != length(y)) {
+            stop(paste('You need to have a variable named -', paste(y[!dt_names], collapse = ' & '), '- in table', deparse(substitute(x)), '\n'))
         }
     }
 

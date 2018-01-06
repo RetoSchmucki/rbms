@@ -105,7 +105,7 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
         data.table::setkey(f_curve)
         f_curve <- unique(f_curve)
 
-        f_curve_mod <- list(f_curve=f_curve, f_model <<- gam_obj_site)
+        f_curve_mod <- list(f_curve = f_curve, f_model = gam_obj_site)
 
     return(f_curve_mod)
 }

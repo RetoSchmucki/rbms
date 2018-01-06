@@ -43,13 +43,6 @@ for(y in 2001:2003){
   c <- c + 1
 }
 legend('topright',legend=c(2000:2003),col=c(seq_along(c(2000:2003))),lty=1,bty='n')
-plot(ts_flight_curve$f_pheno[M_YEAR==2000,trimDAYNO],ts_flight_curve$f_pheno[M_YEAR==2000,NM],type='l',ylim=c(0,max(ts_flight_curve$f_pheno[,NM])),xlab='Monitoring Year Day',ylab='Relative Abundance')
-c <- 2
-for(y in 2001:2003){
-  points(ts_flight_curve$f_pheno[M_YEAR==y,trimDAYNO],ts_flight_curve$f_pheno[M_YEAR==y,NM],type='l',col=c)
-  c <- c + 1
-}
-legend('topright',legend=c(2000:2003),col=c(seq_along(c(2000:2003))),lty=1,bty='n')
 
 
 ## 5.

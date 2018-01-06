@@ -8,7 +8,7 @@ Compute the annual flight curve from butterfly count data collated across multip
 flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2,
   MinNbrSite = 1, MaxTrial = 3, FcMethod = "regionalGAM",
   GamFamily = "poisson", CompltSeason = TRUE, SelectYear = NULL,
-  SpeedGam = TRUE, OptiGam = TRUE, ...)
+  SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE, ...)
 }
 \arguments{
 \item{ts_season_count}{data.table with complete time series of count and season information returned by \code{\link{ts_monit_count_site}}}
@@ -34,6 +34,8 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2,
 \item{SpeedGam}{Logical to use the \code{link[mgcv]{bam}} method instead of the \code{\link[mgcv]{gam}} method.}
 
 \item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset}
+
+\item{KeepModel}{Logical to keep model output in a list object named \code{flight_curve_model}}
 
 \item{...}{additional parameters passed to gam or bam function from the \code{\link[mgcv]{gam}} package.}
 }

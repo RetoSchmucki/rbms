@@ -6,7 +6,8 @@
 Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.}
 \usage{
 impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
-  CompltSeason = TRUE, SelectYear = NULL, SpeedGlm = FALSE)
+  CompltSeason = TRUE, SelectYear = NULL, SpeedGlm = FALSE,
+  KeepModel = TRUE)
 }
 \arguments{
 \item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \code{\link{ts_monit_count_site}}.}
@@ -20,6 +21,8 @@ impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
 \item{SelectYear}{vector of specific years of interest, can be a single value (e.g. 2015).}
 
 \item{SpeedGlm}{logical defining if the speedglm method available in the package \code{link[speedglm{speedglm}} should be used}
+
+\item{KeepModel}{Logical to keep model output in a list object named \code{imp_glm_model}}
 }
 \value{
 A a list of object, i) data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where 

@@ -51,7 +51,7 @@ legend('topright',legend=c(2000:2003),col=c(seq_along(c(2000:2003))),lty=1,bty='
 ## regionalGAM method
 ##=========================================
 
-site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve, SpeedGlm=FALSE, FamilyGlm = 'poisson')
+site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve, SpeedGlm = FALSE, FamilyGlm = 'poisson')
 
 ## 6.
 ## plot the imputed and observed counts for one

@@ -208,7 +208,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         }
 
         if(isTRUE(KeepModel)){
-            if ("flight_curve_model" %in% ls()) {
+            if (exists("flight_curve_model")) {
                 flight_curve_model <<- c(flight_curve_model, f_model) 
             } else {
                 flight_curve_model <<- f_model
@@ -413,8 +413,6 @@ fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
 
 impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(), CompltSeason = TRUE,
                                     SelectYear = NULL, SpeedGlm = FALSE, KeepModel = TRUE) {
-
-        ts_flight_curve <- ts_flight_curve
         
         if(ts_season_count$SPECIES[1] != ts_flight_curve$SPECIES[1]){
             stop('Species in count data and flight curve must be the same!')
@@ -513,7 +511,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             }
 
             if(isTRUE(KeepModel)){
-                if ("imp_glm_model" %in% ls()) {
+                if (exists("imp_glm_model")) {
                     glm_model <- list(sp_count_flight_mod)
                     names(glm_model) <- paste0('imput_glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
                     imp_glm_model <<- c(imp_glm_model, glm_model)

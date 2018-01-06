@@ -414,7 +414,7 @@ fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
 impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(), CompltSeason = TRUE,
                                     SelectYear = NULL, SpeedGlm = FALSE, KeepModel = TRUE) {
 
-        ts_flight_curve <- ts_flight_curve$f_pheno
+        ts_flight_curve <- ts_flight_curve
         
         if(ts_season_count$SPECIES[1] != ts_flight_curve$SPECIES[1]){
             stop('Species in count data and flight curve must be the same!')

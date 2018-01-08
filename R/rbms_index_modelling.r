@@ -431,8 +431,6 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             check_package('speedglm')
         }
         
-        # could verify if the species for the counts and the flight curve match. -error if not
-
         if(isTRUE(CompltSeason)){
             ts_season_count <- ts_season_count[COMPLT_SEASON==1]
         }
@@ -525,6 +523,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             } else {
                 impute_glm_model <<- i_glm_model
             }
+        }
 
     if(!is.null(SelectYear)){
         return(sp_ts_season_count=sp_ts_season_count[M_YEAR %in% SelectYear, ])

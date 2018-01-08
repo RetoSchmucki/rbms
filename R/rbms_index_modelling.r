@@ -474,30 +474,30 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             }
 
             if(sp_count_flight_y[is.na(NM), .N] > 0){
-                next()
-            }
-
-            print(paste("Computing abundance indices for", sp_count_flight_y[1, SPECIES], "in", sp_count_flight_y[1, M_YEAR], "across", 
+                print(paste("No glm model will be fitted for" sp_count_flight_y[1, M_YEAR]))
+            } else {
+                print(paste("Computing abundance indices for", sp_count_flight_y[1, SPECIES], "in", sp_count_flight_y[1, M_YEAR], "across", 
                         sp_count_flight_y[,uniqueN(SITE_ID)], "sites, using", glmMet, ":", Sys.time()))
+            }
 
             sp_count_flight_y[M_SEASON == 0L, COUNT := NA]
             sp_count_flight_y[M_SEASON != 0L & NM == 0, NM := 0.000001]
             non_zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 > 0, SITE_ID]
             zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 == 0, SITE_ID]
 
-            if(length(non_zero) >= 1){
+            if(length(non_zero) >= 1 & sp_count_flight_y[is.na(NM), .N] > 0){
                 if(isTRUE(SpeedGlm)){
                     sp_count_flight_l <- fit_speedglm(sp_count_flight_y, non_zero, FamilyGlm)             
                 } else {
                     if(FamilyGlm[1] == 'nb'){
                         sp_count_flight_l <- fit_glm.nb(sp_count_flight_y, non_zero)    
                     } else {
-                        sp_count_flight_l <<- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)    
+                        sp_count_flight_l <- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)    
                     }  
                 }
             } else {
-               sp_count_flight_l <<- list(sp_count_flight_y = sp_count_flight_y, 
-                                    glm_obj_site = paste('no glm was fitted for', sp_count_flight_y[1, M_YEAR]))
+               sp_count_flight_l <- list(sp_count_flight_y = sp_count_flight_y, 
+                                    glm_obj_site = paste('No glm fitted for', sp_count_flight_y[1, M_YEAR]))
             }
 
             sp_count_flight_y <- sp_count_flight_l$sp_count_flight_y

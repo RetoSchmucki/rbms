@@ -22,7 +22,7 @@ ts_season <- ts_monit_season(ts_date, StartMonth=4, EndMonth=9, StartDay=1, EndD
 
 ts_season_visit <- ts_monit_site(m_visit, ts_season)
 
-ts_season_count <- ts_monit_count_site(ts_season_visit, m_count, sp=2)
+ts_season_count <- ts_monit_count_site(ts_season_visit, m_count, sp=4)
 
 ## 3.
 ## compute the flight curve, using the
@@ -58,7 +58,8 @@ legend('topright',legend=c(2000:2003),col=c(seq_along(c(2000:2003))),lty=1,bty='
 site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve, SpeedGlm = FALSE, FamilyGlm = 'quasipoisson',
                                   KeepModel = TRUE)
 
-names(imp_glm_model)
+names(impute_glm_model)
+
 ## 6.
 ## plot the imputed and observed counts for one
 ## site (e.g. 2) and one year (e.g 2003)

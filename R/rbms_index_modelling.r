@@ -492,12 +492,12 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
                     if(FamilyGlm[1] == 'nb'){
                         sp_count_flight_l <- fit_glm.nb(sp_count_flight_y, non_zero)    
                     } else {
-                        sp_count_flight_l <- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)    
+                        sp_count_flight_l <<- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)    
                     }  
                 }
             } else {
-               sp_count_flight_l <- list(sp_count_flight_y = sp_count_flight_y, 
-                                    glm_obj_site = paste('no site glm fitted for year', sp_count_flight_y[1, M_YEAR]))
+               sp_count_flight_l <<- list(sp_count_flight_y = sp_count_flight_y, 
+                                    glm_obj_site = paste('no glm was fitted for', sp_count_flight_y[1, M_YEAR]))
             }
 
             sp_count_flight_y <- sp_count_flight_l$sp_count_flight_y

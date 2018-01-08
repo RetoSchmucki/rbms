@@ -474,7 +474,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             }
 
             if(sp_count_flight_y[is.na(NM), .N] > 0){
-                print(paste("No glm model will be fitted for" sp_count_flight_y[1, M_YEAR]))
+                print(paste("No glm model will be fitted for", sp_count_flight_y[1, M_YEAR]))
             } else {
                 print(paste("Computing abundance indices for", sp_count_flight_y[1, SPECIES], "in", sp_count_flight_y[1, M_YEAR], "across", 
                         sp_count_flight_y[,uniqueN(SITE_ID)], "sites, using", glmMet, ":", Sys.time()))

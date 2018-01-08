@@ -249,7 +249,8 @@ check_pheno <- function(sp_count_flight_y, sp_count_flight){
             }
             
             if(alt_flight[is.na(NM), .N] > 0){
-                next(paste("No reliable flight curve available within a 5 year horizon of", sp_count_flight_y[1, M_YEAR, ]))
+                print(paste("No reliable flight curve available within a 5 year horizon of", sp_count_flight_y[1, M_YEAR, ]))
+
             } else {
                 warning(paste("We used the flight curve of", alt_flight[1, M_YEAR], "to compute abundance indices for year", sp_count_flight_y[1, M_YEAR, ]))
                 sp_count_flight_y[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1]
@@ -400,6 +401,7 @@ fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
 #' @param CompltSeason logical to define if only years where a complete season is available should be modelled.
 #' @param SelectYear vector of specific years of interest, can be a single value (e.g. 2015).
 #' @param SpeedGlm logical defining if the speedglm method available in the package \code{link[speedglm{speedglm}} should be used
+#' @param NearPheno Logical if flight curve from neirhest year should be used, if available within 5 years, default=TRUE
 #' @param KeepModel Logical to keep model output in a list object named \code{imp_glm_model}
 #' @return A a list of object, i) data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where 
 #'         a phenology is available \code{sp_ts_season_count} and ii) a glm object for the GLM model \code{glm_model}.
@@ -412,7 +414,7 @@ fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
 #'
 
 impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(), CompltSeason = TRUE,
-                                    SelectYear = NULL, SpeedGlm = FALSE, KeepModel = TRUE) {
+                                    SelectYear = NULL, SpeedGlm = FALSE, KeepModel = TRUE, NearPheno = TRUE) {
         
         if(ts_season_count$SPECIES[1] != ts_flight_curve$SPECIES[1]){
             stop('Species in count data and flight curve must be the same!')
@@ -466,9 +468,16 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
         for(y in year_series){
             
             sp_count_flight_y <-  data.table::copy(sp_count_flight[as.integer(M_YEAR) == y, ])
-            sp_count_flight_y <- check_pheno(sp_count_flight_y, sp_count_flight)
+            
+            if(isTRUE(NearPheno)){
+                sp_count_flight_y <- check_pheno(sp_count_flight_y, sp_count_flight)
+            }
 
-            print(paste("Computing abundance indices for species", sp_count_flight_y[1, SPECIES], "monitored in year", sp_count_flight_y[1, M_YEAR], "across", 
+            if(sp_count_flight_y[is.na(NM), .N] > 0){
+                next()
+            }
+
+            print(paste("Computing abundance indices for", sp_count_flight_y[1, SPECIES], "in", sp_count_flight_y[1, M_YEAR], "across", 
                         sp_count_flight_y[,uniqueN(SITE_ID)], "sites, using", glmMet, ":", Sys.time()))
 
             sp_count_flight_y[M_SEASON == 0L, COUNT := NA]

@@ -36,11 +36,11 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 
         check_package('data.table')
 
-        if (dataset_y[, uniqueN(SITE_ID)] > NbrSample) {
-            sp_data_all <- data.table::copy(dataset_y[SITE_ID %in% sample(unique(dataset_y[, SITE_ID]), NbrSample, replace = FALSE), ])
-        } else {
-            sp_data_all <- data.table::copy(dataset_y)
-        }
+        # if (dataset_y[, uniqueN(SITE_ID)] > NbrSample) {
+        #     sp_data_all <- data.table::copy(dataset_y[SITE_ID %in% sample(unique(dataset_y[, SITE_ID]), NbrSample, replace = FALSE), ])
+        # } else {
+        #     sp_data_all <- data.table::copy(dataset_y)
+        # }
 
         tr <- 1
         gam_obj_site <- c()
@@ -165,21 +165,18 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, SITE_ID, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON, COUNT, ANCHOR)]
             dataset_y[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1]
 
-            ## filter for site with at least 3 visits and 2 occurrences
+            ## filter for site with at least x visits and x occurrences
             visit_occ_site <- merge(dataset_y[!is.na(COUNT) & ANCHOR == 0L, .N, by=SITE_ID], dataset_y[!is.na(COUNT) & ANCHOR == 0L & COUNT > 0, .N, by=SITE_ID], by="SITE_ID", all=TRUE)
-            dataset_y <- data.table::copy(dataset_y[SITE_ID %in% visit_occ_site[N.x >= MinVisit & N.y >= MinOccur, SITE_ID]])
+            dataset_y <- data.table::copy(dataset_y[SITE_ID %in% visit_occ_site[N.x >= MinVisit & N.y >= MinOccur, SITE_ID],])
 
-            if(dataset_y[, .N] <= MinNbrSite){
+            if(dataset_y[,uniqueN(SITE_ID)] <= MinNbrSite){
                 dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON)]
                 dataset_y[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1]
                 f_curve <- dataset_y[, NM := NA]
                 data.table::setkey(f_curve, SPECIES, DAY_SINCE)
                 f_curve <- unique(f_curve)
                 f_curve_mod <- list(f_curve=f_curve, f_model=NA)
-
-            print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(dataset_y$SPECIES[1]), "in", dataset_y$M_YEAR[1]))
-            
-            
+                print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(dataset_y$SPECIES[1]), "in", dataset_y$M_YEAR[1]))
             } else {
                 if(FcMethod=='regionalGAM'){
                     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, 

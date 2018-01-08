@@ -481,22 +481,19 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             if(length(non_zero) >= 1){
                 if(isTRUE(SpeedGlm)){
                     sp_count_flight_l <- fit_speedglm(sp_count_flight_y, non_zero, FamilyGlm)             
-                    sp_count_flight_y <- sp_count_flight_l$sp_count_flight_y
-                    sp_count_flight_mod <- sp_count_flight_l$glm_obj_site 
                 } else {
                     if(FamilyGlm[1] == 'nb'){
                         sp_count_flight_l <- fit_glm.nb(sp_count_flight_y, non_zero)    
-                        sp_count_flight_y <- sp_count_flight_l$sp_count_flight_y
-                        sp_count_flight_mod <- sp_count_flight_l$glm_obj_site
                     } else {
                         sp_count_flight_l <- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)    
-                        sp_count_flight_y <- sp_count_flight_l$sp_count_flight_y
-                        sp_count_flight_mod <- sp_count_flight_l$glm_obj_site
                     }  
                 }
             } else {
-               sp_count_flight_mod <- paste('no site glm fitted for year', sp_count_flight_y[1, M_YEAR])
+               sp_count_flight_l <- list(sp_count_flight_y = sp_count_flight_y, 
+                                    glm_obj_site = paste('no site glm fitted for year', sp_count_flight_y[1, M_YEAR]))
             }
+
+            sp_count_flight_y <- sp_count_flight_l$sp_count_flight_y
 
             sp_count_flight_y[SITE_ID %in% zero, FITTED := 0]
             sp_count_flight_y[is.na(COUNT), COUNT_IMPUTED := FITTED][!is.na(COUNT), COUNT_IMPUTED := as.numeric(COUNT)] [M_SEASON == 0L, COUNT_IMPUTED := 0] 
@@ -511,17 +508,23 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             }
 
             if(isTRUE(KeepModel)){
-                if (exists("imp_glm_model")) {
-                    glm_model <- list(sp_count_flight_mod)
-                    names(glm_model) <- paste0('imput_glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
-                    imp_glm_model <<- c(imp_glm_model, glm_model)
+                if ("i_glm_model" %in% ls()) {
+                    glm_model <- list(sp_count_flight_l$glm_obj_site)
+                    names(glm_model) <- paste0('glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
+                    i_glm_model <- c(imp_glm_model, glm_model)
                 } else { 
-                    imp_glm_model <- list(sp_count_flight_mod)
-                    names(imp_glm_model) <- paste0('imput_glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
-                    imp_glm_model <<- imp_glm_model
+                    i_glm_model <- list(sp_count_flight_mod)
+                    names(i_glm_model) <- paste0('glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
                 }
             }
         }
+
+        if(isTRUE(KeepModel)){
+            if (exists("impute_glm_model")) { 
+                impute_glm_model <<- c(impute_glm_model,i_glm_model) 
+            } else {
+                impute_glm_model <<- i_glm_model
+            }
 
     if(!is.null(SelectYear)){
         return(sp_ts_season_count=sp_ts_season_count[M_YEAR %in% SelectYear, ])

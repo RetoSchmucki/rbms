@@ -509,9 +509,9 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
                 if ("i_glm_model" %in% ls()) {
                     glm_model <- list(sp_count_flight_l$glm_obj_site)
                     names(glm_model) <- paste0('glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
-                    i_glm_model <- c(imp_glm_model, glm_model)
+                    i_glm_model <- c(i_glm_model, glm_model)
                 } else { 
-                    i_glm_model <- list(sp_count_flight_mod)
+                    i_glm_model <- list(sp_count_flight_l$glm_obj_site)
                     names(i_glm_model) <- paste0('glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
                 }
             }

@@ -485,7 +485,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             non_zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 > 0, SITE_ID]
             zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 == 0, SITE_ID]
 
-            if(length(non_zero) >= 1 & sp_count_flight_y[is.na(NM), .N] > 0){
+            if(length(non_zero) >= 1 & sp_count_flight_y[is.na(NM), .N] == 0){
                 if(isTRUE(SpeedGlm)){
                     sp_count_flight_l <- fit_speedglm(sp_count_flight_y, non_zero, FamilyGlm)             
                 } else {

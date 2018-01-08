@@ -36,12 +36,6 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 
         check_package('data.table')
 
-        # if (dataset_y[, uniqueN(SITE_ID)] > NbrSample) {
-        #     sp_data_all <- data.table::copy(dataset_y[SITE_ID %in% sample(unique(dataset_y[, SITE_ID]), NbrSample, replace = FALSE), ])
-        # } else {
-        #     sp_data_all <- data.table::copy(dataset_y)
-        # }
-
         tr <- 1
         gam_obj_site <- c()
 
@@ -54,7 +48,7 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
             }
 
             if(isTRUE(OptiGam)){
-                if(dataset_y[, uniqueN(SITE_ID)] < 100){
+                if(sp_data_all[, uniqueN(SITE_ID)] < 100){
                     SpeedGam <- FALSE
                 }
             }

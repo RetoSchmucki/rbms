@@ -169,7 +169,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             visit_occ_site <- merge(dataset_y[!is.na(COUNT) & ANCHOR == 0L, .N, by=SITE_ID], dataset_y[!is.na(COUNT) & ANCHOR == 0L & COUNT > 0, .N, by=SITE_ID], by="SITE_ID", all=TRUE)
             dataset_y <- data.table::copy(dataset_y[SITE_ID %in% visit_occ_site[N.x >= MinVisit & N.y >= MinOccur, SITE_ID],])
 
-            if(dataset_y[,uniqueN(SITE_ID)] <= MinNbrSite){
+            if(dataset_y[,uniqueN(SITE_ID)] < MinNbrSite){
                 dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON)]
                 dataset_y[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1]
                 f_curve <- dataset_y[, NM := NA]

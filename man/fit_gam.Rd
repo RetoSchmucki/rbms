@@ -24,7 +24,7 @@ fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily,
 \item{...}{additional parameters passed to gam or bam function from the \code{link[mgcv]{gam}} package.}
 }
 \value{
-A list with two object, i) a data.table with the fligth curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
+A list with two object, i) a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
         and ii) the resulting gam model \code{f_model} fitted on the count data.
 }
 \description{

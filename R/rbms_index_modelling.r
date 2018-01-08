@@ -22,7 +22,7 @@
 #' @param SpeedGam Logical to use the \code{link[mgcv]{bam}} method instead of the \code{link[mgcv]{gam}} method.
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
 #' @param ... additional parameters passed to gam or bam function from the \code{link[mgcv]{gam}} package. 
-#' @return A list with two object, i) a data.table with the fligth curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
+#' @return A list with two object, i) a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
 #'         and ii) the resulting gam model \code{f_model} fitted on the count data.
 #' @keywords gam
 #' @seealso \code{\link{flight_curve}}, \code{link[mgcv]{gam}}, \code{link[mgcv]{bam}}
@@ -127,7 +127,7 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
 #' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}
 #' @param ... additional parameters passed to gam or bam function from the \code{\link[mgcv]{gam}} package. 
-#' @return A list with two object, i) a vector with annual fligth curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
+#' @return A list with two object, i) a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
 #'         and ii) a list of the resulting gam models \code{f_model} fitted on the count data for each year.
 #' @keywords gam, flight curve
 #' @seealso \code{\link{fit_gam}}

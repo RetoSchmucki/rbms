@@ -182,7 +182,8 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             
             } else {
                 if(FcMethod=='regionalGAM'){
-                    f_curve_mod <- fit_gam(dataset_y, NbrSample, GamFamily, MaxTrial, SpeedGam = SpeedGam, OptiGam = OptiGam, KeepModel = KeepModel, ...)
+                    f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, 
+                                            SpeedGam = SpeedGam, OptiGam = OptiGam, KeepModel = KeepModel, ...)
                 } else {
                     print("ONLY the regionalGAM method is available so far!")
                 }

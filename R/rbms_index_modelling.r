@@ -473,7 +473,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
                 sp_count_flight_y <- check_pheno(sp_count_flight_y, sp_count_flight)
             }
 
-            if(sp_count_flight_y[is.na(NM), .N] > 0){
+            if(sp_count_flight_y[is.na(NM) & trimDAYNO != 366, .N] > 0){
                 print(paste("No glm model will be fitted for", sp_count_flight_y[1, M_YEAR]))
             } else {
                 print(paste("Computing abundance indices for", sp_count_flight_y[1, SPECIES], "in", sp_count_flight_y[1, M_YEAR], "across", 
@@ -485,7 +485,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             non_zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 > 0, SITE_ID]
             zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 == 0, SITE_ID]
 
-            if(length(non_zero) >= 1 & sp_count_flight_y[is.na(NM), .N] == 0){
+            if(length(non_zero) >= 1 & sp_count_flight_y[is.na(NM) & trimDAYNO != 366, .N] == 0){
                 if(isTRUE(SpeedGlm)){
                     sp_count_flight_l <- fit_speedglm(sp_count_flight_y, non_zero, FamilyGlm)             
                 } else {

@@ -1,0 +1,126 @@
+"GEnS_seq","GEnZname","GEnS_num_1","GEnZ","GEnZ_seq","GEnS"
+1,A. Arctic,101.000000,A,1,A1
+2,A. Arctic,102.000000,A,1,A2
+3,B. Arctic,201.000000,B,2,B1
+4,B. Arctic,202.000000,B,2,B2
+5,B. Arctic,203.000000,B,2,B3
+6,C. Extremely cold and wet,301.000000,C,3,C1
+7,C. Extremely cold and wet,302.000000,C,3,C2
+8,D. Extremely cold and wet,401.000000,D,4,D1
+9,D. Extremely cold and wet,402.000000,D,4,D2
+10,D. Extremely cold and wet,403.000000,D,4,D3
+11,F. Extremely cold and mesic,601.000000,F,6,F1
+12,F. Extremely cold and mesic,601.000000,F,6,F2
+13,E. Cold and wet,501.000000,E,5,E1
+14,E. Cold and wet,501.000000,E,5,E2
+15,F. Extremely cold and mesic,601.000000,F,6,F3
+16,F. Extremely cold and mesic,601.000000,F,6,F4
+17,F. Extremely cold and mesic,601.000000,F,6,F5
+18,F. Extremely cold and mesic,601.000000,F,6,F6
+19,F. Extremely cold and mesic,601.000000,F,6,F7
+20,F. Extremely cold and mesic,601.000000,F,6,F8
+21,F. Extremely cold and mesic,601.000000,F,6,F9
+22,F. Extremely cold and mesic,601.000000,F,6,F10
+23,C. Extremely cold and wet,303.000000,C,3,C3
+24,E. Cold and wet,501.000000,E,5,E3
+25,F. Extremely cold and mesic,601.000000,F,6,F11
+26,F. Extremely cold and mesic,601.000000,F,6,F12
+27,F. Extremely cold and mesic,601.000000,F,6,F13
+28,F. Extremely cold and mesic,601.000000,F,6,F14
+29,F. Extremely cold and mesic,601.000000,F,6,F15
+30,G. Cold and mesic,701.000000,G,7,G1
+31,G. Cold and mesic,702.000000,G,7,G2
+32,E. Cold and wet,501.000000,E,5,E4
+33,G. Cold and mesic,703.000000,G,7,G3
+34,G. Cold and mesic,704.000000,G,7,G4
+35,G. Cold and mesic,705.000000,G,7,G5
+36,G. Cold and mesic,706.000000,G,7,G6
+37,G. Cold and mesic,707.000000,G,7,G7
+38,G. Cold and mesic,708.000000,G,7,G8
+39,E. Cold and wet,501.000000,E,5,E5
+40,G. Cold and mesic,709.000000,G,7,G9
+41,G. Cold and mesic,710.000000,G,7,G10
+42,G. Cold and mesic,711.000000,G,7,G11
+43,H. Cool temperate and dry,801.000000,H,8,H1
+44,G. Cold and mesic,712.000000,G,7,G12
+45,H. Cool temperate and dry,802.000000,H,8,H2
+46,H. Cool temperate and dry,803.000000,H,8,H3
+47,G. Cold and mesic,713.000000,G,7,G13
+48,G. Cold and mesic,714.000000,G,7,G14
+49,J. Cool temperate and moist,1001.000000,J,10,J1
+50,H. Cool temperate and dry,804.000000,H,8,H4
+51,H. Cool temperate and dry,805.000000,H,8,H5
+52,H. Cool temperate and dry,806.000000,H,8,H6
+53,J. Cool temperate and moist,1001.000000,J,10,J2
+54,H. Cool temperate and dry,807.000000,H,8,H7
+55,J. Cool temperate and moist,1001.000000,J,10,J3
+56,H. Cool temperate and dry,808.000000,H,8,H8
+57,H. Cool temperate and dry,809.000000,H,8,H9
+58,I. Cool temperate and xeric,901.000000,I,9,I1
+59,I. Cool temperate and xeric,901.000000,I,9,I2
+60,J. Cool temperate and moist,1001.000000,J,10,J4
+61,J. Cool temperate and moist,1001.000000,J,10,J5
+62,J. Cool temperate and moist,1001.000000,J,10,J6
+63,I. Cool temperate and xeric,901.000000,I,9,I3
+64,I. Cool temperate and xeric,901.000000,I,9,I4
+65,I. Cool temperate and xeric,901.000000,I,9,I5
+66,K. Warm temperate and mesic,1101.000000,K,11,K1
+67,K. Warm temperate and mesic,1102.000000,K,11,K2
+68,K. Warm temperate and mesic,1103.000000,K,11,K3
+69,I. Cool temperate and xeric,901.000000,I,9,I6
+70,K. Warm temperate and mesic,1104.000000,K,11,K4
+71,K. Warm temperate and mesic,1105.000000,K,11,K5
+72,K. Warm temperate and mesic,1106.000000,K,11,K6
+73,K. Warm temperate and mesic,1107.000000,K,11,K7
+74,K. Warm temperate and mesic,1108.000000,K,11,K8
+75,K. Warm temperate and mesic,1109.000000,K,11,K9
+76,K. Warm temperate and mesic,1110.000000,K,11,K10
+77,K. Warm temperate and mesic,1111.000000,K,11,K11
+78,L. Warm temperate and xeric,1201.000000,L,12,L1
+79,L. Warm temperate and xeric,1202.000000,L,12,L2
+80,K. Warm temperate and mesic,1112.000000,K,11,K12
+81,K. Warm temperate and mesic,1113.000000,K,11,K13
+82,L. Warm temperate and xeric,1203.000000,L,12,L3
+83,N. Hot and dry,1401.000000,N,14,N1
+84,L. Warm temperate and xeric,1204.000000,L,12,L4
+85,N. Hot and dry,1401.000000,N,14,N2
+86,L. Warm temperate and xeric,1205.000000,L,12,L5
+87,N. Hot and dry,1401.000000,N,14,N3
+88,N. Hot and dry,1401.000000,N,14,N4
+89,L. Warm temperate and xeric,1206.000000,L,12,L6
+90,N. Hot and dry,1401.000000,N,14,N5
+91,N. Hot and dry,1401.000000,N,14,N6
+92,N. Hot and dry,1401.000000,N,14,N7
+93,N. Hot and dry,1401.000000,N,14,N8
+94,N. Hot and dry,1401.000000,N,14,N9
+95,M. Hot and mesic,1301.000000,M,13,M1
+96,N. Hot and dry,1401.000000,N,14,N10
+97,N. Hot and dry,1401.000000,N,14,N11
+98,M. Hot and mesic,1302.000000,M,13,M2
+99,O. Hot and arid,1501.000000,O,15,O1
+100,M. Hot and mesic,1303.000000,M,13,M3
+101,M. Hot and mesic,1304.000000,M,13,M4
+102,M. Hot and mesic,1305.000000,M,13,M5
+103,O. Hot and arid,1502.000000,O,15,O2
+104,M. Hot and mesic,1306.000000,M,13,M6
+105,M. Hot and mesic,1307.000000,M,13,M7
+106,M. Hot and mesic,1308.000000,M,13,M8
+107,O. Hot and arid,1503.000000,O,15,O3
+108,R. Extremely hot and moist,1801.000000,R,18,R1
+109,R. Extremely hot and moist,1801.000000,R,18,R2
+110,P. Extremely hot and arid,1601.000000,P,16,P1
+111,R. Extremely hot and moist,1801.000000,R,18,R3
+112,R. Extremely hot and moist,1801.000000,R,18,R4
+113,R. Extremely hot and moist,1801.000000,R,18,R5
+114,R. Extremely hot and moist,1801.000000,R,18,R6
+115,R. Extremely hot and moist,1801.000000,R,18,R7
+116,P. Extremely hot and arid,1602.000000,P,16,P2
+117,R. Extremely hot and moist,1801.000000,R,18,R8
+118,R. Extremely hot and moist,1801.000000,R,18,R9
+119,Q. Extremely hot and xeric,1701.000000,Q,17,Q1
+120,R. Extremely hot and moist,1801.000000,R,18,R10
+121,Q. Extremely hot and xeric,1701.000000,Q,17,Q2
+122,Q. Extremely hot and xeric,1701.000000,Q,17,Q3
+123,Q. Extremely hot and xeric,1701.000000,Q,17,Q4
+124,Q. Extremely hot and xeric,1701.000000,Q,17,Q5
+125,Q. Extremely hot and xeric,1701.000000,Q,17,Q6

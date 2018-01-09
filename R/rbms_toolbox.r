@@ -85,7 +85,7 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
     }
 
 
-#' get_rater_value 
+#' get_raster_value 
 #' Extract raster value for a set of geographic points
 #' @param x data frame with longitude and latitude in column 1 and 2 respectively 
 #' @param y raster layer from which value should be extracted
@@ -95,13 +95,13 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
 #' @param out_df logical if true return a data.frame, if false, a sf object is returned
 #' @return return a df or a sf object with value extracted from the y layer, see \code{out_df}.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @export get_rater_value 
-#' @example 
+#' @export get_raster_value 
+#' @examples 
 #' x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
 #' (x_value <- get_rater_value(x))
 #'
 
-get_rater_value <- function(x, y = metzger_v3_europe , Classification = NULL, x_crs = 4326, buffer_dist = NULL, out_df = TRUE){
+get_raster_value <- function(x, y = metzger_v3_europe , Classification = NULL, x_crs = 4326, buffer_dist = NULL, out_df = TRUE){
 
         x_sf <- sf::st_as_sf(x, coords = names(x)[1:2], crs = x_crs, agr = 'constant')
         x_sf <- sf::st_transform(x_sf, as.character(raster::crs(y)))

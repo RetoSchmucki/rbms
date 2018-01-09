@@ -1,6 +1,5 @@
 R --vanilla
-
-install.packages("devtools")
+if(!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("RetoSchmucki/rbms", force=TRUE)
 library(rbms)
 
@@ -10,6 +9,9 @@ library(rbms)
 ##==================================
 data(m_visit)
 data(m_count)
+data(metzger_v3_europe)
+
+raster::plot(metzger_v3_europe)
 
 
 ## 2.

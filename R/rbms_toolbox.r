@@ -98,13 +98,13 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
 #' @export get_raster_value 
 #' @examples 
 #' x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
-#' (x_value <- get_rater_value(x))
+#' (x_value <- get_raster_value(x))
 #'
 
 get_raster_value <- function(x, y_path = 'metzger_v3_europe' , Classification = NULL, x_crs = 4326, buffer_dist = NULL, out_df = TRUE){
 
         if(y_path == 'metzger_v3_europe'){
-            if(!exists(file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'))){
+            if(!file.exists(file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'))){
                 raster::values(metzger_v3_europe) <- metzger_v3_europe_values
                 raster::writeRaster(metzger_v3_europe, file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'), overwrite=TRUE)
             }

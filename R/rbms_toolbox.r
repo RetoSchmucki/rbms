@@ -105,6 +105,8 @@ get_raster_value <- function(x, y_path = 'metzger_v3_europe' , Classification = 
 
         if(y_path == 'metzger_v3_europe'){
             if(!file.exists(file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'))){
+                message(paste0('On first use, we need to build the metzger_v3_europe raster, this is stored in \n',
+                                    file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif')))
                 raster::values(metzger_v3_europe) <- metzger_v3_europe_values
                 raster::writeRaster(metzger_v3_europe, file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'), overwrite=TRUE)
             }

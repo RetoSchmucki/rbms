@@ -87,14 +87,14 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
 
 #' get_raster_value
 #' Extract raster value for a set of geographic points
-#' @param x data frame with longitude and latitude in column 1 and 2 respectively
+#' @param x data.frame with longitude and latitude in column 1 and 2 respectively
 #' @param yPath complete path to raster layer from which value should be extracted
 #' @param Classification a data.frame with classification for the raster values
 #' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
 #' @param BufferDist extent of the buffer to be added around the bounding box to insure, default set to 50 pixels of the raster
 #' @param OutDf logical if true return a data.frame, if false, a sf object is returned
 #' @param PlotRaster logical informing if points, their bounding box and the raster layer should be plotted
-#' @return return a df or a sf object with value extracted from the y layer, see \code{out_df}.
+#' @return return a data.frame or a sf object with value extracted from the y layer, see \code{out_df}.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @export get_raster_value
 #' @examples
@@ -142,4 +142,44 @@ get_raster_value <- function(x, yPath = 'metzger_v3_europe' , Classification = N
         }
 
     return(x_sf)
+}
+
+
+#' get_bioclim
+#' Assign a bioclimatic region to the value extractacted from raster layer for a set of geographic points
+#' @param x data.frame, or sf object, with longitude and latitude in column 1 and 2 respectively and bioclim value extracted with get_raster_value
+#' @param y data.frame with bioclimatic region classification key refering to the raster layer used by get_raster_value 
+#' @param byY character name of the variable name corresponding to the raster layer value in y 
+#' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
+#' @param OutDf logical if true return a data.frame, if false, a sf object is returned
+#' @return return a data.frame or a sf object with bioclimatic region extracted from the y layer.
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @export get_bioclim
+#' @examples
+#' x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
+#' x_value <- get_raster_value(x, OutDf = FALSE)
+#' get_bioclim(x_value)
+#' get_bioclim(x_value, OutDf = FALSE)
+#'
+
+get_bioclim <- function(x, y = 'metzger_v3_class', byY = 'gens_seq', xCrs = 4326, OutDf = TRUE){
+    
+        if(class(x)[1]== 'sf'){
+            x$longitude <- sf::st_coordinates(x)[,1]
+            x$latitude <- sf::st_coordinates(x)[,2]
+            sf::st_geometry(x) <- NULL
+        }
+
+        if(y == 'metzger_v3_class'){
+            x_bioclim <- merge(x, metzger_v3_class[,c('gens_seq', 'genzname', 'genz', 'gens')], by.x = 'value', by.y = byY, all.x = TRUE)
+        } else {
+            x_bioclim <- merge(x, y, by.x = 'value', by.y = byY, all.x = TRUE) 
+        }
+
+        if(!isTRUE(OutDf)){
+          x_bioclim <- sf::st_as_sf(x_bioclim, coords = c('longitude','latitude'), crs = xCrs, agr = 'constant')  
+        }
+
+    return(x_bioclim)
+
 }

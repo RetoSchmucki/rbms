@@ -5,4 +5,4 @@ Metzger, M.J., Bunce, R.G.H., Jongman, R.H.G., Sayre, R., Trabucco, A. & Zomer, 
 for global biodiversity research and monitoring. Global Ecology and Biogeography, 22, 630–638.
 
 ### Source:
-The global map is available from \code{\link{https://edinburgh-innovations.ed.ac.uk/project/bioclimate-world-map/}}.
+The global map is available from https://edinburgh-innovations.ed.ac.uk/project/bioclimate-world-map/.

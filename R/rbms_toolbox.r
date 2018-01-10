@@ -88,22 +88,24 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
 #' get_raster_value 
 #' Extract raster value for a set of geographic points
 #' @param x data frame with longitude and latitude in column 1 and 2 respectively 
-#' @param y_path complete path to raster layer from which value should be extracted
+#' @param yPath complete path to raster layer from which value should be extracted
 #' @param Classification a data.frame with classification for the raster values
-#' @param x_crs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
-#' @param buffer_dist extent of the buffer to be added around the bounding box to insure
-#' @param out_df logical if true return a data.frame, if false, a sf object is returned
+#' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
+#' @param BufferDist extent of the buffer to be added around the bounding box to insure, default set to 50 pixels of the raster
+#' @param OutDf logical if true return a data.frame, if false, a sf object is returned
+#' @param PlotRaster logical informing if points, their bounding box and the raster layer should be plotted
 #' @return return a df or a sf object with value extracted from the y layer, see \code{out_df}.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @export get_raster_value 
 #' @examples 
 #' x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
 #' (x_value <- get_raster_value(x))
+#'  (x_value <- get_raster_value(x, PlotRaster = TRUE))
 #'
 
-get_raster_value <- function(x, y_path = 'metzger_v3_europe' , Classification = NULL, x_crs = 4326, buffer_dist = NULL, out_df = TRUE){
+get_raster_value <- function(x, yPath = 'metzger_v3_europe' , Classification = NULL, xCrs = 4326, BufferDist = NULL, OutDf = TRUE, PlotRaster = FALSE){
 
-        if(y_path == 'metzger_v3_europe'){
+        if(yPath == 'metzger_v3_europe'){
             if(!file.exists(file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'))){
                 message(paste0('On first use, we need to build the metzger_v3_europe raster, this is stored in \n',
                                     file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif')))
@@ -112,20 +114,27 @@ get_raster_value <- function(x, y_path = 'metzger_v3_europe' , Classification = 
             }
             y_r <- raster::raster(file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'))
         } else {
-            y_r <- raster::raster(y_path)
+            y_r <- raster::raster(yPath)
         }
 
-        x_sf <- sf::st_as_sf(x, coords = names(x)[1:2], crs = x_crs, agr = 'constant')
+        x_sf <- sf::st_as_sf(x, coords = names(x)[1:2], crs = xCrs, agr = 'constant')
         x_sf <- sf::st_transform(x_sf, as.character(raster::crs(y_r)))
-        if(is.null(buffer_dist)){
-            r <- raster::res(y_r)[1]*100
+        if(is.null(BufferDist)){
+            r <- raster::res(y_r)[1]*50
         }
-        focal_box <- as(sf::st_buffer(sf::st_as_sfc(sf::st_bbox(x_sf)), raster::res(y_r)[1]*100), "Spatial")
+        focal_box <- as(sf::st_buffer(sf::st_as_sfc(sf::st_bbox(x_sf)), raster::res(y_r)[1]*50), "Spatial")
         layer_cr <- raster::crop(y_r, raster::extent(focal_box))
-        x_sf$value <- raster::extract(layer_cr,as(x_sf,"Spatial"))
-        x_sf <- sf::st_transform(x_sf, x_crs)
         
-        if(isTRUE(out_df)){
+        if(isTRUE(PlotRaster)){
+            raster::plot(y_r)
+            plot(focal_box, col = 'orange', lwd = 1, lty = 2, add = TRUE)
+            plot(x_sf$geometry, col = 'blue', pch = 19, add = TRUE)
+        }
+        
+        x_sf$value <- raster::extract(layer_cr,as(x_sf,"Spatial"))
+        x_sf <- sf::st_transform(x_sf, xCrs)
+        
+        if(isTRUE(OutDf)){
             x_sf$longitude <- sf::st_coordinates(x_sf)[,1]
             x_sf$latitude <- sf::st_coordinates(x_sf)[,2]
             sf::st_geometry(x_sf) <- NULL

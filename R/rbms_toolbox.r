@@ -88,7 +88,7 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
 #' get_raster_value 
 #' Extract raster value for a set of geographic points
 #' @param x data frame with longitude and latitude in column 1 and 2 respectively 
-#' @param y raster layer from which value should be extracted
+#' @param y_path complete path to raster layer from which value should be extracted
 #' @param Classification a data.frame with classification for the raster values
 #' @param x_crs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
 #' @param buffer_dist extent of the buffer to be added around the bounding box to insure
@@ -101,15 +101,25 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
 #' (x_value <- get_rater_value(x))
 #'
 
-get_raster_value <- function(x, y = metzger_v3_europe , Classification = NULL, x_crs = 4326, buffer_dist = NULL, out_df = TRUE){
+get_raster_value <- function(x, y_path = 'metzger_v3_europe' , Classification = NULL, x_crs = 4326, buffer_dist = NULL, out_df = TRUE){
+
+        if(y_path == 'metzger_v3_europe'){
+            if(!exists(file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'))){
+                raster::values(metzger_v3_europe) <- metzger_v3_europe_values
+                raster::writeRaster(metzger_v3_europe, file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'), overwrite=TRUE)
+            }
+            y_r <- raster::raster(file.path(system.file(package = 'rbms'), 'raster_data/metzger_v3_europe.tif'))
+        } else {
+            y_r <- raster::raster(y_path)
+        }
 
         x_sf <- sf::st_as_sf(x, coords = names(x)[1:2], crs = x_crs, agr = 'constant')
-        x_sf <- sf::st_transform(x_sf, as.character(raster::crs(y)))
+        x_sf <- sf::st_transform(x_sf, as.character(raster::crs(y_r)))
         if(is.null(buffer_dist)){
-            r <- raster::res(y)[1]*100
+            r <- raster::res(y_r)[1]*100
         }
-        focal_box <- as(sf::st_buffer(sf::st_as_sfc(sf::st_bbox(x_sf)), raster::res(y)[1]*100), "Spatial")
-        layer_cr <- raster::crop(y, raster::extent(focal_box))
+        focal_box <- as(sf::st_buffer(sf::st_as_sfc(sf::st_bbox(x_sf)), raster::res(y_r)[1]*100), "Spatial")
+        layer_cr <- raster::crop(y_r, raster::extent(focal_box))
         x_sf$value <- raster::extract(layer_cr,as(x_sf,"Spatial"))
         x_sf <- sf::st_transform(x_sf, x_crs)
         

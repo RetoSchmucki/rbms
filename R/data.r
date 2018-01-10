@@ -1,4 +1,4 @@
-#' European part of Metzger's high-resolution bioclimate map of the world.
+#' Values of the European portion of Metzger's high-resolution bioclimate map of the world.
 #'
 #' Aim: To develop a novel global spatial framework for the integration and analysis of ecological and environmental data. 
 #' Location: The global land surface excluding Antarctica. Methods: A broad set of climate-related variables were considered 
@@ -16,14 +16,11 @@
 #' The original dataset is available for non-commercial use through the GEO portal (http://www.geoportal.org). 
 #' Value's classification key is available in \code{metzger_v3_class} dataset.
 #'
-#' @format A raster object as stored as .rda dataset:
+#' @format values used to build a raster object \code{raster_data/metzger_v3_europe.tif} using the empty raster \code{metger_v3_europe.rda}:
 #' \describe{
-#'   \item{resolution}{0.008333334, 0.008333334  (x, y)}
-#'   \item{extent}{-10.99999, 43.00001, 35, 72.00001  (xmin, xmax, ymin, ymax)}
-#'   \item{extent}{-10.99999, 43.00001, 35, 72.00001  (xmin, xmax, ymin, ymax)}
-#'   \item{values}{1,103 (min, max)}
+#'   \item{value}{Integer associated classification is found in the \code{metzger_v3_class} dataset}
 #' }
-#' @source Metzger, M.J., Bunce, R.G.H., Jongman, R.H.G., Sayre, R., Trabucco, A. & Zomer, R. (2013) A high-resolution bioclimate map of the world: a unifying framework 
+#' @references Metzger, M.J., Bunce, R.G.H., Jongman, R.H.G., Sayre, R., Trabucco, A. & Zomer, R. (2013) A high-resolution bioclimate map of the world: a unifying framework 
 #' for global biodiversity research and monitoring. Global Ecology and Biogeography, 22, 630–638.
-#' Global map is available through \code{\link{https://edinburgh-innovations.ed.ac.uk/project/bioclimate-world-map/}}.
-"metzger_v3_europe"
+#' @source Global map is available from \code{\link{https://edinburgh-innovations.ed.ac.uk/project/bioclimate-world-map/}}.
+"metzger_v3_europe_values"

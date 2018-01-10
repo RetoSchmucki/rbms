@@ -12,7 +12,11 @@ data(m_count)
 data(metzger_v3_europe)
 
 raster::plot(metzger_v3_europe)
-
+rv <- raster::values(metzger_v3_europe)
+save(rv,file='rv.rds')
+nr <- metzger_v3_europe
+raster::values(nr) <- rv
+raster::plot(nr)
 
 ## 2.
 ## organize the data to cover the time 

@@ -10,7 +10,6 @@ LazyData: true
 Imports:
 	mgcv,
 	data.table,
-Suggests:
 	raster,
 	sp,
 	sf

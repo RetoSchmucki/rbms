@@ -30,7 +30,7 @@ Extract raster value for a set of geographic points
 }
 \examples{
 x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
-(x_value <- get_rater_value(x))
+(x_value <- get_raster_value(x))
 
 }
 \author{

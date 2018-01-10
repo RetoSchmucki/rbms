@@ -5,13 +5,13 @@
 \title{get_raster_value 
 Extract raster value for a set of geographic points}
 \usage{
-get_raster_value(x, y = metzger_v3_europe, Classification = NULL,
+get_raster_value(x, y_path = "metzger_v3_europe", Classification = NULL,
   x_crs = 4326, buffer_dist = NULL, out_df = TRUE)
 }
 \arguments{
 \item{x}{data frame with longitude and latitude in column 1 and 2 respectively}
 
-\item{y}{raster layer from which value should be extracted}
+\item{y_path}{complete path to raster layer from which value should be extracted}
 
 \item{Classification}{a data.frame with classification for the raster values}
 

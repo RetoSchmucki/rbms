@@ -9,7 +9,7 @@ library(rbms)
 ##==================================
 data(m_visit)
 data(m_count)
-data(metzger_v3_europe)
+
 
 raster::plot(metzger_v3_europe)
 rv <- raster::values(metzger_v3_europe)

@@ -40,7 +40,7 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2,
 \item{...}{additional parameters passed to gam or bam function from the \code{\link[mgcv]{gam}} package.}
 }
 \value{
-A list with two object, i) a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
+A list with two object, i) a vector with annual fligth curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
         and ii) a list of the resulting gam models \code{f_model} fitted on the count data for each year.
 }
 \description{

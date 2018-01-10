@@ -93,3 +93,9 @@ site_year_sp_count
 ##==============================================
 names(impute_glm_model)
 summary(impute_glm_model$glm_mod_2_2003)
+
+
+x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
+x_value <- get_raster_value(x, OutDf = FALSE, PlotRaster = TRUE)
+get_bioclim(x_value)
+get_bioclim(x_value, OutDf = FALSE)

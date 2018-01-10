@@ -2,35 +2,38 @@
 % Please edit documentation in R/rbms_toolbox.r
 \name{get_raster_value}
 \alias{get_raster_value}
-\title{get_raster_value 
+\title{get_raster_value
 Extract raster value for a set of geographic points}
 \usage{
-get_raster_value(x, y_path = "metzger_v3_europe", Classification = NULL,
-  x_crs = 4326, buffer_dist = NULL, out_df = TRUE)
+get_raster_value(x, yPath = "metzger_v3_europe", Classification = NULL,
+  xCrs = 4326, BufferDist = NULL, OutDf = TRUE, PlotRaster = FALSE)
 }
 \arguments{
-\item{x}{data frame with longitude and latitude in column 1 and 2 respectively}
+\item{x}{data.frame with longitude and latitude in column 1 and 2 respectively}
 
-\item{y_path}{complete path to raster layer from which value should be extracted}
+\item{yPath}{complete path to raster layer from which value should be extracted}
 
 \item{Classification}{a data.frame with classification for the raster values}
 
-\item{x_crs}{EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}}
+\item{xCrs}{EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}}
 
-\item{buffer_dist}{extent of the buffer to be added around the bounding box to insure}
+\item{BufferDist}{extent of the buffer to be added around the bounding box to insure, default set to 50 pixels of the raster}
 
-\item{out_df}{logical if true return a data.frame, if false, a sf object is returned}
+\item{OutDf}{logical if true return a data.frame, if false, a sf object is returned}
+
+\item{PlotRaster}{logical informing if points, their bounding box and the raster layer should be plotted}
 }
 \value{
-return a df or a sf object with value extracted from the y layer, see \code{out_df}.
+return a data.frame or a sf object with value extracted from the y layer, see \code{out_df}.
 }
 \description{
-get_raster_value 
+get_raster_value
 Extract raster value for a set of geographic points
 }
 \examples{
 x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
 (x_value <- get_raster_value(x))
+(x_value <- get_raster_value(x, PlotRaster = TRUE))
 
 }
 \author{

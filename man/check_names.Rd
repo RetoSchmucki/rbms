@@ -13,7 +13,7 @@ check_names(x, y)
 \item{y}{vector with the required variable names}
 }
 \value{
-Verify if column names listed in \code{y} vector are found in the data set \code{x}, if not, a message identifies the 
+Verify if column names listed in \code{y} vector are found in the data set \code{x}, if not, a message identifies the
 missing column name and stops.
 }
 \description{

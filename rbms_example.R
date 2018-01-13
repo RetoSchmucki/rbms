@@ -19,7 +19,7 @@ raster::values(nr) <- rv
 raster::plot(nr)
 
 ## 2.
-## organize the data to cover the time 
+## organize the data to cover the time
 ## period and monitoring season of the BMS
 ##=========================================
 ts_date <- ts_dwmy_table(InitYear = 2000, LastYear = 2003, WeekDay1 = 'monday')
@@ -41,11 +41,11 @@ system.time(ts_flight_curve <- flight_curve(ts_season_count, NbrSample = 200, Mi
 
 
 ## 4.
-## plot the flight curves 
+## plot the flight curves
 ##=========================================
 ts_flight_curve
 
-plot(ts_flight_curve[M_YEAR == 2000, trimDAYNO], ts_flight_curve[M_YEAR == 2000, NM], type = 'l', 
+plot(ts_flight_curve[M_YEAR == 2000, trimDAYNO], ts_flight_curve[M_YEAR == 2000, NM], type = 'l',
       ylim = c(0, max(ts_flight_curve[, NM])), xlab = 'Monitoring Year Day', ylab = 'Relative Abundance')
 c <- 2
 for(y in 2001:2003){
@@ -64,7 +64,7 @@ summary(flight_curve_model$FlightModel_2_2003)
 
 ## 6.
 ## impute the count for the missing day, using
-## the flight curve computed with the 
+## the flight curve computed with the
 ## regionalGAM method
 ##=========================================
 site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve, SpeedGlm = FALSE, FamilyGlm = 'quasipoisson')
@@ -79,9 +79,9 @@ s <- 2
 y <- 2003
 
 plot(site_year_sp_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count[SITE_ID == s & M_YEAR == y, FITTED],
-    ylim=c(0, max(site_year_sp_count[SITE_ID == s & M_YEAR == y, COUNT_IMPUTED])), 
-    col = 'blue', type='l', 
-    main = paste0('Site ', s, ', Season ', y), 
+    ylim=c(0, max(site_year_sp_count[SITE_ID == s & M_YEAR == y, COUNT_IMPUTED])),
+    col = 'blue', type='l',
+    main = paste0('Site ', s, ', Season ', y),
     xlab='Monitoring Month', ylab='Fitted Count')
 points(site_year_sp_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count[SITE_ID == s & M_YEAR == y, COUNT],
        col='red')
@@ -89,7 +89,7 @@ points(site_year_sp_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count[
 
 site_year_sp_count
 ## 8.
-## retrieve GLM models 
+## retrieve GLM models
 ##==============================================
 names(impute_glm_model)
 summary(impute_glm_model$glm_mod_2_2003)

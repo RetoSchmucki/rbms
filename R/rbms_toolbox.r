@@ -16,6 +16,50 @@
   packageStartupMessage(" Welcome to rbms, version 0.0.9 \n This package replaces the RegionalGAM package that is no longer maintained.")
 }
 
+
+#' initiate_project
+#' Build the initial folder structure for a typical research project
+#' @param project_name name of the project name to be used for the parent folder
+#' @param project_home path to where the project folder structure to be built, default is the current working directory
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @export initiate_project
+
+initiate_project <- function(project_name, project_home = NULL){
+
+  if(is.null(project_home)){
+      project_home <- getwd()
+  }
+
+	prj_path <- file.path(project_home,project_name)
+
+	if (dir.exists(prj_path)) {
+		setwd(prj_path)
+	} else {
+		cat(paste0('Creating project folder: ',prj_path,'\n'))
+			dir.create(prj_path,recursive=TRUE)
+			setwd(prj_path)}
+
+	if (dir.exists(file.path(prj_path,'data'))) {
+	     cat(paste('You are all set to work on',project_name,'project!','\n'))
+	} else {
+	   	setwd(prj_path)
+	   	cat(paste0('Creating the folder structure and initiate the version control for ',project_name,'\n'))
+
+        dir.create("R")
+        dir.create("data")
+        dir.create("documentation")
+        dir.create("figures")
+        dir.create("output")
+        dir.create("analysis")
+        dir.create("manuscript")
+        dir.create("sql_script")
+     }
+
+	setwd(prj_path)
+}
+
+
+
 #' check_package
 #' Internal function to verified the required package is installed
 #' @param pkgName A string with the package name
@@ -148,8 +192,8 @@ get_raster_value <- function(x, yPath = 'metzger_v3_europe' , Classification = N
 #' get_bioclim
 #' Assign a bioclimatic region to the value extractacted from raster layer for a set of geographic points
 #' @param x data.frame, or sf object, with longitude and latitude in column 1 and 2 respectively and bioclim value extracted with get_raster_value
-#' @param y data.frame with bioclimatic region classification key refering to the raster layer used by get_raster_value 
-#' @param byY character name of the variable name corresponding to the raster layer value in y 
+#' @param y data.frame with bioclimatic region classification key refering to the raster layer used by get_raster_value
+#' @param byY character name of the variable name corresponding to the raster layer value in y
 #' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
 #' @param OutDf logical if true return a data.frame, if false, a sf object is returned
 #' @return return a data.frame or a sf object with bioclimatic region extracted from the y layer.
@@ -163,7 +207,7 @@ get_raster_value <- function(x, yPath = 'metzger_v3_europe' , Classification = N
 #'
 
 get_bioclim <- function(x, y = 'metzger_v3_class', byY = 'gens_seq', xCrs = 4326, OutDf = TRUE){
-    
+
         if(class(x)[1]== 'sf'){
             x$longitude <- sf::st_coordinates(x)[,1]
             x$latitude <- sf::st_coordinates(x)[,2]
@@ -173,11 +217,11 @@ get_bioclim <- function(x, y = 'metzger_v3_class', byY = 'gens_seq', xCrs = 4326
         if(y == 'metzger_v3_class'){
             x_bioclim <- merge(x, metzger_v3_class[,c('gens_seq', 'genzname', 'genz', 'gens')], by.x = 'value', by.y = byY, all.x = TRUE)
         } else {
-            x_bioclim <- merge(x, y, by.x = 'value', by.y = byY, all.x = TRUE) 
+            x_bioclim <- merge(x, y, by.x = 'value', by.y = byY, all.x = TRUE)
         }
 
         if(!isTRUE(OutDf)){
-          x_bioclim <- sf::st_as_sf(x_bioclim, coords = c('longitude','latitude'), crs = xCrs, agr = 'constant')  
+          x_bioclim <- sf::st_as_sf(x_bioclim, coords = c('longitude','latitude'), crs = xCrs, agr = 'constant')
         }
 
     return(x_bioclim)

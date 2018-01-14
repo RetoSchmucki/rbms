@@ -1,3 +1,6 @@
 language: r
 
-apt_packages: libudunits2-dev
+before_install:
+  
+  # units/udunits2 dependency:
+  - sudo apt-get install --yes libudunits2-dev

@@ -20,4 +20,11 @@ if(!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("RetoSchmucki/rbms")
 ```
 
+#### LINUX note:
+You might have to install to following library to install the `sf package`.
+
+```
+sudo apt-get install libudunits2-dev
+```
+
 For reporting errors and issues related to this package and its functions, please open a [issue here](https://github.com/RetoSchmucki/rbms/issues)

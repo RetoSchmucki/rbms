@@ -1,4 +1,7 @@
 R --vanilla
+
+## add a comment that is very important!
+
 if(!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("RetoSchmucki/rbms", force=TRUE)
 library(rbms)

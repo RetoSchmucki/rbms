@@ -63,9 +63,9 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 
             if(isTRUE(SpeedGam)){
                 if(length(sp_data_all[, unique(SITE_ID)]) > 1){
-                    gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr") + as.factor(SITE_ID) -1, data=sp_data_all, family=GamFamily, ...), silent = TRUE)
+                    gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr") + as.factor(SITE_ID), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
                 } else {
-                    gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr")  -1, data=sp_data_all, family=GamFamily, ...), silent = TRUE)
+                    gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
                 }
             } else {
                 if(length(sp_data_all[, unique(SITE_ID)]) > 1){

@@ -199,9 +199,10 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
             if(isTRUE(KeepModelData)){
                 if ("f_data" %in% ls()) {
-                    f_data <- rbind(f_data, f_curve_mod$f_data)
+                    f_data2 <- data.table::data.table(f_curve_mod$f_data)
+                    f_data <- rbind(f_data, f_data2)
                 } else {
-                    f_data <- f_curve_mod$f_data
+                    f_data <- data.table::data.table(f_curve_mod$f_data)
                 }
             }
 

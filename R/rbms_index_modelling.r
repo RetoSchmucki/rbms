@@ -199,12 +199,9 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
             if(isTRUE(KeepModelData)){
                 if ("f_data" %in% ls()) {
-                    f_data_2 <- list(f_curve_mod$f_data)
-                    names(f_data_2) <- paste0('FlightModelData_',gsub(' ','_',as.character(dataset_y$SPECIES[1])),'_', dataset_y$M_YEAR[1])
-                    f_data <- c(f_data, f_data_2)
+                    f_data <- rbind(f_data, f_curve_mod$f_data)
                 } else {
-                    f_data <- list(f_curve_mod$f_data)
-                    names(f_data) <- paste0('FlightModelData_',gsub(' ','_',as.character(dataset_y$SPECIES[1])),'_', dataset_y$M_YEAR[1])
+                    f_data <- f_curve_mod$f_data
                 }
             }
 
@@ -223,7 +220,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
                 flight_curve_model_data <<- c(flight_curve_model_data, f_data)
             } else {
                 flight_curve_model_data <<- f_data
-            }  
+            }
         }
 
     return(f_pheno)

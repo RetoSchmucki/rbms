@@ -218,7 +218,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
         if(isTRUE(KeepModelData)){
             if (exists("flight_curve_model_data")) {
-                flight_curve_model_data <<- c(flight_curve_model_data, f_data)
+                flight_curve_model_data <<- rbind(flight_curve_model_data, f_data)
             } else {
                 flight_curve_model_data <<- f_data
             }

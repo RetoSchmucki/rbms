@@ -208,23 +208,35 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
         }
 
-        if(isTRUE(KeepModel)){
-            if (exists("flight_curve_model")) {
-                flight_curve_model <<- c(flight_curve_model, f_model)
-            } else {
-                flight_curve_model <<- f_model
-            }
+        # if(isTRUE(KeepModel)){
+        #     if (exists("flight_curve_model")) {
+        #         flight_curve_model <<- c(flight_curve_model, f_model)
+        #     } else {
+        #         flight_curve_model <<- f_model
+        #     }
+        # }
+        #
+        # if(isTRUE(KeepModelData)){
+        #     if (exists("flight_curve_model_data")) {
+        #         flight_curve_model_data <<- rbind(flight_curve_model_data, f_data)
+        #     } else {
+        #         flight_curve_model_data <<- f_data
+        #     }
+        # }
+    
+    if(!isTRUE(KeepModelData) & !isTRUE(KeepModel)){
+          result_fc <- list(pheno = f_pheno)
         }
 
-        if(isTRUE(KeepModelData)){
-            if (exists("flight_curve_model_data")) {
-                flight_curve_model_data <<- rbind(flight_curve_model_data, f_data)
-            } else {
-                flight_curve_model_data <<- f_data
-            }
+    if(isTRUE(KeepModelData) & !isTRUE(KeepModel)){
+          result_fc <- list(pheno = f_pheno, model = f_model)
         }
 
-    return(f_pheno)
+    if(isTRUE(KeepModelData) & isTRUE(KeepModel)){
+          result_fc <- list(pheno = f_pheno, model = f_model, data = f_data)
+        }
+
+    return(result_fc)
 }
 
 

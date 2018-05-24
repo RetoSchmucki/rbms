@@ -224,6 +224,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             }
         }
 
+
     return(f_pheno)
 }
 

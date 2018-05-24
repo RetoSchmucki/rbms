@@ -1,9 +1,9 @@
 Package: rbms
 Title: Compute abundance index Butterfly Monitoring Schemes, using the regional GAM approach also known as the two-stage model.
-Version: 0.0.9
+Version: 0.1.0
 Date: 04-01-2018
 Authors@R: person("Reto", "Schmucki", email = "reto.schmucki@mail.mcgill.ca", role = c("aut", "cre"))
-Description: Implementation of the regional GAM method presented in Schmucki et al. 2015, an adaptation of the two-stage model developed by Dennis et al. 2013. This package compute the flight curve from a set of monitoring sites and compute the abundance index, using the flight curve to impute values where weekly counts are missing. This is a fully revised version of the former RegionalGAM package. The rbms package has been totally rewritten and build on a more robust and efficient programming framework, providing more functionality and flexibility to the end-user.  
+Description: Implementation of the regional GAM method presented in Schmucki et al. 2015, an adaptation of the two-stage model developed by Dennis et al. 2013. This package compute the flight curve from a set of monitoring sites and compute the abundance index, using the flight curve to impute values where weekly counts are missing. This is a fully revised version of the former RegionalGAM package. The rbms package has been totally rewritten and build on a more robust and efficient programming framework, providing more functionality and flexibility to the end-user.
 Depends: R (>= 3.4.0)
 License: MIT + file LICENSE.md
 LazyData: true

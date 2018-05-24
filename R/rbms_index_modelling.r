@@ -223,7 +223,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         #         flight_curve_model_data <<- f_data
         #     }
         # }
-    
+
     if(!isTRUE(KeepModelData) & !isTRUE(KeepModel)){
           result_fc <- list(pheno = f_pheno)
         }
@@ -236,12 +236,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
           result_fc <- list(pheno = f_pheno, model = f_model, data = f_data)
         }
 
-<<<<<<< HEAD
     return(result_fc)
-=======
-
-    return(f_pheno)
->>>>>>> a1b80605366b3a2930da2bd9371e8c9e413feac7
 }
 
 

@@ -154,6 +154,9 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             year_series <- ts_season_count[M_YEAR %in% SelectYear, unique(as.integer(M_YEAR))]
         }
 
+        f_pheno <- data.table::data.table()
+        f_data  <- data.table::data.table()
+        f_model <- list()
         for (y in year_series) {
 
             dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, SITE_ID, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON, COUNT, ANCHOR)]
@@ -180,30 +183,17 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
                 }
             }
 
-            if ("f_pheno" %in% ls()) {
-                f_pheno <- rbind(f_pheno, f_curve_mod$f_curve)
-            } else {
-                f_pheno <- f_curve_mod$f_curve
-            }
+
+            f_pheno <- rbind(f_pheno, f_curve_mod$f_curve)
 
             if(isTRUE(KeepModel)){
-                if ("f_model" %in% ls()) {
-                    f_model_2 <- list(f_curve_mod$f_model)
-                    names(f_model_2) <- paste0('FlightModel_',gsub(' ','_',as.character(dataset_y$SPECIES[1])),'_', dataset_y$M_YEAR[1])
-                    f_model <- c(f_model, f_model_2)
-                } else {
-                    f_model <- list(f_curve_mod$f_model)
-                    names(f_model) <- paste0('FlightModel_',gsub(' ','_',as.character(dataset_y$SPECIES[1])),'_', dataset_y$M_YEAR[1])
-                }
+              f_model_2 <- list(f_curve_mod$f_model)
+              names(f_model_2) <- paste0('FlightModel_', gsub('', '_', as.character(dataset_y$SPECIES[1])), '_', dataset_y$M_YEAR[1])
+              f_model <- c(f_model, f_model_2)
             }
 
             if(isTRUE(KeepModelData)){
-                if ("f_data" %in% ls()) {
-                    f_data2 <- data.table::data.table(f_curve_mod$f_data)
-                    f_data <- rbind(f_data, f_data2)
-                } else {
-                    f_data <- data.table::data.table(f_curve_mod$f_data)
-                }
+              f_data <- rbind(f_data, data.table::data.table(f_curve_mod$f_data))
             }
 
         }

@@ -188,7 +188,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
             if(isTRUE(KeepModel)){
               f_model_2 <- list(f_curve_mod$f_model)
-              names(f_model_2) <- paste0('FlightModel_', gsub('', '_', as.character(dataset_y$SPECIES[1])), '_', dataset_y$M_YEAR[1])
+              names(f_model_2) <- paste0('FlightModel_', gsub(' ', '_', as.character(dataset_y$SPECIES[1])), '_', dataset_y$M_YEAR[1])
               f_model <- c(f_model, f_model_2)
             }
 

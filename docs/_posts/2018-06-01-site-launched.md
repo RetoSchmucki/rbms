@@ -4,7 +4,7 @@ title: "package site"
 date: "2018-06-01"
 ---
 
-Well... not much to say yet.
+Well... not much to say yet, but more to come...
 
 
 {% highlight r linenos %}

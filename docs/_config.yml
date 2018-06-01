@@ -1,6 +1,6 @@
 name: rbms
 markdown: kramdown
-permalink: rbms/blog/:year/:month/:day/:title
+permalink: /rbms/blog/:year/:month/:day/:title
 highlighter: rouge
 kramdown:
     math_engine: mathjax

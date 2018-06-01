@@ -2,6 +2,8 @@
 layout: post
 title: "site launched"
 date: "2018-06-01"
+categories: test
+published: true
 ---
 
 Well... not much to say yet, but more to come...

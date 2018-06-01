@@ -4,7 +4,7 @@ title: "post tester"
 date: "2018-06-01"
 ---
 
-Well... not much to say yet, but more to come... and so on
+Well... not much to say yet, but more to come... what else
 
 
 {% highlight r linenos %}

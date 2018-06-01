@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "package site"
+title: "site launched"
 date: "2018-06-01"
 ---
 

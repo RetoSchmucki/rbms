@@ -31,4 +31,4 @@ ul.posts li { list-style: none; }
 
 .img-circle { width: 150px; height: 150px; border-radius: 50%;     display: block; margin: 0 auto; }
 .img-full {width: 150px; height: 150px; border-radius: 100%;     display: block; margin: 0 auto; }
-.blurb { text-align: left }
+.blurb { text-align: center }

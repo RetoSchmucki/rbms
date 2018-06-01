@@ -13,7 +13,7 @@ check_pheno(sp_count_flight_y, sp_count_flight)
 \item{sp_count_flight}{data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \code{\link{flight_curve}}.}
 }
 \value{
-A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where 
+A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
         phenology is available.
 }
 \description{

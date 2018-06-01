@@ -3,7 +3,7 @@
 \name{fit_speedglm}
 \alias{fit_speedglm}
 \title{fit_speedglm
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution 
+Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
 as implemented in the package \code{link[speedglm{speedglm}}. Function used in \code{\link{impute_count}}.}
 \usage{
 fit_speedglm(sp_count_flight_y, non_zero, FamilyGlm)
@@ -17,12 +17,12 @@ or the nearest available.}
 \item{FamilyGlm}{string for the distribution to be used for the error term in the GLM, inherited from \code{\link{impute_count}}, default='quasipoisson'.}
 }
 \value{
-A a list of object, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where 
+A a list of object, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) a glm object for the model \code{glm_obj_site}.
 }
 \description{
 fit_speedglm
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution 
+Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
 as implemented in the package \code{link[speedglm{speedglm}}. Function used in \code{\link{impute_count}}.
 }
 \details{

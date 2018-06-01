@@ -27,7 +27,7 @@ impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
 \item{NearPheno}{Logical if flight curve from neirhest year should be used, if available within 5 years, default=TRUE}
 }
 \value{
-A a list of object, i) data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where 
+A a list of object, i) data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
         a phenology is available \code{sp_ts_season_count} and ii) a glm object for the GLM model \code{glm_model}.
 }
 \description{

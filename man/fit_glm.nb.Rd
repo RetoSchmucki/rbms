@@ -3,7 +3,7 @@
 \name{fit_glm.nb}
 \alias{fit_glm.nb}
 \title{fit_glm.nb
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution 
+Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
 as implemented in the package \code{link[MASS]{glm.nb}}. Function used in \code{\link{impute_count}}.}
 \usage{
 fit_glm.nb(sp_count_flight_y, non_zero)
@@ -15,12 +15,12 @@ or the nearest available.}
 \item{non_zero}{vector of sites with non-zero value to be included in the model (see detail)}
 }
 \value{
-A a list of object, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where 
+A a list of object, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) a glm object for the model \code{glm_obj_site}.
 }
 \description{
 fit_glm.nb
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution 
+Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
 as implemented in the package \code{link[MASS]{glm.nb}}. Function used in \code{\link{impute_count}}.
 }
 \details{

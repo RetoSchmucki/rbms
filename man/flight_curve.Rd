@@ -8,7 +8,8 @@ Compute the annual flight curve from butterfly count data collated across multip
 flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2,
   MinNbrSite = 1, MaxTrial = 3, FcMethod = "regionalGAM",
   GamFamily = "poisson", CompltSeason = TRUE, SelectYear = NULL,
-  SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE, ...)
+  SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE,
+  KeepModelData = TRUE, ...)
 }
 \arguments{
 \item{ts_season_count}{data.table with complete time series of count and season information returned by \code{\link{ts_monit_count_site}}}

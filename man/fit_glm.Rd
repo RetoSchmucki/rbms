@@ -16,7 +16,7 @@ or the nearest available.}
 \item{FamilyGlm}{string for the distribution to be used for the error term in the GLM, inherited from \code{\link{impute_count}}, default='quasipoisson'.}
 }
 \value{
-A a list of objects, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where 
+A a list of objects, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) a glm object for the model \code{glm_obj_site}.
 }
 \description{

@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Launches Site"
-date: "2018-04-29"
+title: "first post"
+date: "2018-06-01"
 ---
 
-Well... not much to say yet.
+Just a try...
 
 
 {% highlight r linenos %}

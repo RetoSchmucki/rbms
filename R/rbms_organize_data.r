@@ -20,7 +20,7 @@
 #' @return a data.table object with the date, the day since the first date, the year, the month, 
 #'          the day in the month, the ISO week number and the day in the week.
 #' @keywords time series
-#' @seealso \code{\link{ts_date_seq}}, \code{\link[data.table]{isoweek}}
+#' @seealso \code{\link{ts_date_seq}}, \code{\link[data.table]{IDate}}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export ts_dwmy_table

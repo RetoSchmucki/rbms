@@ -9,7 +9,7 @@
   \item{value}{Integer associated classification is found in the \code{metzger_v3_class} dataset}
 }}
 \source{
-Global map is available from \code{\link{https://edinburgh-innovations.ed.ac.uk/project/bioclimate-world-map/}}.
+Global map is available from \code{\url{https://edinburgh-innovations.ed.ac.uk/project/bioclimate-world-map}}.
 }
 \usage{
 metzger_v3_europe_values

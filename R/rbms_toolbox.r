@@ -134,7 +134,7 @@ ts_date_seq <- function(InitYear=1970,LastYear=format(Sys.Date(),"%Y")) {
 #' @param x data.frame with longitude and latitude in column 1 and 2 respectively
 #' @param yPath complete path to raster layer from which value should be extracted
 #' @param Classification a data.frame with classification for the raster values
-#' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
+#' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\url{http://spatialreference.org}}
 #' @param BufferDist extent of the buffer to be added around the bounding box to insure, default set to 50 pixels of the raster
 #' @param OutDf logical if true return a data.frame, if false, a sf object is returned
 #' @param PlotRaster logical informing if points, their bounding box and the raster layer should be plotted
@@ -194,7 +194,7 @@ get_raster_value <- function(x, yPath = 'metzger_v3_europe' , Classification = N
 #' @param x data.frame, or sf object, with longitude and latitude in column 1 and 2 respectively and bioclim value extracted with get_raster_value
 #' @param y data.frame with bioclimatic region classification key refering to the raster layer used by get_raster_value
 #' @param byY character name of the variable name corresponding to the raster layer value in y
-#' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\link{http://spatialreference.org/}}
+#' @param xCrs EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\url{http://spatialreference.org}}
 #' @param OutDf logical if true return a data.frame, if false, a sf object is returned
 #' @return return a data.frame or a sf object with bioclimatic region extracted from the y layer.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}

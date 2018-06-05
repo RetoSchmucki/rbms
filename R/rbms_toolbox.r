@@ -93,7 +93,7 @@ check_package <- function(pkgName=NULL, message1='you need to install the packag
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @examples
 #' DF <- data.frame(DAY=c(1:5),MONTH=rep(month.name[2],5),YEAR=rep(format(Sys.Date(),'%Y'),5))
-#' check_names(DT,c('DAY','month','Years'))
+#' check_names(DF,c('DAY','month','Years'))
 #' @export check_names
 #'
 

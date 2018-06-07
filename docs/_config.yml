@@ -5,3 +5,11 @@ highlighter: rouge
 kramdown:
     math_engine: mathjax
     syntax_highlighter: rouge
+
+# If you are building a simple GitHub user page (http://username.github.io) then use these settings:
+# url: "http://username.github.io"
+# baseurl: ""
+
+# If you are building a GitHub project page then use these settings:
+url: "https://retoschmucki.github.io/rbms"
+baseurl: "/rbms"

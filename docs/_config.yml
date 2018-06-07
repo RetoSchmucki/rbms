@@ -11,5 +11,5 @@ kramdown:
 # baseurl: ""
 
 # If you are building a GitHub project page then use these settings:
-url: "https://retoschmucki.github.io/rbms"
+url: "http://retoschmucki.github.io"
 baseurl: "/rbms"

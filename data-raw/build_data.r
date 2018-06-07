@@ -2,7 +2,7 @@ R --vanilla
 
 m_visit <- data.table::fread("data-raw/m_visit.csv", header=TRUE)
 m_count <- data.table::fread("data-raw/m_count.csv", header=TRUE)
-metzger_v3_europe_orig <- raster::raster('data-raw/metzger_v3_eu_crop.tif')
+metzger_v3_europe_orig <- raster::raster('inst/raster_data/metzger_v3_europe.tif')
 metzger_v3_europe_values <- raster::values(metzger_v3_europe_orig)
 
 ##build empty raster

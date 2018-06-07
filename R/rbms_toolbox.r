@@ -188,7 +188,6 @@ get_raster_value <- function(x, yPath = 'metzger_v3_europe' , Classification = N
     return(x_sf)
 }
 
-
 #' get_bioclim
 #' Assign a bioclimatic region to the value extractacted from raster layer for a set of geographic points
 #' @param x data.frame, or sf object, with longitude and latitude in column 1 and 2 respectively and bioclim value extracted with get_raster_value

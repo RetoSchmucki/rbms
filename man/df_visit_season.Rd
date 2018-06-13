@@ -3,14 +3,14 @@
 \name{df_visit_season}
 \alias{df_visit_season}
 \title{df_visit_season
-Link each recorded visit to a corresponding monitoring season, this function is used in \code{\link{df_visit_season}}}
+Link each recorded visit to a corresponding monitoring season, this function is used in \link{df_visit_season}}
 \usage{
 df_visit_season(m_visit, ts_season, DateFormat = "\%Y-\%m-\%d")
 }
 \arguments{
 \item{m_visit}{data.table or data.frame with Date and Site ID for each monitoring visit.}
 
-\item{ts_season}{data.table returned by \code{\link{ts_monit_season}} with the detail time-series of the monitoring season.}
+\item{ts_season}{data.table returned by \link{ts_monit_season} with the detail time-series of the monitoring season.}
 
 \item{DateFormat}{format used for the date in the visit data, default="\%Y-\%m-\%d".}
 }
@@ -19,14 +19,14 @@ A data.table where each visit is attributed a monitoring year, the \code{M_YEAR}
 }
 \description{
 df_visit_season
-Link each recorded visit to a corresponding monitoring season, this function is used in \code{\link{df_visit_season}}
+Link each recorded visit to a corresponding monitoring season, this function is used in \link{df_visit_season}
 }
 \details{
-The value of \code{M_YEAR} should be used as Monitoring year as this can differ form the \code{YEAR} if the 
+The value of \code{M_YEAR} should be used as Monitoring year as this can differ form the \code{YEAR} if the
         monitoring season covers two calendar years (e.g. November to June).
 }
 \seealso{
-\code{\link{ts_monit_season}}
+\link{ts_monit_season}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

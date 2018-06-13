@@ -8,7 +8,7 @@ count cumulative butterfly count observed over one monitoring season, including 
 butterfly_day(sp_ts_season_count)
 }
 \arguments{
-\item{sp_ts_season_count}{data.table with observed and expected butterfly counts per day imputed for each sites based by \code{\link{impute_count}}.}
+\item{sp_ts_season_count}{data.table with observed and expected butterfly counts per day imputed for each sites based by \link{impute_count}.}
 }
 \value{
 data.table with total butterfly day observed per species, year, and site.
@@ -18,7 +18,7 @@ butterfly_day
 count cumulative butterfly count observed over one monitoring season, including observed and imputed values.
 }
 \seealso{
-\code{\link{impute_count}}, \code{\link{flight_curve}}
+\link{impute_count}, \link{flight_curve}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

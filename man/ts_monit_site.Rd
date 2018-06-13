@@ -10,7 +10,7 @@ ts_monit_site(m_visit, ts_season, DateFormat = "\%Y-\%m-\%d")
 \arguments{
 \item{m_visit}{data.table or data.frame with Date and Site ID for each monitoring visit.}
 
-\item{ts_season}{data.table returned by \code{\link{ts_monit_season}} with the detail time-series of the monitoring season.}
+\item{ts_season}{data.table returned by \link{ts_monit_season} with the detail time-series of the monitoring season.}
 
 \item{DateFormat}{format used for the date in the visit data, default="\%Y-\%m-\%d".}
 }
@@ -22,7 +22,7 @@ ts_monit_site
 Augment the time series in m_season with all sites and visits with "zeros", leaving all non visited day with and <NA>
 }
 \seealso{
-\code{\link{df_visit_season}}
+\link{df_visit_season}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

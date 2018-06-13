@@ -16,7 +16,7 @@ ts_dwmy_table(InitYear = 1970, LastYear = format(Sys.Date(), "\%Y"),
 \item{WeekDay1}{to start the week on monday, use 'monday', otherwise the week start on sunday}
 }
 \value{
-a data.table object with the date, the day since the first date, the year, the month, 
+a data.table object with the date, the day since the first date, the year, the month,
          the day in the month, the ISO week number and the day in the week.
 }
 \description{
@@ -24,7 +24,7 @@ ts_dwmy_table
 Generate a time-series of dates with day, week, month and year (dwmy) from one initial to an end years
 }
 \seealso{
-\code{\link{ts_date_seq}}, \code{\link[data.table]{IDate}}
+\link{ts_date_seq}, \link[data.table]{IDate}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

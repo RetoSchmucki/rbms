@@ -10,9 +10,9 @@ impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
   KeepModel = TRUE, NearPheno = TRUE)
 }
 \arguments{
-\item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \code{\link{ts_monit_count_site}}.}
+\item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}
 
-\item{ts_flight_curve}{data.table with the flight curves, relative abundance (NM), for a specific species as returned by \code{\link{flight_curve}}.}
+\item{ts_flight_curve}{data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.}
 
 \item{FamilyGlm}{string for the distribution to be used for the error term in the GLM, default='quasipoisson'.}
 
@@ -20,15 +20,15 @@ impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
 
 \item{SelectYear}{vector of specific years of interest, can be a single value (e.g. 2015).}
 
-\item{SpeedGlm}{logical defining if the speedglm method available in the package \code{link[speedglm{speedglm}} should be used}
+\item{SpeedGlm}{logical defining if the speedglm method available in the package \link[speedglm]{speedglm} should be used}
 
 \item{KeepModel}{Logical to keep model output in a list object named \code{imp_glm_model}}
 
 \item{NearPheno}{Logical if flight curve from neirhest year should be used, if available within 5 years, default=TRUE}
 }
 \value{
-A a list of object, i) data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
-        a phenology is available \code{sp_ts_season_count} and ii) a glm object for the GLM model \code{glm_model}.
+A a list of one or two objects, i) **impute_count**: data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
+        a phenology is available \code{sp_ts_season_count} and ii) **model**: a glm object for the GLM model \code{glm_model}.
 }
 \description{
 impute_count
@@ -38,7 +38,7 @@ Fit a Generalized Linear Model (GLM) to predict daily count per site, using the 
 GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null.
 }
 \seealso{
-\code{\link{fit_glm}}, \code{\link{fit_speedglm}}, \code{\link{fit_glm.nb}}, \code{\link{flight_curve}}
+\link{fit_glm}, \link{fit_speedglm}, \link{fit_glm.nb}, \link{flight_curve}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

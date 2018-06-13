@@ -12,7 +12,7 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2,
   KeepModelData = TRUE, ...)
 }
 \arguments{
-\item{ts_season_count}{data.table with complete time series of count and season information returned by \code{\link{ts_monit_count_site}}}
+\item{ts_season_count}{data.table with complete time series of count and season information returned by \link{ts_monit_count_site}}
 
 \item{NbrSample}{integer setting the maximum number of site to use to compute the flight curve, default=100.}
 
@@ -32,28 +32,28 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2,
 
 \item{SelectYear}{integer to select a specific year to compute the flight curve, default=NULL.}
 
-\item{SpeedGam}{Logical to use the \code{link[mgcv]{bam}} method instead of the \code{\link[mgcv]{gam}} method.}
+\item{SpeedGam}{Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.}
 
 \item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset}
 
 \item{KeepModel}{Logical to keep model output in a list object named \code{flight_curve_model}}
 
-\item{...}{additional parameters passed to gam or bam function from the \code{\link[mgcv]{gam}} package.}
+\item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
-A list with two object, i) a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
-        and ii) a list of the resulting gam models \code{f_model} fitted on the count data for each year.
+A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
+        ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
 }
 \description{
 flight_curve
 Compute the annual flight curve from butterfly count data collated across multiple sites.
 }
 \seealso{
-\code{\link{fit_gam}}
+\link{fit_gam}
 
-\code{\link[mgcv]{gam}}
+\link[mgcv]{gam}
 
-\code{\link[mgcv]{bam}}
+\link[mgcv]{bam}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

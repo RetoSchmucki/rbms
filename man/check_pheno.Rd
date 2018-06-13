@@ -3,14 +3,14 @@
 \name{check_pheno}
 \alias{check_pheno}
 \title{check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \code{\link{impute_count}}.}
+Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.}
 \usage{
 check_pheno(sp_count_flight_y, sp_count_flight)
 }
 \arguments{
 \item{sp_count_flight_y}{data.table with the flight curve, relative abundance (NM), for a specific year.}
 
-\item{sp_count_flight}{data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \code{\link{flight_curve}}.}
+\item{sp_count_flight}{data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.}
 }
 \value{
 A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
@@ -18,10 +18,10 @@ A data.table with time series of the expected relative abundance of butterfly co
 }
 \description{
 check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \code{\link{impute_count}}.
+Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
 }
 \seealso{
-\code{\link{impute_count}}, \code{\link{flight_curve}}
+\link{impute_count}, \link{flight_curve}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

@@ -3,7 +3,7 @@
 \name{fit_glm}
 \alias{fit_glm}
 \title{fit_glm
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset. Function used in \code{\link{impute_count}}.}
+Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset. Function used in \link{impute_count}.}
 \usage{
 fit_glm(sp_count_flight_y, non_zero, FamilyGlm)
 }
@@ -13,21 +13,21 @@ or the nearest available.}
 
 \item{non_zero}{vector of sites with non-zero value to be included in the model (see detail)}
 
-\item{FamilyGlm}{string for the distribution to be used for the error term in the GLM, inherited from \code{\link{impute_count}}, default='quasipoisson'.}
+\item{FamilyGlm}{string for the distribution to be used for the error term in the GLM, inherited from \link{impute_count}, default='quasipoisson'.}
 }
 \value{
-A a list of objects, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
-        a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) a glm object for the model \code{glm_obj_site}.
+A a list of objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+        a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**:a glm object for the model \code{glm_obj_site}.
 }
 \description{
 fit_glm
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset. Function used in \code{\link{impute_count}}.
+Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset. Function used in \link{impute_count}.
 }
 \details{
 GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
 }
 \seealso{
-\code{\link{impute_count}}, \code{\link{flight_curve}}
+\link{impute_count}, \link{flight_curve}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

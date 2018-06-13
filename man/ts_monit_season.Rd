@@ -10,7 +10,7 @@ ts_monit_season(d_series, StartMonth = 4, EndMonth = 9, StartDay = 1,
   AnchorLag = 7)
 }
 \arguments{
-\item{d_series}{time series of dates returned by \code{\link{ts_dwmy_table}}}
+\item{d_series}{time series of dates returned by \link{ts_dwmy_table}}
 
 \item{StartMonth}{integer for the first month of the monitoring season, default=4}
 
@@ -40,13 +40,13 @@ ts_monit_season
 Build a time-series of dates with specific detail about the monitoring season
 }
 \details{
-The monitoring season can start in year y and end in year y+1, so if the monitoring season goes over two 
-        years (i.e. winter, December-January) the SEASON YEAR is shifted to set the monitoring season within a 
-        continuous year named according to the year at the start. Here the monitoring season is set in the middle 
+The monitoring season can start in year y and end in year y+1, so if the monitoring season goes over two
+        years (i.e. winter, December-January) the SEASON YEAR is shifted to set the monitoring season within a
+        continuous year named according to the year at the start. Here the monitoring season is set in the middle
         or year' to give some room to set ANCHORs  before and after the monitoring season.
 }
 \seealso{
-\code{\link{ts_date_seq}}, \code{\link{ts_dwmy_table}}, \code{\link{set_anchor}}
+\link{ts_date_seq}, \link{ts_dwmy_table}, \link{set_anchor}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

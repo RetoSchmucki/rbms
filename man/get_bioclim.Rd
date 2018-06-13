@@ -15,7 +15,7 @@ get_bioclim(x, y = "metzger_v3_class", byY = "gens_seq", xCrs = 4326,
 
 \item{byY}{character name of the variable name corresponding to the raster layer value in y}
 
-\item{xCrs}{EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\url{http://spatialreference.org}}}
+\item{xCrs}{EPSG number of the cordinate reference system (CRS) of the x coordinates, see \url{http://spatialreference.org}}
 
 \item{OutDf}{logical if true return a data.frame, if false, a sf object is returned}
 }

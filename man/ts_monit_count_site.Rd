@@ -18,7 +18,7 @@ ts_monit_count_site(m_season_visit, m_count, sp = 1,
 \item{DateFormat}{format used for the date in the count data, default="\%Y-\%m-\%d".}
 }
 \value{
-A data.table with a complete time-series where absences (0) and recorded counts for a specific species are implemented for each 
+A data.table with a complete time-series where absences (0) and recorded counts for a specific species are implemented for each
         site.
 }
 \description{
@@ -26,7 +26,7 @@ ts_monit_count_site
 Generate a full time series of observed count, for all sites and each day since a starting and ending years of the defined time-series
 }
 \seealso{
-\code{\link{ts_monit_site}}
+\link{ts_monit_site}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

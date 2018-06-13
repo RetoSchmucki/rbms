@@ -15,7 +15,7 @@ get_raster_value(x, yPath = "metzger_v3_europe", Classification = NULL,
 
 \item{Classification}{a data.frame with classification for the raster values}
 
-\item{xCrs}{EPSG number of the cordinate reference system (CRS) of the x coordinates, see \code{\url{http://spatialreference.org}}}
+\item{xCrs}{EPSG number of the cordinate reference system (CRS) of the x coordinates, see \url{http://spatialreference.org}}
 
 \item{BufferDist}{extent of the buffer to be added around the bounding box to insure, default set to 50 pixels of the raster}
 

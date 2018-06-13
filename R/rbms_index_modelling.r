@@ -16,16 +16,16 @@
 #' fit_gam
 #' fit a Generalized Additive Model to butterfly count data to extract the annual flight curve.
 #' @param dataset_y data.table with filtered butterfly counts for species x over year y over all sites.
-#' @param NbrSample integer inherited from \code{link{flight_curve}}, default=100.
-#' @param GamFamily string inherited from \code{link{flight_curve}}, default='poisson', but can be 'nb' or 'quasipoisson'.
-#' @param MaxTrial integer inherited from \code{link{flight_curve}}, default=3.
-#' @param SpeedGam Logical to use the \code{link[mgcv]{bam}} method instead of the \code{link[mgcv]{gam}} method.
+#' @param NbrSample integer inherited from \link{flight_curve}, default=100.
+#' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
+#' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
+#' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
-#' @param ... additional parameters passed to gam or bam function from the \code{link[mgcv]{gam}} package.
-#' @return A list with two object, i) a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
-#'         and ii) the resulting gam model \code{f_model} fitted on the count data.
+#' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
+#' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
+#'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model.
 #' @keywords gam
-#' @seealso \code{\link{flight_curve}}, \code{link[mgcv]{gam}}, \code{link[mgcv]{bam}}
+#' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export fit_gam
@@ -107,7 +107,7 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 
 #' flight_curve
 #' Compute the annual flight curve from butterfly count data collated across multiple sites.
-#' @param ts_season_count data.table with complete time series of count and season information returned by \code{\link{ts_monit_count_site}}
+#' @param ts_season_count data.table with complete time series of count and season information returned by \link{ts_monit_count_site}
 #' @param NbrSample integer setting the maximum number of site to use to compute the flight curve, default=100.
 #' @param MinVisit integer setting the minimum number of visit required for a site to included in the computation, default=3.
 #' @param MinOccur integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.
@@ -117,16 +117,16 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 #' @param GamFamily string setting the distribution of the error term in the GAM, default='poisson', but can be 'nb' or 'quasipoisson'.
 #' @param CompltSeason Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.
 #' @param SelectYear integer to select a specific year to compute the flight curve, default=NULL.
-#' @param SpeedGam Logical to use the \code{link[mgcv]{bam}} method instead of the \code{\link[mgcv]{gam}} method.
+#' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
 #' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}
-#' @param ... additional parameters passed to gam or bam function from the \code{\link[mgcv]{gam}} package.
-#' @return A list with two object, i) a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
-#'         and ii) a list of the resulting gam models \code{f_model} fitted on the count data for each year.
+#' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
+#' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
+#'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
 #' @keywords gam, flight curve
-#' @seealso \code{\link{fit_gam}}
-#' @seealso \code{\link[mgcv]{gam}}
-#' @seealso \code{\link[mgcv]{bam}}
+#' @seealso \link{fit_gam}
+#' @seealso \link[mgcv]{gam}
+#' @seealso \link[mgcv]{bam}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export flight_curve
@@ -216,13 +216,13 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
 
 #' check_pheno
-#' Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \code{\link{impute_count}}.
+#' Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
 #' @param sp_count_flight_y data.table with the flight curve, relative abundance (NM), for a specific year.
-#' @param sp_count_flight data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \code{\link{flight_curve}}.
+#' @param sp_count_flight data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.
 #' @return A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
 #'         phenology is available.
 #' @keywords flight curve
-#' @seealso \code{\link{impute_count}}, \code{\link{flight_curve}}
+#' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export check_pheno
@@ -264,16 +264,16 @@ check_pheno <- function(sp_count_flight_y, sp_count_flight){
 
 
 #' fit_glm
-#' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset. Function used in \code{\link{impute_count}}.
+#' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset. Function used in \link{impute_count}.
 #' @param sp_count_flight_y data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year of interest,
 #'        or the nearest available.
 #' @param non_zero vector of sites with non-zero value to be included in the model (see detail)
-#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, inherited from \code{\link{impute_count}}, default='quasipoisson'.
-#' @return A a list of objects, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
-#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) a glm object for the model \code{glm_obj_site}.
+#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, inherited from \link{impute_count}, default='quasipoisson'.
+#' @return A a list of objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**:a glm object for the model \code{glm_obj_site}.
 #' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
 #' @keywords flight curve
-#' @seealso \code{\link{impute_count}}, \code{\link{flight_curve}}
+#' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export fit_glm
@@ -309,15 +309,15 @@ fit_glm <- function(sp_count_flight_y, non_zero, FamilyGlm){
 
 #' fit_glm.nb
 #' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
-#' as implemented in the package \code{link[MASS]{glm.nb}}. Function used in \code{\link{impute_count}}.
+#' as implemented in the package link[MASS]{glm.nb}. Function used in \link{impute_count}.
 #' @param sp_count_flight_y data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year of interest,
 #'        or the nearest available.
 #' @param non_zero vector of sites with non-zero value to be included in the model (see detail)
-#' @return A a list of object, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
-#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) a glm object for the model \code{glm_obj_site}.
+#' @return A a list of two objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**: a glm object for the model \code{glm_obj_site}.
 #' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
 #' @keywords flight curve
-#' @seealso \code{\link{impute_count}}, \code{\link{flight_curve}}
+#' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export fit_glm.nb
@@ -350,16 +350,16 @@ fit_glm.nb <- function(sp_count_flight_y, non_zero){
 
 #' fit_speedglm
 #' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
-#' as implemented in the package \code{link[speedglm{speedglm}}. Function used in \code{\link{impute_count}}.
+#' as implemented in the package link[speedglm{speedglm}. Function used in \link{impute_count}.
 #' @param sp_count_flight_y data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year of interest,
 #'        or the nearest available.
 #' @param non_zero vector of sites with non-zero value to be included in the model (see detail).
-#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, inherited from \code{\link{impute_count}}, default='quasipoisson'.
-#' @return A a list of object, i) data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
-#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) a glm object for the model \code{glm_obj_site}.
+#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, inherited from \link{impute_count}, default='quasipoisson'.
+#' @return A a list of two objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**: a glm object for the model \code{glm_obj_site}.
 #' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
 #' @keywords flight curve
-#' @seealso \code{\link{impute_count}}, \code{\link{flight_curve}}
+#' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export fit_speedglm
@@ -390,19 +390,19 @@ fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
 
 #' impute_count
 #' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.
-#' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \code{\link{ts_monit_count_site}}.
-#' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for a specific species as returned by \code{\link{flight_curve}}.
+#' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
+#' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.
 #' @param FamilyGlm string for the distribution to be used for the error term in the GLM, default='quasipoisson'.
 #' @param CompltSeason logical to define if only years where a complete season is available should be modelled.
 #' @param SelectYear vector of specific years of interest, can be a single value (e.g. 2015).
-#' @param SpeedGlm logical defining if the speedglm method available in the package \code{link[speedglm{speedglm}} should be used
+#' @param SpeedGlm logical defining if the speedglm method available in the package \link[speedglm]{speedglm} should be used
 #' @param NearPheno Logical if flight curve from neirhest year should be used, if available within 5 years, default=TRUE
 #' @param KeepModel Logical to keep model output in a list object named \code{imp_glm_model}
-#' @return A a list of object, i) data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
-#'         a phenology is available \code{sp_ts_season_count} and ii) a glm object for the GLM model \code{glm_model}.
+#' @return A a list of one or two objects, i) **impute_count**: data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
+#'         a phenology is available \code{sp_ts_season_count} and ii) **model**: a glm object for the GLM model \code{glm_model}.
 #' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null.
 #' @keywords flight curve
-#' @seealso \code{\link{fit_glm}}, \code{\link{fit_speedglm}}, \code{\link{fit_glm.nb}}, \code{\link{flight_curve}}
+#' @seealso \link{fit_glm}, \link{fit_speedglm}, \link{fit_glm.nb}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export impute_count
@@ -460,6 +460,8 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             year_series <- ts_season_count[M_YEAR %in% SelectYear, unique(as.integer(M_YEAR))]
         }
 
+        i_glm_model <- list()
+
         for(y in year_series){
 
             sp_count_flight_y <-  data.table::copy(sp_count_flight[as.integer(M_YEAR) == y, ])
@@ -510,39 +512,34 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             }
 
             if(isTRUE(KeepModel)){
-                if ("i_glm_model" %in% ls()) {
                     glm_model <- list(sp_count_flight_l$glm_obj_site)
                     names(glm_model) <- paste0('glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
                     i_glm_model <- c(i_glm_model, glm_model)
-                } else {
-                    i_glm_model <- list(sp_count_flight_l$glm_obj_site)
-                    names(i_glm_model) <- paste0('glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
                 }
             }
+
+
+        if(!is.null(SelectYear)){
+            sp_ts_season_count <- sp_ts_season_count[M_YEAR %in% SelectYear, ]
+        } else {
+            sp_ts_season_count <- sp_ts_season_count
         }
+
 
         if(isTRUE(KeepModel)){
-            if (exists("impute_glm_model")) {
-                impute_glm_model <<- c(impute_glm_model,i_glm_model)
-            } else {
-                impute_glm_model <<- i_glm_model
-            }
+          return(list(impute_count = sp_ts_season_count, model = i_glm_model))
+        } else {
+          return(list(impute_count = sp_ts_season_count))
         }
-
-    if(!is.null(SelectYear)){
-        return(sp_ts_season_count=sp_ts_season_count[M_YEAR %in% SelectYear, ])
-    } else {
-        return(sp_ts_season_count=sp_ts_season_count)
-    }
 }
 
 
 #' butterfly_day
 #' count cumulative butterfly count observed over one monitoring season, including observed and imputed values.
-#' @param sp_ts_season_count data.table with observed and expected butterfly counts per day imputed for each sites based by \code{\link{impute_count}}.
+#' @param sp_ts_season_count data.table with observed and expected butterfly counts per day imputed for each sites based by \link{impute_count}.
 #' @return data.table with total butterfly day observed per species, year, and site.
 #' @keywords butterfly count
-#' @seealso \code{\link{impute_count}}, \code{\link{flight_curve}}
+#' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export butterfly_day

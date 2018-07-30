@@ -3,6 +3,7 @@ R --vanilla
 ## add a comment that is very important!
 
 if(!requireNamespace("devtools")) install.packages("devtools")
+if(!requireNamespace('curl')) install.packages('curl')
 devtools::install_github("RetoSchmucki/rbms", force=TRUE)
 library(rbms)
 
@@ -38,8 +39,10 @@ ts_season_count <- ts_monit_count_site(ts_season_visit, m_count, sp = 2)
 ## compute the flight curve, using the
 ## regionalGAM method
 ##=========================================
-system.time(ts_flight_curve <- flight_curve(ts_season_count, NbrSample = 200, MinVisit = 5, MinOccur = 3, MinNbrSite = 1,
-                            MaxTrial = 3, FcMethod = 'regionalGAM', GamFamily = 'quasipoisson', SpeedGam = FALSE, CompltSeason = TRUE))
+system.time(
+  ts_flight_curve <- flight_curve(ts_season_count, NbrSample = 200, MinVisit = 5, MinOccur = 3, MinNbrSite = 1,
+                            MaxTrial = 3, FcMethod = 'regionalGAM', GamFamily = 'nb', SpeedGam = FALSE, CompltSeason = TRUE)
+                            )
 
 
 ## 4.
@@ -47,11 +50,11 @@ system.time(ts_flight_curve <- flight_curve(ts_season_count, NbrSample = 200, Mi
 ##=========================================
 ts_flight_curve
 
-plot(ts_flight_curve[M_YEAR == 2000, trimDAYNO], ts_flight_curve[M_YEAR == 2000, NM], type = 'l',
-      ylim = c(0, max(ts_flight_curve[, NM])), xlab = 'Monitoring Year Day', ylab = 'Relative Abundance')
+plot(ts_flight_curve$pheno[M_YEAR == 2000, trimDAYNO], ts_flight_curve$pheno[M_YEAR == 2000, NM], type = 'l',
+      ylim = c(0, max(ts_flight_curve$pheno[, NM])), xlab = 'Monitoring Year Day', ylab = 'Relative Abundance')
 c <- 2
 for(y in 2001:2003){
-  points(ts_flight_curve[M_YEAR == y, trimDAYNO], ts_flight_curve[M_YEAR == y, NM], type = 'l', col = c)
+  points(ts_flight_curve$pheno[M_YEAR == y, trimDAYNO], ts_flight_curve$pheno[M_YEAR == y, NM], type = 'l', col = c)
   c <- c + 1
 }
 legend('topright', legend = c(2000:2003), col = c(seq_along(c(2000:2003))), lty = 1, bty = 'n')
@@ -60,8 +63,8 @@ legend('topright', legend = c(2000:2003), col = c(seq_along(c(2000:2003))), lty 
 ## 5.
 ## retrieve GAM models
 ##=========================================
-names(flight_curve_model)
-summary(flight_curve_model$FlightModel_2_2003)
+names(ts_flight_curve$model)
+summary(ts_flight_curve$model$FlightModel_2_2003)
 
 
 ## 6.

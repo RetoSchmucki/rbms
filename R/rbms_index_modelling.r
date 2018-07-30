@@ -144,9 +144,9 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             ts_season_count <- ts_season_count[COMPLT_SEASON == 1]
         }
 
-        if(exists("f_pheno")){
-            rm(f_pheno)
-        }
+        # if(exists("f_pheno")){
+        #     rm(f_pheno)
+        # }
 
         if(is.null(SelectYear)){
             year_series <- ts_season_count[, unique(as.integer(M_YEAR))]
@@ -157,6 +157,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         f_pheno <- data.table::data.table()
         f_data  <- data.table::data.table()
         f_model <- list()
+        
         for (y in year_series) {
 
             dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, SITE_ID, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON, COUNT, ANCHOR)]

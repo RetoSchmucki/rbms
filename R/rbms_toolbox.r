@@ -13,7 +13,7 @@
 ##==========================================
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(" Welcome to rbms, version 0.1.0 \n This package replaces the RegionalGAM package that is no longer maintained.")
+  packageStartupMessage(" Welcome to rbms, version 0.1.0 \n This package is still in its beta version and active development.")
 }
 
 

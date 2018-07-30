@@ -13,7 +13,6 @@ library(rbms)
 data(m_visit)
 data(m_count)
 
-
 raster::plot(metzger_v3_europe)
 rv <- raster::values(metzger_v3_europe)
 save(rv,file='rv.rds')

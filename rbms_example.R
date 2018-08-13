@@ -14,12 +14,12 @@ library(rbms)
 data(m_visit)
 data(m_count)
 
-raster::plot(metzger_v3_europe)
-rv <- raster::values(metzger_v3_europe)
-save(rv,file='rv.rds')
-nr <- metzger_v3_europe
-raster::values(nr) <- rv
-raster::plot(nr)
+# raster::plot(metzger_v3_europe)
+# rv <- raster::values(metzger_v3_europe)
+# save(rv,file='rv.rds')
+# nr <- metzger_v3_europe
+# raster::values(nr) <- rv
+# raster::plot(nr)
 
 ## 2.
 ## organize the data to cover the time
@@ -80,7 +80,7 @@ site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve$pheno, Speed
 ## site (e.g. 2) and one year (e.g 2003)
 ##==============================================
 
-impute_count <- site_year_sp_count$impute_count
+
 unique(site_year_sp_count[, SITE_ID])
 s <- 2
 y <- 2003
@@ -98,11 +98,11 @@ site_year_sp_count
 ## 8.
 ## retrieve GLM models
 ##==============================================
-names(impute_glm_model)
-summary(impute_glm_model$glm_mod_2_2003)
+names(site_year_sp_count$model)
+summary(site_year_sp_count$model$glm_mod_2_2003)
 
 
-x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
-x_value <- get_raster_value(x, OutDf = FALSE, PlotRaster = TRUE)
-get_bioclim(x_value)
-get_bioclim(x_value, OutDf = FALSE)
+# x <- data.frame(longitude = c(4, 4.1, 4.5), latitude = c(50, 50.45, 50.5), id = c('a','b','c'))
+# x_value <- get_raster_value(x, OutDf = FALSE, PlotRaster = TRUE)
+# get_bioclim(x_value)
+# get_bioclim(x_value, OutDf = FALSE)

@@ -72,7 +72,7 @@ summary(ts_flight_curve$model$FlightModel_2_2003)
 ## the flight curve computed with the
 ## regionalGAM method
 ##=========================================
-site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve, SpeedGlm = FALSE, FamilyGlm = 'quasipoisson')
+site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve$pheno, SpeedGlm = FALSE, FamilyGlm = 'quasipoisson')
 
 
 ## 7.

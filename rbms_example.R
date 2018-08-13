@@ -79,16 +79,18 @@ site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve$pheno, Speed
 ## plot the imputed and observed counts for one
 ## site (e.g. 2) and one year (e.g 2003)
 ##==============================================
+
+impute_count <- site_year_sp_count$impute_count
 unique(site_year_sp_count[, SITE_ID])
 s <- 2
 y <- 2003
 
-plot(site_year_sp_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count[SITE_ID == s & M_YEAR == y, FITTED],
-    ylim=c(0, max(site_year_sp_count[SITE_ID == s & M_YEAR == y, COUNT_IMPUTED])),
+plot(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, FITTED],
+    ylim=c(0, max(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, COUNT_IMPUTED])),
     col = 'blue', type='l',
     main = paste0('Site ', s, ', Season ', y),
     xlab='Monitoring Month', ylab='Fitted Count')
-points(site_year_sp_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count[SITE_ID == s & M_YEAR == y, COUNT],
+points(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, COUNT],
        col='red')
 
 

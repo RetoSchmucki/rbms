@@ -26,10 +26,9 @@ devtools::install_github("RetoSchmucki/rbms")
 
 > LINUX note:
 > You might have to install to following library to install the `sf package`.
-
-```
-sudo apt-get install libudunits2-dev
-```
+>```
+>sudo apt-get install libudunits2-dev
+>```
 
 #### Usage example
 ##### 1. load package and data included in the package

@@ -54,7 +54,7 @@ ts_season <- ts_monit_season(ts_date, StartMonth = 4, EndMonth = 9, StartDay = 1
                       CompltSeason = TRUE, Anchor = TRUE, AnchorLength = 7, AnchorLag = 7)
 ```
 
-Now that you have defined you monitoring season for the period of interest, you can add your data, starting with the visit date to inform about the sites and the visits
+Now that you have defined the monitoring season for the period of interest, you can add your data, starting with the visit date to inform about the sites and the visits
 
 ```r
 ts_season_visit <- ts_monit_site(m_visit, ts_season)

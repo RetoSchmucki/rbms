@@ -118,7 +118,7 @@ points(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_y
        col='red')
 ```
 
-##### 4. Compute annual site indices
+##### 5. Compute annual site indices
 
 There is no function implemented yet, but you can count the total of weekly butterfly count for each year and site, using one count a week during the defined monitoring period (e.g. Thursday - WEEK_DAY 4).
 

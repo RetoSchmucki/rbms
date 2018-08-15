@@ -118,4 +118,17 @@ points(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_y
        col='red')
 ```
 
+##### 4. Compute annual site indices
+
+There is no function implemented yet, but you can count the total of weekly butterfly count for each year and site, using one count a week during the defined monitoring period (e.g. Thursday - WEEK_DAY 4).
+
+```r
+week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)]
+site_total_week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
+data.frame(site_total_week_count)
+
+plot(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], type='l')
+points(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], col = 'red')
+```
+
 For reporting errors and issues related to this package and its functions, please open a [issue here](https://github.com/RetoSchmucki/rbms/issues)

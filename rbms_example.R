@@ -93,9 +93,20 @@ plot(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_yea
 points(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, COUNT],
        col='red')
 
-
-site_year_sp_count
 ## 8.
+## compute annual site indices
+## using the fitted count for the fourth day in the week.
+##========================================================
+
+week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)]
+site_total_week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
+data.frame(site_total_week_count)
+
+plot(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], type='l')
+points(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], col = 'red')
+
+
+## 9.
 ## retrieve GLM models
 ##==============================================
 names(site_year_sp_count$model)

@@ -536,8 +536,9 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
 
 
 #' butterfly_day
-#' count cumulative butterfly count observed over one monitoring season, including observed and imputed values.
-#' @param sp_ts_season_count data.table with observed and expected butterfly counts per day imputed for each sites based by \link{impute_count}.
+#' count cumulative butterfly count observed over one monitoring season.
+#' @param sp_ts_season_count list of objects, including a data.table with observed and expected butterfly counts per day imputed for each sites based by \link{impute_count}.
+#' @param WeekCount logical defining if butterfly day should be counted by week (default), using the 4th day of the week, or as a total of predicted daily counts.
 #' @return data.table with total butterfly day observed per species, year, and site.
 #' @keywords butterfly count
 #' @seealso \link{impute_count}, \link{flight_curve}
@@ -546,10 +547,14 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
 #' @export butterfly_day
 #'
 
-butterfly_day <- function(sp_ts_season_count){
-
-            b_day <- sp_ts_season_count[,sum(COUNT_IMPUTED),by=.(SPECIES,M_YEAR,SITE_ID)]
+butterfly_day <- function(sp_ts_season_count, WeekCount = TRUE){
+            if (WeekCount == TRUE){
+                b_day <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
+            } else {
+                b_day <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
+            }
+            
             data.table::setnames(b_day,"V1","BUTTERFLY_DAY")
-
+            
         return(b_day)
     }

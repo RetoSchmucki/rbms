@@ -4,7 +4,7 @@ R --vanilla
 
 if(!requireNamespace("devtools")) install.packages("devtools")
 if(!requireNamespace('curl')) install.packages('curl')
-devtools::install_github("RetoSchmucki/rbms", force=TRUE)
+devtools::install_github("RetoSchmucki/rbms", force = TRUE)
 library(rbms)
 
 

@@ -97,7 +97,7 @@ Using the shape of the flight curve computed in 3, you can now impute expected c
 This is done with the impute_count function, using the count data (ts_season_count) and the calculated flight curve (ts_flight_curve$pheno).
 
 ```r
-site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve$pheno, SpeedGlm = FALSE, FamilyGlm = 'quasipoisson')
+site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve$pheno, FamilyGlm = 'quasipoisson')
 ```
 
 The output is again a list of object, including the imputed counts and the model used. To access and visualize the imputed data, you can

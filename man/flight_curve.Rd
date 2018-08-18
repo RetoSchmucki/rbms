@@ -34,9 +34,11 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2,
 
 \item{SpeedGam}{Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.}
 
-\item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset}
+\item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset.}
 
-\item{KeepModel}{Logical to keep model output in a list object named \code{flight_curve_model}}
+\item{KeepModel}{Logical to keep model output in a list object named \code{flight_curve_model}.}
+
+\item{KeepModelData}{Logical to keep the data used for the GAM.}
 
 \item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }

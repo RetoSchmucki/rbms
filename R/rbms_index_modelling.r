@@ -118,8 +118,9 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 #' @param CompltSeason Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.
 #' @param SelectYear integer to select a specific year to compute the flight curve, default=NULL.
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
-#' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
-#' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}
+#' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset.
+#' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}.
+#' @param KeepModelData Logical to keep the data used for the GAM.
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.

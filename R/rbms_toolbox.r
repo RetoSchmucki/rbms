@@ -23,6 +23,7 @@
 #' @param project_home path to where the project folder structure to be built, default is the current working directory
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @export initiate_project
+#'
 
 initiate_project <- function(project_name, project_home = NULL){
 
@@ -68,6 +69,7 @@ initiate_project <- function(project_name, project_home = NULL){
 #' @return If package is not installed, the function ask to install the package.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @export check_package
+#'
 
 check_package <- function(pkgName=NULL, message1='you need to install the package ',message2='This version requires '){
         if (!requireNamespace(pkgName)) {
@@ -91,9 +93,6 @@ check_package <- function(pkgName=NULL, message1='you need to install the packag
 #' missing column name and stops.
 #' @details This function is not case sensitive, but it does not accept different names or spelling.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @examples
-#' DF <- data.frame(DAY=c(1:5),MONTH=rep(month.name[2],5),YEAR=rep(format(Sys.Date(),'%Y'),5))
-#' check_names(DF,c('DAY','month','Years'))
 #' @export check_names
 #'
 

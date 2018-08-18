@@ -23,10 +23,6 @@ Verify for the required column names in the data
 \details{
 This function is not case sensitive, but it does not accept different names or spelling.
 }
-\examples{
-DF <- data.frame(DAY=c(1:5),MONTH=rep(month.name[2],5),YEAR=rep(format(Sys.Date(),'\%Y'),5))
-check_names(DF,c('DAY','month','Years'))
-}
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
 }

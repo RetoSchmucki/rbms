@@ -120,15 +120,64 @@ points(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_y
 
 ##### 5. Compute annual site indices
 
-There is no function implemented yet, but you can count the total of weekly butterfly count for each year and site, using one count a week during the defined monitoring period (e.g. Thursday - WEEK_DAY 4).
+The butterfly_day function compute the sum of weekly butterfly count, using the predicted count for every mid-week (day 4 - Thursday). The total annual count can also be computed by settign the WeekCount = FALSE, this result in using all daily count over the season. total re is no function implemented yet, but you can count the total of weekly butterfly count for each year and site, using one count a week during the defined monitoring period (e.g. Thursday - WEEK_DAY 4).
 
 ```r
-week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)]
-site_total_week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
-data.frame(site_total_week_count)
-
-plot(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], type='l')
-points(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], col = 'red')
+b_index <- butterfly_day(site_year_sp_count, WeekCount = TRUE)
 ```
+
+> This is how the total weekly butterfly count is computed this way (e.g. Thursday - WEEK_DAY 4).
+>```r
+> week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)]
+> site_total_week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
+> data.frame(site_total_week_count)
+> plot(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], type='l')
+> points(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], col = 'red')
+>```
+
+##### 6. Compute general trend using a collated index
+
+> NOTE: this is just an example, you can also use the function available in the R package rtrim
+
+```r
+library(nlme)
+library(MASS)
+b_index_df <- data.frame(b_index)
+# compute collated annual indices
+glmm.mod_fullyear <- glmmPQL(BUTTERFLY_DAY ~ as.factor(M_YEAR) - 1, data = b_index_df , family = quasipoisson, random = ~1|SITE_ID,
+                          correlation = corAR1(form =~ as.numeric(M_YEAR)|SITE_ID), verbose = FALSE)
+summary(glmm.mod_fullyear)
+
+# extract collated index and plot against years
+col.index <- as.numeric(glmm.mod_fullyear$coefficients$fixed)
+year <- unique(b_index_df$M_YEAR)
+plot(year, col.index, type = 'o', xlab = "year", ylab = "collated index")
+```
+
+From the collated indices, you can now compute a temporal trend for that species in this region. Here we first use a simple linear model and explore for temporal autocorrelation that we will account in our final model.
+
+```r
+# model temporal trend with a simple linear regression
+mod1 <- gls(col.index ~ as.numeric(year))
+summary(mod1)
+
+# check for temporal autocorrelation in the residuals
+acf(residuals(mod1, type = "normalized"))
+
+# adjust the model to account for autocorrelation in the residuals
+mod2 <- gls(col.index ~ as.numeric(year), correlation = corARMA(p = 2))
+summary(mod2)
+
+# check for remaining autocorrelation in the residuals
+acf(residuals(mod2, type = "normalized"))
+
+# plot abundance with trend line
+plot(year, col.index, type='o', xlab = "year", ylab = "collated index")
+abline(mod1, lty = 2, col = "red")
+abline(mod2, lty = 2, col = "blue")
+```
+
+
+##### Reporting Issues
 
 For reporting errors and issues related to this package and its functions, please open a [issue here](https://github.com/RetoSchmucki/rbms/issues)

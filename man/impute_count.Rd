@@ -6,8 +6,8 @@
 Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.}
 \usage{
 impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
-  CompltSeason = TRUE, SelectYear = NULL, SpeedGlm = FALSE,
-  KeepModel = TRUE, NearPheno = TRUE)
+  CompltSeason = TRUE, SelectYear = NULL, KeepModel = TRUE,
+  NearPheno = TRUE)
 }
 \arguments{
 \item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}
@@ -19,8 +19,6 @@ impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
 \item{CompltSeason}{logical to define if only years where a complete season is available should be modelled.}
 
 \item{SelectYear}{vector of specific years of interest, can be a single value (e.g. 2015).}
-
-\item{SpeedGlm}{logical defining if the speedglm method available in the package \link[speedglm]{speedglm} should be used}
 
 \item{KeepModel}{Logical to keep model output in a list object named \code{imp_glm_model}}
 
@@ -38,7 +36,7 @@ Fit a Generalized Linear Model (GLM) to predict daily count per site, using the 
 GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null.
 }
 \seealso{
-\link{fit_glm}, \link{fit_speedglm}, \link{fit_glm.nb}, \link{flight_curve}
+\link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

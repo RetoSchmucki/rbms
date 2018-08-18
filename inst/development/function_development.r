@@ -195,3 +195,45 @@ get_bioclim <- function(x, y = 'metzger_v3_class', byY = 'gens_seq', xCrs = 4326
     return(x_bioclim)
 
 }
+
+
+
+
+#' fit_speedglm
+#' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
+#' as implemented in the package link[speedglm{speedglm}. Function used in \link{impute_count}.
+#' @param sp_count_flight_y data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year of interest,
+#'        or the nearest available.
+#' @param non_zero vector of sites with non-zero value to be included in the model (see detail).
+#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, inherited from \link{impute_count}, default='quasipoisson'.
+#' @return A a list of two objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**: a glm object for the model \code{glm_obj_site}.
+#' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
+#' @keywords flight curve
+#' @seealso \link{impute_count}, \link{flight_curve}
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @import data.table
+#' @export fit_speedglm
+#'
+
+fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
+
+            if(sp_count_flight_y[SITE_ID %in% non_zero,uniqueN(SITE_ID)] > 1){
+                glm_obj_site <- try(speedglm::speedglm(COUNT ~ factor(SITE_ID) + offset(log(NM)) -1, data=sp_count_flight_y[SITE_ID %in% non_zero, ],
+                family=FamilyGlm, control=list(maxit=100)), silent=TRUE)
+            } else {
+                glm_obj_site <- try(speedglm::speedglm(COUNT ~ offset(log(NM)) -1, data=sp_count_flight_y[SITE_ID %in% non_zero, ],
+                family=FamilyGlm, control=list(maxit=100)), silent=TRUE)
+            }
+
+            if (class(glm_obj_site)[1] == "try-error") {
+                sp_count_flight_y[SITE_ID %in% non_zero, c("FITTED", "COUNT_IMPUTED") := .(NA, NA)]
+                print(paste("Computation of abundance indices for year", sp_count_flight_y[1, M_YEAR, ], "failed with the RegionalGAM, verify the data you provided for that year"))
+            }else{
+                sp_count_flight_y[SITE_ID %in% non_zero, FITTED := predict(glm_obj_site, newdata=sp_count_flight_y[SITE_ID %in% non_zero, ], type="response")]
+            }
+
+            sp_count_flight_mod_y <- list(sp_count_flight_y = sp_count_flight_y, glm_obj_site = glm_obj_site)
+
+        return(sp_count_flight_mod_y)
+    }

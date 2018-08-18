@@ -9,5 +9,6 @@ License: MIT + file LICENSE.md
 LazyData: true
 Imports:
 	mgcv,
-	data.table
+	data.table,
+	MASS
 RoxygenNote: 6.0.1

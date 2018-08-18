@@ -349,46 +349,6 @@ fit_glm.nb <- function(sp_count_flight_y, non_zero){
     }
 
 
-#' fit_speedglm
-#' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
-#' as implemented in the package link[speedglm{speedglm}. Function used in \link{impute_count}.
-#' @param sp_count_flight_y data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year of interest,
-#'        or the nearest available.
-#' @param non_zero vector of sites with non-zero value to be included in the model (see detail).
-#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, inherited from \link{impute_count}, default='quasipoisson'.
-#' @return A a list of two objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
-#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**: a glm object for the model \code{glm_obj_site}.
-#' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
-#' @keywords flight curve
-#' @seealso \link{impute_count}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @import data.table
-#' @export fit_speedglm
-#'
-
-fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
-
-            if(sp_count_flight_y[SITE_ID %in% non_zero,uniqueN(SITE_ID)] > 1){
-                glm_obj_site <- try(speedglm::speedglm(COUNT ~ factor(SITE_ID) + offset(log(NM)) -1, data=sp_count_flight_y[SITE_ID %in% non_zero, ],
-                family=FamilyGlm, control=list(maxit=100)), silent=TRUE)
-            } else {
-                glm_obj_site <- try(speedglm::speedglm(COUNT ~ offset(log(NM)) -1, data=sp_count_flight_y[SITE_ID %in% non_zero, ],
-                family=FamilyGlm, control=list(maxit=100)), silent=TRUE)
-            }
-
-            if (class(glm_obj_site)[1] == "try-error") {
-                sp_count_flight_y[SITE_ID %in% non_zero, c("FITTED", "COUNT_IMPUTED") := .(NA, NA)]
-                print(paste("Computation of abundance indices for year", sp_count_flight_y[1, M_YEAR, ], "failed with the RegionalGAM, verify the data you provided for that year"))
-            }else{
-                sp_count_flight_y[SITE_ID %in% non_zero, FITTED := predict(glm_obj_site, newdata=sp_count_flight_y[SITE_ID %in% non_zero, ], type="response")]
-            }
-
-            sp_count_flight_mod_y <- list(sp_count_flight_y = sp_count_flight_y, glm_obj_site = glm_obj_site)
-
-        return(sp_count_flight_mod_y)
-    }
-
-
 #' impute_count
 #' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.
 #' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
@@ -396,21 +356,20 @@ fit_speedglm <- function(sp_count_flight_y, non_zero, FamilyGlm){
 #' @param FamilyGlm string for the distribution to be used for the error term in the GLM, default='quasipoisson'.
 #' @param CompltSeason logical to define if only years where a complete season is available should be modelled.
 #' @param SelectYear vector of specific years of interest, can be a single value (e.g. 2015).
-#' @param SpeedGlm logical defining if the speedglm method available in the package \link[speedglm]{speedglm} should be used
 #' @param NearPheno Logical if flight curve from neirhest year should be used, if available within 5 years, default=TRUE
 #' @param KeepModel Logical to keep model output in a list object named \code{imp_glm_model}
 #' @return A a list of one or two objects, i) **impute_count**: data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
 #'         a phenology is available \code{sp_ts_season_count} and ii) **model**: a glm object for the GLM model \code{glm_model}.
 #' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null.
 #' @keywords flight curve
-#' @seealso \link{fit_glm}, \link{fit_speedglm}, \link{fit_glm.nb}, \link{flight_curve}
+#' @seealso \link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export impute_count
 #'
 
 impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(), CompltSeason = TRUE,
-                                    SelectYear = NULL, SpeedGlm = FALSE, KeepModel = TRUE, NearPheno = TRUE) {
+                                    SelectYear = NULL, KeepModel = TRUE, NearPheno = TRUE) {
 
         if(ts_season_count$SPECIES[1] != ts_flight_curve$SPECIES[1]){
             stop('Species in count data and flight curve must be the same!')
@@ -420,14 +379,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             stop('Negative binomial distribution for GLM is not resolved, please use quasipoisson distribution instead')
         }
 
-        if(isTRUE(SpeedGlm)){
-            stop('speedGlm method is not resolved, please use standard GLM instead')
-        }
-
         check_package('data.table')
-        if(isTRUE(SpeedGlm)){
-            check_package('speedglm')
-        }
 
         if(isTRUE(CompltSeason)){
             ts_season_count <- ts_season_count[COMPLT_SEASON==1]
@@ -441,18 +393,8 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
 
         glmMet <- "glm()"
 
-        if(isTRUE(SpeedGlm)){
-            glmMet <- "speedglm()"
-        }
-
         if( FamilyGlm[1]=='nb'){
             glmMet <- "glm.nb()"
-        }
-
-        if( FamilyGlm[1]=='nb' & isTRUE(SpeedGlm)){
-            glmMet <- "glm.nb()"
-            SpeedGlm <- FALSE
-            cat('SpeedGlm is not implemented with Negative Binomial, we will use glm.nb() from the MASS package instead /n')
         }
 
         if(is.null(SelectYear)){
@@ -484,14 +426,10 @@ impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipois
             zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 == 0, SITE_ID]
 
             if(length(non_zero) >= 1 & sp_count_flight_y[is.na(NM) & trimDAYNO != 366, .N] == 0){
-                if(isTRUE(SpeedGlm)){
-                    sp_count_flight_l <- fit_speedglm(sp_count_flight_y, non_zero, FamilyGlm)
+                if(FamilyGlm[1] == 'nb'){
+                    sp_count_flight_l <- fit_glm.nb(sp_count_flight_y, non_zero)
                 } else {
-                    if(FamilyGlm[1] == 'nb'){
-                        sp_count_flight_l <- fit_glm.nb(sp_count_flight_y, non_zero)
-                    } else {
-                        sp_count_flight_l <- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)
-                    }
+                    sp_count_flight_l <- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)
                 }
             } else {
                sp_count_flight_l <- list(sp_count_flight_y = sp_count_flight_y,

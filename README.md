@@ -16,7 +16,7 @@ Schmucki R., Pe’er G., Roy D.B., Stefanescu C., Van Swaay C.A.M., Oliver T.H.,
 
 #### Installation
 
-To install this package from GitHub, you will fist need to install the package `devtools` that is available from CRAN. From there, simply use the the function `install_github()` to install the `rbms` package on your system. Note that this package was build with R 3.4.2, so you might have to update your R installation. If you are unable to install this package, you might consider sourcing the R script that can be found here: [rbms source code] (https://github.com/RetoSchmucki/rbms/blob/master/R/)
+To install this package from GitHub, you will first need to install the package `devtools` that is available from CRAN. From there, simply use the the function `install_github()` to install the `rbms` package on your system. Note that this package was build with R 3.4.2, so you might have to update your R installation. If you are unable to install this package, you might consider sourcing the R script that can be found here: [rbms source code] (https://github.com/RetoSchmucki/rbms/blob/master/R/)
 
 ```R
 if(!requireNamespace("devtools")) install.packages("devtools")

@@ -5,7 +5,8 @@
 \title{check_package
 Internal function to verified the required package is installed}
 \usage{
-check_package(pkgName = NULL, message1 = "you need to install the package ",
+check_package(pkgName = NULL,
+  message1 = "you need to install the package ",
   message2 = "This version requires ")
 }
 \arguments{

@@ -5,9 +5,9 @@
 \title{impute_count
 Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.}
 \usage{
-impute_count(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(),
-  CompltSeason = TRUE, SelectYear = NULL, KeepModel = TRUE,
-  NearPheno = TRUE)
+impute_count(ts_season_count, ts_flight_curve,
+  FamilyGlm = quasipoisson(), CompltSeason = TRUE, SelectYear = NULL,
+  KeepModel = TRUE, NearPheno = TRUE)
 }
 \arguments{
 \item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}

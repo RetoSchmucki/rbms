@@ -6,8 +6,8 @@
 Build a time-series of dates with specific detail about the monitoring season}
 \usage{
 ts_monit_season(d_series, StartMonth = 4, EndMonth = 9, StartDay = 1,
-  EndDay = NULL, CompltSeason = TRUE, Anchor = TRUE, AnchorLength = 7,
-  AnchorLag = 7)
+  EndDay = NULL, CompltSeason = TRUE, Anchor = TRUE,
+  AnchorLength = 7, AnchorLag = 7)
 }
 \arguments{
 \item{d_series}{time series of dates returned by \link{ts_dwmy_table}}

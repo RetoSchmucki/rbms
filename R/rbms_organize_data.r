@@ -17,7 +17,7 @@
 #' @param InitYear start year of the time-series, 4 numbers format (e.g 1987)
 #' @param LastYear end year of the time-series, if not provided, current year is used instead
 #' @param WeekDay1 to start the week on monday, use 'monday', otherwise the week start on sunday
-#' @return a data.table object with the date, the day since the first date, the year, the month,
+#' @return a data.table object with the date, the day since the first date, the week since the first week, the year, the month,
 #'          the day in the month, the ISO week number and the day in the week.
 #' @keywords time series
 #' @seealso \link{ts_date_seq}, \link[data.table]{IDate}
@@ -37,6 +37,10 @@ ts_dwmy_table = function(InitYear=1970, LastYear=format(Sys.Date(), "%Y"), WeekD
             w <- c(1:7)
         }
 
+        w_s <- c(1, diff(data.table::isoweek(date_seq)))
+        w_s[w_s < 0] <- 1
+        w_s <- cumsum(w_s)
+
         dt_iso_dwmy <- data.table::data.table(
                         DATE = data.table::as.IDate(date_seq),
                         DAY_SINCE = seq_along(date_seq),
@@ -44,6 +48,7 @@ ts_dwmy_table = function(InitYear=1970, LastYear=format(Sys.Date(), "%Y"), WeekD
                         MONTH = data.table::month(date_seq),
                         DAY = data.table::mday(date_seq),
                         WEEK = data.table::isoweek(date_seq),
+                        WEEK_SINCE = w_s,
                         WEEK_DAY = w[data.table::wday(date_seq)])
 
         return(dt_iso_dwmy)

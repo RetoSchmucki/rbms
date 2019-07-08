@@ -21,6 +21,7 @@
 #' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
+#' @param Week Logical to define week as variable for the GAM, instead of day.
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model.
@@ -32,7 +33,7 @@
 #'
 
 fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
-                    SpeedGam = TRUE, OptiGam = TRUE, ...){
+                    SpeedGam = TRUE, OptiGam = TRUE, Week = FALSE, ...){
 
         check_package('data.table')
 
@@ -61,21 +62,42 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
             print(paste("Fitting the RegionalGAM for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
                         sp_data_all[, uniqueN(SITE_ID)], "sites, using", gamMethod, ":", Sys.time(), "-> trial", tr))
 
-            if(isTRUE(SpeedGam)){
+            if(isTRUE(Week)){
+
+              if(isTRUE(SpeedGam)){
+                  if(length(sp_data_all[, unique(SITE_ID)]) > 1){
+                      week_data <- unique(sp_data_all[, .(COUNT, trimWEEKNO, SITE_ID)][, max(COUNT, na.rm = TRUE), by = .(trimWEEKNO, SITE_ID)])
+                      gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimWEEKNO, bs = "cr") + as.factor(SITE_ID), data=week_data, family=GamFamily, ...), silent = TRUE)
+                  } else {
+                      week_data <- unique(sp_data_all[, .(COUNT, trimWEEKNO)][, max(COUNT, na.rm = TRUE), by = .(trimWEEKNO)])
+                      gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimWEEKNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
+                  }
+              } else {
+                  if(length(sp_data_all[, unique(SITE_ID)]) > 1){
+                      gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimWEEKNO, bs = "cr") + as.factor(SITE_ID), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
+                  } else {
+                      gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimWEEKNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
+                  }
+              }
+
+           } else {
+
+             if(isTRUE(SpeedGam)){
                 if(length(sp_data_all[, unique(SITE_ID)]) > 1){
                     gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr") + as.factor(SITE_ID), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
                 } else {
                     gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
                 }
-            } else {
+             } else {
                 if(length(sp_data_all[, unique(SITE_ID)]) > 1){
                     gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimDAYNO, bs = "cr") + as.factor(SITE_ID), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
                 } else {
                     gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimDAYNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
                 }
-            }
+             }
+           }
 
-            tr <- tr + 1
+          tr <- tr + 1
 
         }
 
@@ -84,9 +106,13 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
                     "; Model did not converge after", tr, "trials"))
             sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
         } else {
+          if(isTRUE(Week)){
+            sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = sp_data_all[, c("trimWEEKNO", "SITE_ID")], type = "response")]
+            sp_data_all[M_SEASON == 0L, FITTED := 0]
+          } else {
             sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = sp_data_all[, c("trimDAYNO", "SITE_ID")], type = "response")]
             sp_data_all[M_SEASON == 0L, FITTED := 0]
-
+          }
             if(sum(is.infinite(sp_data_all[, FITTED])) > 0){
                 sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
             } else {
@@ -95,7 +121,7 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
             }
         }
 
-        f_curve <- sp_data_all[, .(SPECIES, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON, trimDAYNO,NM)]
+        f_curve <- sp_data_all[, .(SPECIES, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON, trimDAYNO, trimWEEKNO, NM)]
         data.table::setkey(f_curve)
         f_curve <- unique(f_curve)
 
@@ -121,6 +147,7 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset.
 #' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}.
 #' @param KeepModelData Logical to keep the data used for the GAM.
+#' @param Week Logical to define week as variable for the GAM, instead of day.
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
@@ -134,12 +161,13 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
 #'
 
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3, FcMethod = 'regionalGAM',
-                            GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, ...) {
+                            GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE,
+                            Week = FALSE, ...) {
 
         check_package('data.table')
 
         names(ts_season_count) <- toupper(names(ts_season_count))
-        check_names(ts_season_count,c("COMPLT_SEASON", "M_YEAR", "SITE_ID", "SPECIES", "DATE", "WEEK", "WEEK_DAY", "DAY_SINCE", "M_SEASON", "COUNT", "ANCHOR"))
+        check_names(ts_season_count, c("COMPLT_SEASON", "M_YEAR", "SITE_ID", "SPECIES", "DATE", "WEEK", "WEEK_DAY", "DAY_SINCE", "WEEK_SINCE", "M_SEASON", "COUNT", "ANCHOR"))
 
         if(isTRUE(CompltSeason)){
             ts_season_count <- ts_season_count[COMPLT_SEASON == 1]
@@ -158,19 +186,21 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         f_pheno <- data.table::data.table()
         f_data  <- data.table::data.table()
         f_model <- list()
-        
+
         for (y in year_series) {
 
-            dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, SITE_ID, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON, COUNT, ANCHOR)]
+            dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, SITE_ID, DATE, WEEK, WEEK_DAY, DAY_SINCE, WEEK_SINCE, M_YEAR, M_SEASON, COUNT, ANCHOR)]
             dataset_y[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1]
+            dataset_y[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1]
 
             ## filter for site with at least x visits and x occurrences
             visit_occ_site <- merge(dataset_y[!is.na(COUNT) & ANCHOR == 0L, .N, by=SITE_ID], dataset_y[!is.na(COUNT) & ANCHOR == 0L & COUNT > 0, .N, by=SITE_ID], by="SITE_ID", all=TRUE)
             dataset_y <- data.table::copy(dataset_y[SITE_ID %in% visit_occ_site[N.x >= MinVisit & N.y >= MinOccur, SITE_ID],])
 
             if(dataset_y[,uniqueN(SITE_ID)] < MinNbrSite){
-                dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON)]
+                dataset_y <- ts_season_count[as.integer(M_YEAR) == y, .(SPECIES, DATE, WEEK, WEEK_DAY, DAY_SINCE, WEEK_SINCE, M_YEAR, M_SEASON)]
                 dataset_y[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1]
+                dataset_y[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1]
                 f_curve <- dataset_y[, NM := NA]
                 data.table::setkey(f_curve, SPECIES, DAY_SINCE)
                 f_curve <- unique(f_curve)
@@ -179,7 +209,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             } else {
                 if(FcMethod=='regionalGAM'){
                     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
-                                            SpeedGam = SpeedGam, OptiGam = OptiGam, KeepModel = KeepModel, ...)
+                                            SpeedGam = SpeedGam, OptiGam = OptiGam, KeepModel = KeepModel, Week = Week, ...)
                 } else {
                     print("ONLY the regionalGAM method is available so far!")
                 }
@@ -493,8 +523,8 @@ butterfly_day <- function(sp_ts_season_count, WeekCount = TRUE){
             } else {
                 b_day <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
             }
-            
+
             data.table::setnames(b_day,"V1","BUTTERFLY_DAY")
-            
+
         return(b_day)
     }

@@ -33,7 +33,7 @@ ts_dwmy_table = function(InitYear=1970, LastYear=format(Sys.Date(), "%Y"), WeekD
 
         if(WeekDay1=='monday'){
             w <- c(7,1:6)
-        }else{
+        } else {
             w <- c(1:7)
         }
 
@@ -63,22 +63,34 @@ ts_dwmy_table = function(InitYear=1970, LastYear=format(Sys.Date(), "%Y"), WeekD
 #' @param LastObs integer defining the end of the monitoring season - correspond to the day since
 #' @param AnchorLength integer defining the number of days used as Anchor each side of the monitoring season
 #' @param AnchorLag integer defining the number of days between the Anchor and the monitoring season
+#' @param TimeUnit character defining the time unit used for the Anchor, can be 'd' for day or 'w' for week
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export set_anchor
 #'
 
-set_anchor <- function(FirstObs,LastObs,AnchorLength=7,AnchorLag=7){
+set_anchor <- function(FirstObs, LastObs, AnchorLength=7, AnchorLag=7, TimeUnit='d'){
 
-        x <- FirstObs$V1-(AnchorLength+AnchorLag)
-        y <- FirstObs$V1-(AnchorLag+1)
-        before_anchor <- c(apply(as.matrix(cbind(x,y)),1,function(w) w[1]:w[2]))
+        if(TimeUnit == 'd'){
+          x <- FirstObs$V1 - (AnchorLength + AnchorLag)
+          y <- FirstObs$V1 - (AnchorLag + 1)
+          before_anchor <- c(apply(as.matrix(cbind(x, y)), 1, function(w) w[1]:w[2]))
 
-        x <- LastObs$V1+(AnchorLength+AnchorLag)
-        y <- LastObs$V1+(AnchorLag+1)
-        after_anchor <- c(apply(as.matrix(cbind(x,y)),1,function(w) w[2]:w[1]))
+          x <- LastObs$V1 + (AnchorLength + AnchorLag)
+          y <- LastObs$V1 + (AnchorLag + 1)
+          after_anchor <- c(apply(as.matrix(cbind(x, y)), 1,function(w) w[2]:w[1]))
+        }
 
-        anchor_day <- c(before_anchor,after_anchor)
+        if(TimeUnit == 'w'){
+          x <- FirstObs$V1 - (AnchorLength * 7 + AnchorLag * 7)
+          y <- FirstObs$V1 - (AnchorLag * 7 + 1)
+          before_anchor <- c(apply(as.matrix(cbind(x, y)), 1, function(w) w[1]:w[2]))
+
+          x <- LastObs$V1 + (AnchorLength * 7 + AnchorLag * 7)
+          y <- LastObs$V1 + (AnchorLag * 7 + 1)
+          after_anchor <- c(apply(as.matrix(cbind(x, y)), 1,function(w) w[2]:w[1]))
+        }
+        anchor_day <- c(before_anchor, after_anchor)
 
         return(anchor_day)
 
@@ -96,6 +108,7 @@ set_anchor <- function(FirstObs,LastObs,AnchorLength=7,AnchorLag=7){
 #' @param Anchor logical if Anchor should be used at the beginning and end of the monitoring season, default=TRUE
 #' @param AnchorLength integer for the number of day used as Anchor, default=7
 #' @param AnchorLag integer for the number of days before and after where the Anchor should start, default=TRUE
+#' @param TimeUnit character defining the time unit used for the Anchor, can be 'd' for day or 'w' for week
 #' @return A data.table with the entire time-series of date (\code{DATE}, \code{DAY_SINCE}, \code{YEAR}, \code{MONTH},
 #'         \code{DAY}, \code{WEEK} (ISO), the \code{WEEK_DAY}, and details about the Monitoring Year (\code{M_YEAR}) which
 #'         is the monitoring year to which that date refers to, using the year of the starting month of the monitoring season,
@@ -112,7 +125,7 @@ set_anchor <- function(FirstObs,LastObs,AnchorLength=7,AnchorLag=7){
 #'
 
 ts_monit_season = function(d_series, StartMonth=4, EndMonth=9, StartDay=1, EndDay=NULL, CompltSeason=TRUE,
-                            Anchor=TRUE, AnchorLength=7, AnchorLag=7){
+                            Anchor=TRUE, AnchorLength=7, AnchorLag=7, TimeUnit='d'){
 
         check_package('data.table')
         d_series <- data.table::copy(d_series)
@@ -155,8 +168,13 @@ ts_monit_season = function(d_series, StartMonth=4, EndMonth=9, StartDay=1, EndDa
         if(isTRUE(Anchor)){
             first_obs <- d_series[M_SEASON > 0L, min(DAY_SINCE), by = .(M_YEAR)]
             last_obs <- d_series[M_SEASON > 0L, max(DAY_SINCE), by = .(M_YEAR)]
-            anchor_day <- set_anchor(FirstObs = first_obs, LastObs = last_obs, AnchorLength = AnchorLength, AnchorLag = AnchorLag)
+            anchor_day <- set_anchor(FirstObs = first_obs, LastObs = last_obs, AnchorLength = AnchorLength, AnchorLag = AnchorLag, TimeUnit = TimeUnit)
             d_series <- d_series[DAY_SINCE %in% anchor_day, ANCHOR := 1L] [DAY_SINCE %in% anchor_day, COUNT := 0L]
+
+            if(TimeUnit == 'w'){
+              ANCHOR_WEEK <- unique(d_series[ , ANCHOR_PER_WEEK := sum(ANCHOR), by = WEEK_SINCE][ANCHOR_PER_WEEK >= 4 , WEEK_SINCE])
+              d_series[ , ANCHOR := 0L][WEEK_SINCE %in% ANCHOR_WEEK, ANCHOR := 1L]
+            }
         }
 
         return(d_series)
@@ -164,7 +182,7 @@ ts_monit_season = function(d_series, StartMonth=4, EndMonth=9, StartDay=1, EndDa
 
 
 #' df_visit_season
-#' Link each recorded visit to a corresponding monitoring season, this function is used in \link{df_visit_season}
+#' Link each recorded visit to a corresponding monitoring season, this function is used in \link{ts_monit_site}
 #' @param m_visit data.table or data.frame with Date and Site ID for each monitoring visit.
 #' @param ts_season data.table returned by \link{ts_monit_season} with the detail time-series of the monitoring season.
 #' @param DateFormat format used for the date in the visit data, default="\%Y-\%m-\%d".

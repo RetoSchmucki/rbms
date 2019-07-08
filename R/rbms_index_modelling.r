@@ -33,7 +33,7 @@
 #'
 
 fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
-                    SpeedGam = TRUE, OptiGam = TRUE, Week = FALSE, ...){
+                    SpeedGam = TRUE, OptiGam = TRUE, TimeUnit = 'd', ...){
 
         check_package('data.table')
 
@@ -59,43 +59,24 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
                 gamMethod <- 'SpeedGAM [bam()]'
             }
 
-            print(paste("Fitting the RegionalGAM for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
+            print(paste("Fitting the flight curve spline for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
                         sp_data_all[, uniqueN(SITE_ID)], "sites, using", gamMethod, ":", Sys.time(), "-> trial", tr))
 
-            if(isTRUE(Week)){
+            if(TimeUnit == 'd'){
+              tp_col == trimDAYNO
+              sp_data_all <- unique(sp_data_all[, .(COUNT, trimDAYNO, SITE_ID)][, max(COUNT, na.rm = TRUE), by = .(trimDAYNO, SITE_ID)])
+            } else {
+              tp_col == trimWEEKNO
+              sp_data_all <- unique(sp_data_all[, .(COUNT, trimWEEKNO, SITE_ID)][, max(COUNT, na.rm = TRUE), by = .(trimWEEKNO, SITE_ID)])
+            }
+
+            mod_form = as.formula(paste0("COUNT ~ s(",tp_col,",bs =\"cr\")",ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1 & site_effect, "+ factor(SITE)","")))
 
               if(isTRUE(SpeedGam)){
-                  if(length(sp_data_all[, unique(SITE_ID)]) > 1){
-                      week_data <- unique(sp_data_all[, .(COUNT, trimWEEKNO, SITE_ID)][, max(COUNT, na.rm = TRUE), by = .(trimWEEKNO, SITE_ID)])
-                      gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimWEEKNO, bs = "cr") + as.factor(SITE_ID), data=week_data, family=GamFamily, ...), silent = TRUE)
-                  } else {
-                      week_data <- unique(sp_data_all[, .(COUNT, trimWEEKNO)][, max(COUNT, na.rm = TRUE), by = .(trimWEEKNO)])
-                      gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimWEEKNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
-                  }
+                gam_obj_site <- try(mgcv::bam(mod_form, data=sp_data_all, family=GamFamily, ...), silent = TRUE)
               } else {
-                  if(length(sp_data_all[, unique(SITE_ID)]) > 1){
-                      gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimWEEKNO, bs = "cr") + as.factor(SITE_ID), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
-                  } else {
-                      gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimWEEKNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
-                  }
+                gam_obj_site <- try(mgcv::gam(mod_form, data=sp_data_all, family=GamFamily, ...), silent = TRUE)
               }
-
-           } else {
-
-             if(isTRUE(SpeedGam)){
-                if(length(sp_data_all[, unique(SITE_ID)]) > 1){
-                    gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr") + as.factor(SITE_ID), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
-                } else {
-                    gam_obj_site <- try(mgcv::bam(COUNT ~ s(trimDAYNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
-                }
-             } else {
-                if(length(sp_data_all[, unique(SITE_ID)]) > 1){
-                    gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimDAYNO, bs = "cr") + as.factor(SITE_ID), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
-                } else {
-                    gam_obj_site <- try(mgcv::gam(COUNT ~ s(trimDAYNO, bs = "cr"), data=sp_data_all, family=GamFamily, ...), silent = TRUE)
-                }
-             }
-           }
 
           tr <- tr + 1
 
@@ -106,13 +87,9 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
                     "; Model did not converge after", tr, "trials"))
             sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
         } else {
-          if(isTRUE(Week)){
-            sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = sp_data_all[, c("trimWEEKNO", "SITE_ID")], type = "response")]
+            sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = sp_data_all[, c(tp_col, "SITE_ID")], type = "response")]
             sp_data_all[M_SEASON == 0L, FITTED := 0]
-          } else {
-            sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = sp_data_all[, c("trimDAYNO", "SITE_ID")], type = "response")]
-            sp_data_all[M_SEASON == 0L, FITTED := 0]
-          }
+
             if(sum(is.infinite(sp_data_all[, FITTED])) > 0){
                 sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
             } else {
@@ -120,6 +97,9 @@ fit_gam <- function(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, Max
                 sp_data_all[, NM := round(FITTED / SITE_SUM, 5)]
             }
         }
+
+
+## I'm HERE!!!! check sp_data_all is not full anymore.
 
         f_curve <- sp_data_all[, .(SPECIES, DATE, WEEK, WEEK_DAY, DAY_SINCE, M_YEAR, M_SEASON, trimDAYNO, trimWEEKNO, NM)]
         data.table::setkey(f_curve)

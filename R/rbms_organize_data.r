@@ -173,7 +173,7 @@ ts_monit_season = function(d_series, StartMonth=4, EndMonth=9, StartDay=1, EndDa
 
             if(TimeUnit == 'w'){
               ANCHOR_WEEK <- unique(d_series[ , ANCHOR_PER_WEEK := sum(ANCHOR), by = WEEK_SINCE][ANCHOR_PER_WEEK >= 4 , WEEK_SINCE])
-              d_series[ , ANCHOR := 0L][WEEK_SINCE %in% ANCHOR_WEEK, ANCHOR := 1L]
+              d_series[ , ANCHOR := 0L][WEEK_SINCE %in% ANCHOR_WEEK, ANCHOR := 1L][, ANCHOR_PER_WEEK := NULL]
             }
         }
 

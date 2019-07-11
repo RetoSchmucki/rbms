@@ -234,11 +234,33 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
     return(result_fc)
 }
 
+#' get_nny
+#' find nearest year with flight period
+#' @param x year to find nearest flight period.
+#' @param y years with availabe flight period.
+#' @return z a value of the nearest year
+#' @keywords flight curve
+#' @seealso \link{check_pheno}
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @import data.table
+#' @export check_pheno
+#'
+
+get_nny <- function(x, y) {
+      z <- which.min(abs(x - y))
+      if(length(z) > 1)
+      z <- sample(z, 1)
+      return(z)
+      }
+
 
 #' check_pheno
 #' Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
 #' @param sp_count_flight_y data.table with the flight curve, relative abundance (NM), for a specific year.
-#' @param sp_count_flight data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.
+#' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.
+#' @param YearCheck
+#' @param YearLimit
+#' @param TimeUnit
 #' @return A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
 #'         phenology is available.
 #' @keywords flight curve
@@ -248,47 +270,122 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 #' @export check_pheno
 #'
 
-check_pheno <- function(sp_count_flight_y, sp_count_flight, TimeUnit){
+check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, TimeUnit){
 
-          if(TimeUnit == 'd'){
-            tp_col <- "trimDAYNO"
-          } else {
-            tp_col <- "trimWEEKNO"
-          }
+       sp_count_flight_y <- sp_count_flight[M_YEAR == YearCheck, ]
 
-         fcol <- c("M_YEAR", tp_col, "NM")
-
-        if(sp_count_flight_y[is.na(NM), .N] > 0){
-            y_ <- unique(sp_count_flight_y[, as.integer(M_YEAR)])
-            tr <- 1
-            z <- rep(1:5, rep(2, 5)) * c(-1, 1)
-            search_op <- unique(sp_count_flight[, as.integer(M_YEAR)])
-            valid_y <- c(y_ + z)[c(y_ + z) > min(search_op) & c(y_ + z) < max(search_op)]
-            alt_flight <- unique(sp_count_flight[as.integer(M_YEAR) == y_, fcol, with = FALSE])
-
-            while(alt_flight[is.na(NM), .N] > 0 & tr <= length(valid_y)){
-                alt_flight <- unique(sp_count_flight[as.integer(M_YEAR) == valid_y[tr], fcol, with = FALSE])
-                tr <- tr + 1
-            }
-
-            if(alt_flight[is.na(NM), .N] > 0){
-                print(paste("No reliable flight curve available within a 5 year horizon of", sp_count_flight_y[1, M_YEAR, ]))
-
-            } else {
-                warning(paste("We used the flight curve of", alt_flight[1, M_YEAR], "to compute abundance indices for year", sp_count_flight_y[1, M_YEAR, ]))
-                #sp_count_flight_y[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1]
-                data.table::setnames(alt_flight, 'NM', 'NMnew')
-                alt_flight[, M_YEAR := NULL]
-                data.table::setkeyv(sp_count_flight_y, tp_col)
-                data.table::setkeyv(alt_flight, tp_col)
-                sp_count_flight_y <- merge(sp_count_flight_y, alt_flight, by=tp_col, all.x=TRUE)
-                sp_count_flight_y[, NM := NMnew][, NMnew := NULL]
-            }
+       if(any(!is.na(ts_flight_curve[!is.na(NM), .N, by = M_YEAR]$N)) == 0){
+            warning("No flight curve available for this species!")
         }
 
-        return(sp_count_flight_y)
+        if(TimeUnit == 'd'){
+            tp_col <- "trimDAYNO"
+        } else {
+            tp_col <- "trimWEEKNO"
+        }
+
+        fcol <- c("M_YEAR", tp_col, "NM")
+
+        count_y <- as.integer(as.character(unique(sp_count_flight_y[ , M_YEAR])))
+        fc_y <- as.integer(as.character(unique(ts_flight_curve[!is.na(NM), M_YEAR])))
+        fc_year <- fc_y[unlist(lapply(count_y, get_nny, y = fc_y))]
+
+        alt_flight <- unique(ts_flight_curve[as.integer(as.character(M_YEAR)) == fc_year, fcol, with = FALSE])
+
+        if(is.null(YearLimit)){
+          warning(paste("We used the flight curve of", alt_flight[1, M_YEAR], "to compute abundance indices for year", sp_count_flight_y[1, M_YEAR, ]))
+          data.table::setnames(alt_flight, 'NM', 'NMnew')
+          alt_flight[, M_YEAR := NULL]
+          data.table::setkeyv(sp_count_flight_y, tp_col)
+          data.table::setkeyv(alt_flight, tp_col)
+          sp_count_flight_y <- merge(sp_count_flight_y, alt_flight, by=tp_col, all.x=TRUE)
+          sp_count_flight_y[, NM := NMnew][, NMnew := NULL]
+        } else {
+          if(abs(count_y - fc_year) > YearLimit){
+            print(paste("No reliable flight curve available within a ",YearLimit," year horizon of", sp_count_flight_y[1, M_YEAR, ]))
+          } else {
+            warning(paste("We used the flight curve of", alt_flight[1, M_YEAR], "to compute abundance indices for year", sp_count_flight_y[1, M_YEAR, ]))
+            data.table::setnames(alt_flight, 'NM', 'NMnew')
+            alt_flight[, M_YEAR := NULL]
+            data.table::setkeyv(sp_count_flight_y, tp_col)
+            data.table::setkeyv(alt_flight, tp_col)
+            sp_count_flight_y <- merge(sp_count_flight_y, alt_flight, by=tp_col, all.x=TRUE)
+            sp_count_flight_y[, NM := NMnew][, NMnew := NULL]
+          }
+       }
+
+      return(sp_count_flight_y)
 
     }
+
+
+#' impute_count2
+#' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
+#' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.
+#' @return
+#' @details
+#' @keywords flight curve
+#' @seealso \link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @import data.table
+#' @export impute_count2
+#'
+
+impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE, NearPheno = TRUE){
+
+        check_package('data.table')
+
+        if(!is.null(SelectYear)){
+          ts_season_count <- ts_season_count[M_YEAR == SelectYear, ]
+        }
+
+        if(!is.null(sp)){
+          ts_season_count <- ts_season_count[SPECIES == sp, ]
+        }
+
+        if(!ts_season_count$SPECIES[1] %in% unique(ts_flight_curve$SPECIES)){
+            stop('Species in count data must be in the flight curve data!')
+        }
+
+        if(TimeUnit == 'd'){
+            tp_col <- "trimDAYNO"
+            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
+            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
+            ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
+            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
+        } else {
+            tp_col <- "trimWEEKNO"
+            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
+            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
+            ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
+            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
+        }
+
+        keycol <- c("SPECIES", "M_YEAR", tp_col)
+        data.table::setkeyv(ts_season_count, keycol)
+        data.table::setkeyv(ts_flight_curve, keycol)
+        mcol <- c(keycol, "NM")
+
+        sp_count_flight <- merge(ts_season_count, ts_flight_curve[, mcol, with = FALSE], all.x=TRUE)
+
+        YearCheck <- as.integer(as.character(unique(sp_count_flight[ is.na(NM), M_YEAR])))
+
+        if(length(YearCheck)>0){
+          a <- lapply(YearCheck, check_pheno, sp_count_flight=sp_count_flight, ts_flight_curve=ts_flight_curve, YearLimit=YearLimit, TimeUnit = TimeUnit)
+          sp_count_flight <- rbind(data.table::rbindlist(a), sp_count_flight[!M_YEAR %in% data.table::rbindlist(a)[!is.na(NM), .N, by= M_YEAR][N>0, M_YEAR], ])
+        }
+
+        total_count <- sp_count_flight[M_SEASON != 0 , sum(COUNT, na.rm = TRUE), by = .(M_YEAR, SITE_ID)][, TOTAL_COUNT := V1][, V1 := NULL]
+        total_nm <- sp_count_flight[M_SEASON != 0 & !is.na(COUNT) , sum(NM, na.rm = TRUE), by = .(M_YEAR, SITE_ID)][, TOTAL_NM := V1][, V1 := NULL]
+        setkey(total_count, M_YEAR, SITE_ID)
+        setkey(total_nm, M_YEAR, SITE_ID)
+        setkey(sp_count_flight, M_YEAR, SITE_ID)
+
+        sp_count_flight <- merge(sp_count_flight, merge(total_count, total_nm, all.x=TRUE)[, SINDEX := TOTAL_COUNT / TOTAL_NM], all.x = TRUE)
+        sp_count_flight[, IMPUTED_COUNT:= COUNT][M_SEASON != 0 & is.na(COUNT), IMPUTED_COUNT := as.integer(round(SINDEX*NM))]
+
+     return(sp_count_flight)
+  }
 
 
 #' fit_glm
@@ -375,6 +472,8 @@ fit_glm.nb <- function(sp_count_flight_y, non_zero){
 
         return(sp_count_flight_mod_y)
     }
+
+
 
 
 #' impute_count

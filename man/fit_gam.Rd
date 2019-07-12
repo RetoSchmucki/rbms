@@ -3,10 +3,10 @@
 \name{fit_gam}
 \alias{fit_gam}
 \title{fit_gam
-fit a Generalized Additive Model to butterfly count data to extract the annual flight curve.}
+fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site efffect when multiple are available.}
 \usage{
-fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily,
-  MaxTrial = MaxTrial, SpeedGam = TRUE, OptiGam = TRUE, ...)
+fit_gam(dataset_y, NbrSample = NULL, GamFamily = "poisson",
+  MaxTrial = 4, SpeedGam = TRUE, OptiGam = TRUE, TimeUnit = "d")
 }
 \arguments{
 \item{dataset_y}{data.table with filtered butterfly counts for species x over year y over all sites.}
@@ -21,15 +21,17 @@ fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily,
 
 \item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset}
 
+\item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
+
 \item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
 A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
-        ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model.
+        ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. Thi is provide for one year 'y'.
 }
 \description{
 fit_gam
-fit a Generalized Additive Model to butterfly count data to extract the annual flight curve.
+fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site efffect when multiple are available.
 }
 \seealso{
 \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}

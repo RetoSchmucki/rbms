@@ -14,17 +14,17 @@
 
 
 #' fit_gam
-#' fit a Generalized Additive Model to butterfly count data to extract the annual flight curve.
+#' fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site efffect when multiple are available.
 #' @param dataset_y data.table with filtered butterfly counts for species x over year y over all sites.
 #' @param NbrSample integer inherited from \link{flight_curve}, default=100.
 #' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
 #' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
-#' @param Week Logical to define week as variable for the GAM, instead of day.
+#' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
-#'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model.
+#'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. Thi is provide for one year 'y'.
 #' @keywords gam
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -117,11 +117,21 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 }
 
 #' get_nm
-#' fit a Generalized Additive Model for one year 'y' to butterfly count data to extract the annual flight curve .
+#' Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.
 #' @param y integer of vector of years for wich to compute flight curve.
+#' @param ts_season_count data.table with complete time series of count and season information returned by \link{ts_monit_count_site}
+#' @param MinVisit integer setting the minimum number of visit required for a site to included in the computation, default=3.
+#' @param MinOccur integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.
+#' @param MinNbrSite integer setting the minimum number of site required to compute the flight curve, default=1.
+#' @param NbrSample integer inherited from \link{flight_curve}, when set to 'NULL' (default), all site are considered in the GAM model
+#' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
+#' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
+#' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
+#' @param OptiGam Logical to set use bam when data are larger than 200 and gam for smaller dataset
+#' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
 #' @return A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
-#'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model.
-#' @keywords gam
+#'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
+#' @keywords gam, spline
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
@@ -137,11 +147,17 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
   dataset_y <- data.table::copy(dataset_y[SITE_ID %in%
                                 visit_occ_site[N.x >= MinVisit & N.y >= MinOccur, SITE_ID],])
 
+  if(TimeUnit == 'd'){
+    tp_col <- "trimDAYNO"
+  } else {
+    tp_col <- "trimWEEKNO"
+  }
+
   if(dataset_y[, uniqueN(SITE_ID)] < MinNbrSite){
 
     f_curve  <- unique(ts_season_count[as.integer(M_YEAR) == y, ][ , SITE_ID := NULL][, COUNT := NULL])[, NM := NA]
     f_curve_mod <- list(f_curve=f_curve[order(get(tp_col)),], f_model=list(NA), f_data=data.table(NA))
-    print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(dataset_y$SPECIES[1]), "in", dataset_y$M_YEAR[1]))
+    print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
   } else {
     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
                           SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit)
@@ -188,14 +204,16 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         check_names(ts_season_count, c("COMPLT_SEASON", "M_YEAR", "SITE_ID", "SPECIES", "DATE", "WEEK", "WEEK_DAY", "DAY_SINCE", "WEEK_SINCE", "M_SEASON", "COUNT", "ANCHOR"))
 
         if(isTRUE(CompltSeason)){
-            ts_season_count <- ts_season_count[COMPLT_SEASON == 1]
+            ts_season_count <- ts_season_count[COMPLT_SEASON == 1, ]
         }
 
         if(is.null(SelectYear)){
-            year_series <- ts_season_count[, unique(as.integer(M_YEAR))]
+            year_series <- ts_season_count[!is.na(COUNT) & ANCHOR != 1, unique(as.integer(M_YEAR))]
         } else {
             year_series <- ts_season_count[M_YEAR %in% SelectYear, unique(as.integer(M_YEAR))]
         }
+
+        if(length(year_series) == 0) stop(paste0(" No count data found for year ", SelectYear))
 
         if(TimeUnit == 'd'){
             tp_col <- "trimDAYNO"
@@ -258,9 +276,9 @@ get_nny <- function(x, y) {
 #' Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
 #' @param sp_count_flight_y data.table with the flight curve, relative abundance (NM), for a specific year.
 #' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.
-#' @param YearCheck
-#' @param YearLimit
-#' @param TimeUnit
+#' @param YearCheck integer or vector of year to check for nearest phenology, set internally in \link{impute_count2}.
+#' @param YearLimit integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.
+#' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
 #' @return A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
 #'         phenology is available.
 #' @keywords flight curve
@@ -322,16 +340,21 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' impute_count2
 #' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
 #' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.
-#' @return
-#' @details
-#' @keywords flight curve
+#' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
+#' @param sp integer or string for the species ID or name.
+#' @param YearLimit integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.
+#' @param SelectYear integer to select a specific year to compute the flight curve, default=NULL.
+#' @param CompltSeason Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.
+#' @return A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
+#' @details Site indices can be extracted from the data.table returned from this function.The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
+#' @keywords site index, flight curve
 #' @seealso \link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export impute_count2
 #'
 
-impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE, NearPheno = TRUE){
+impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
 
         check_package('data.table')
 
@@ -366,7 +389,7 @@ impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL,
         data.table::setkeyv(ts_flight_curve, keycol)
         mcol <- c(keycol, "NM")
 
-        sp_count_flight <- merge(ts_season_count, ts_flight_curve[, mcol, with = FALSE], all.x=TRUE)
+        sp_count_flight <- merge(ts_season_count, ts_flight_curve[!duplicated(ts_flight_curve[, mcol, with = FALSE]), mcol, with = FALSE], all.x=TRUE)
 
         YearCheck <- as.integer(as.character(unique(sp_count_flight[ is.na(NM), M_YEAR])))
 
@@ -383,6 +406,8 @@ impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL,
 
         sp_count_flight <- merge(sp_count_flight, merge(total_count, total_nm, all.x=TRUE)[, SINDEX := TOTAL_COUNT / TOTAL_NM], all.x = TRUE)
         sp_count_flight[, IMPUTED_COUNT:= COUNT][M_SEASON != 0 & is.na(COUNT), IMPUTED_COUNT := as.integer(round(SINDEX*NM))]
+
+        if(TimeUnit == 'd') {sp_count_flight[ , SINDEX := SINDEX / 7]}
 
      return(sp_count_flight)
   }
@@ -472,8 +497,6 @@ fit_glm.nb <- function(sp_count_flight_y, non_zero){
 
         return(sp_count_flight_mod_y)
     }
-
-
 
 
 #' impute_count

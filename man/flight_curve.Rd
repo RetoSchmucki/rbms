@@ -9,7 +9,8 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
   MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
   FcMethod = "regionalGAM", GamFamily = "poisson",
   CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
-  OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, ...)
+  OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE,
+  TimeUnit = "d", ...)
 }
 \arguments{
 \item{ts_season_count}{data.table with complete time series of count and season information returned by \link{ts_monit_count_site}}
@@ -41,6 +42,8 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
 \item{KeepModelData}{Logical to keep the data used for the GAM.}
 
 \item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
+
+\item{TimeUnits}{Character to define days 'd' or week 'w' as variable for the GAM.}
 }
 \value{
 A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,

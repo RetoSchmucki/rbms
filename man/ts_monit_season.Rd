@@ -7,7 +7,7 @@ Build a time-series of dates with specific detail about the monitoring season}
 \usage{
 ts_monit_season(d_series, StartMonth = 4, EndMonth = 9, StartDay = 1,
   EndDay = NULL, CompltSeason = TRUE, Anchor = TRUE,
-  AnchorLength = 7, AnchorLag = 7)
+  AnchorLength = 7, AnchorLag = 7, TimeUnit = "d")
 }
 \arguments{
 \item{d_series}{time series of dates returned by \link{ts_dwmy_table}}
@@ -27,6 +27,8 @@ ts_monit_season(d_series, StartMonth = 4, EndMonth = 9, StartDay = 1,
 \item{AnchorLength}{integer for the number of day used as Anchor, default=7}
 
 \item{AnchorLag}{integer for the number of days before and after where the Anchor should start, default=TRUE}
+
+\item{TimeUnit}{character defining the time unit used for the Anchor, can be 'd' for day or 'w' for week}
 }
 \value{
 A data.table with the entire time-series of date (\code{DATE}, \code{DAY_SINCE}, \code{YEAR}, \code{MONTH},

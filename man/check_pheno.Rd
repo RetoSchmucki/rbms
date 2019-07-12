@@ -5,12 +5,19 @@
 \title{check_pheno
 Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.}
 \usage{
-check_pheno(sp_count_flight_y, sp_count_flight)
+check_pheno(sp_count_flight, ts_flight_curve, YearCheck, YearLimit,
+  TimeUnit)
 }
 \arguments{
-\item{sp_count_flight_y}{data.table with the flight curve, relative abundance (NM), for a specific year.}
+\item{ts_flight_curve}{data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.}
 
-\item{sp_count_flight}{data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.}
+\item{YearCheck}{integer or vector of year to check for nearest phenology, set internally in \link{impute_count2}.}
+
+\item{YearLimit}{integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.}
+
+\item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
+
+\item{sp_count_flight_y}{data.table with the flight curve, relative abundance (NM), for a specific year.}
 }
 \value{
 A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where

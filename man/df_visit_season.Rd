@@ -3,7 +3,7 @@
 \name{df_visit_season}
 \alias{df_visit_season}
 \title{df_visit_season
-Link each recorded visit to a corresponding monitoring season, this function is used in \link{df_visit_season}}
+Link each recorded visit to a corresponding monitoring season, this function is used in \link{ts_monit_site}}
 \usage{
 df_visit_season(m_visit, ts_season, DateFormat = "\%Y-\%m-\%d")
 }
@@ -19,7 +19,7 @@ A data.table where each visit is attributed a monitoring year, the \code{M_YEAR}
 }
 \description{
 df_visit_season
-Link each recorded visit to a corresponding monitoring season, this function is used in \link{df_visit_season}
+Link each recorded visit to a corresponding monitoring season, this function is used in \link{ts_monit_site}
 }
 \details{
 The value of \code{M_YEAR} should be used as Monitoring year as this can differ form the \code{YEAR} if the

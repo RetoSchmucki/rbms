@@ -41,9 +41,9 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
 
 \item{KeepModelData}{Logical to keep the data used for the GAM.}
 
-\item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
+\item{TimeUnit}{Character to define days 'd' or week 'w' as variable for the GAM.}
 
-\item{TimeUnits}{Character to define days 'd' or week 'w' as variable for the GAM.}
+\item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
 A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,

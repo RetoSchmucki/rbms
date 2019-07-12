@@ -181,7 +181,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset.
 #' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}.
 #' @param KeepModelData Logical to keep the data used for the GAM.
-#' @param TimeUnits Character to define days 'd' or week 'w' as variable for the GAM.
+#' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
@@ -274,7 +274,7 @@ get_nny <- function(x, y) {
 
 #' check_pheno
 #' Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
-#' @param sp_count_flight_y data.table with the flight curve, relative abundance (NM), for a specific year.
+#' @param sp_count_flight data.table with the flight curve, relative abundance (NM), for a specific year.
 #' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.
 #' @param YearCheck integer or vector of year to check for nearest phenology, set internally in \link{impute_count2}.
 #' @param YearLimit integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.

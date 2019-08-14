@@ -424,7 +424,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, 
 #' site_index
 #' extract abundance indices per sites and year based on flight curve imputation.
 #' @param butterfly_count data.table with observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2()
-#' @param MinFC value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL.
+#' @param MinFC value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.
 #' @return data.table with estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
 #' @keywords butterfly count
 #' @seealso \link{impute_count}, \link{flight_curve}
@@ -436,10 +436,10 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, 
 site_index <- function(butterfly_count, MinFC = NULL){
 
       if(is.null(MinFC)){
-        sindex <- unique(imp[!is.na(SINDEX), .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)])
+        sindex <- unique(butterfly_count[!is.na(SINDEX), .(SPECIES, SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
       } else {
         if(!MinFC >= 0 & MinFC <= 1) stop('MinFC must be between 0 and 1, or NULL')
-        sindex <- unique(imp[!is.na(SINDEX) & TOTAL_NM >= MinFC, .(SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
+        sindex <- unique(butterfly_count[!is.na(SINDEX) & TOTAL_NM >= MinFC, .(SPECIES, SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
       }
 
     return(sindex)
@@ -489,6 +489,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 #' compute a collated index from the site indices, using a Generalized Linear Model.
 #' @param data data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.
 #' @param s_sp string with with the species name to be found in the data.
+#' @param sindex_value string defining the response variable to be used for collated index computation, default is "SINDEX", but could be other standardized values.
 #' @param bootID integer with the n^th bootstrap.
 #' @param boot_ind data.table with in index of the bootstrap and the corresponding set of site id to be used for the specific bootstrap sample
 #' @param glm_weights logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weigth is used.
@@ -501,7 +502,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 #' @export collated_index
 #'
 
-collated_index <- function(data, s_sp, bootID=NULL, boot_ind=boot_ind, glm_weights=TRUE, rm_zero=TRUE){
+collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boot_ind=boot_ind, glm_weights=TRUE, rm_zero=TRUE){
 
   data = data[SPECIES == s_sp, ]
   y = as.numeric(as.character(unique(data$M_YEAR)))
@@ -515,7 +516,7 @@ collated_index <- function(data, s_sp, bootID=NULL, boot_ind=boot_ind, glm_weigh
 
   if(bootID == 0){
     if(is.null(boot_ind)){
-    a <- data.table(uID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))), SITE_ID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))))
+    a <- data.table(uID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))), SITE_ID = as.character(unique(data[, SITE_ID])))
     }else{
     a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID+1, ]))), SITE_ID = as.character(boot_ind$site_id[seq_along(boot_ind$boot_ind[bootID+1, ])]))
     }
@@ -534,7 +535,12 @@ collated_index <- function(data, s_sp, bootID=NULL, boot_ind=boot_ind, glm_weigh
   s_y <- merge(s_y, a, all.x=TRUE)
 
   setkey(s_y, SITE_ID, M_YEAR); setkey(data, SITE_ID, M_YEAR)
-  data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, SINDEX_1KM, TOTAL_NM)])
+
+  if(sindex_value != 'SINDEX'){
+    data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)][, (sindex_value) := data[, get(sindex_value)]])
+    } else {
+    data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)])
+    }
 
   sum_data <- data.table( BOOTi = bootID,
                           M_YEAR = y[order(y)],
@@ -553,7 +559,7 @@ collated_index <- function(data, s_sp, bootID=NULL, boot_ind=boot_ind, glm_weigh
     pred_data_boot <- expand.grid(unique(data_boot$uID), unique(data_boot$M_YEAR))
     names(pred_data_boot) <- c("uID", "M_YEAR")
 
-    mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, "I(round(2*SINDEX_1KM)) ~ factor(uID) + factor(M_YEAR) - 1", "I(round(2*SINDEX_1KM)) ~ factor(M_YEAR) - 1"))
+    mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, paste0("I(round(", sindex_value,")) ~ factor(uID) + factor(M_YEAR) - 1"), paste0("I(round(", sindex_value,"))) ~ factor(M_YEAR) - 1")))
 
     if(!isTRUE(glm_weights)){
       data_boot[ , weights := 1]
@@ -585,4 +591,31 @@ collated_index <- function(data, s_sp, bootID=NULL, boot_ind=boot_ind, glm_weigh
   }
 
   return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
+}
+
+
+#' boot_sample
+#' generat n bootstrap sample from the site indices.
+#' @param data data.table or data.frame with site id.
+#' @param boot_n integer defining the number of bootstap sample to generate.
+#' @return a list with site id and bootstrap indices for n bootstrap sample.
+#' @keywords bootstrap collated index
+#' @seealso \link{impute_count}, \link{collated_index}
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @import data.table
+#' @export boot_sample
+#'
+
+boot_sample <- function(data, boot_n = 1000){
+
+  site_id <- unique(data[, SITE_ID])
+  boot_n <- boot_n
+  boot_ind <- matrix(NA, nrow = boot_n, ncol = length(site_id))
+
+    for(i in seq_len(boot_n)){
+      boot_ind[i, ] <- sample(seq_len(length(site_id)), replace = TRUE)
+    }
+
+  boot_ind <- list(site_id = site_id, boot_ind = boot_ind)
+  return(boot_ind)
 }

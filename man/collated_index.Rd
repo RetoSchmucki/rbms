@@ -5,13 +5,15 @@
 \title{collated_index
 compute a collated index from the site indices, using a Generalized Linear Model.}
 \usage{
-collated_index(data, s_sp, bootID = NULL, boot_ind = boot_ind,
-  glm_weights = TRUE, rm_zero = TRUE)
+collated_index(data, s_sp, sindex_value = "SINDEX", bootID = NULL,
+  boot_ind = boot_ind, glm_weights = TRUE, rm_zero = TRUE)
 }
 \arguments{
 \item{data}{data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.}
 
 \item{s_sp}{string with with the species name to be found in the data.}
+
+\item{sindex_value}{string defining the response variable to be used for collated index computation, default is "SINDEX", but could be other standardized values.}
 
 \item{bootID}{integer with the n^th bootstrap.}
 

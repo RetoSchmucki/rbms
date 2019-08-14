@@ -10,7 +10,7 @@ site_index(butterfly_count, MinFC = NULL)
 \arguments{
 \item{butterfly_count}{data.table with observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2()}
 
-\item{MinFC}{value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL.}
+\item{MinFC}{value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.}
 }
 \value{
 data.table with estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.

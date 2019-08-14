@@ -13,7 +13,7 @@ check_pheno(sp_count_flight, ts_flight_curve, YearCheck, YearLimit,
 
 \item{ts_flight_curve}{data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.}
 
-\item{YearCheck}{integer or vector of year to check for nearest phenology, set internally in \link{impute_count2}.}
+\item{YearCheck}{integer or vector of year to check for nearest phenology, set internally in \link{impute_count}.}
 
 \item{YearLimit}{integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.}
 

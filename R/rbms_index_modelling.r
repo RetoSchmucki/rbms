@@ -276,7 +276,7 @@ get_nny <- function(x, y) {
 #' Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
 #' @param sp_count_flight data.table with the flight curve, relative abundance (NM), for a specific year.
 #' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.
-#' @param YearCheck integer or vector of year to check for nearest phenology, set internally in \link{impute_count2}.
+#' @param YearCheck integer or vector of year to check for nearest phenology, set internally in \link{impute_count}.
 #' @param YearLimit integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
 #' @return A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
@@ -348,7 +348,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @return A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
 #' @details Site indices can be extracted from the data.table returned from this function.The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 #' @keywords site index, flight curve
-#' @seealso \link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
+#' @seealso \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export impute_count
@@ -467,7 +467,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
         col_mod <- try(speedglm::speedglm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily, weigth = GlmWeight), silent = TRUE)
       }
 
-      if(class(col_mod)[1] == "try-error")){
+      if(class(col_mod)[1] == "try-error"){
         if(is.null(GlmWeight)){
           col_mod <- try(glm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily), silent = TRUE)
         } else {
@@ -475,7 +475,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
         }
       }
 
-      if(class(col_mod)[1] == "try-error")) stop('Unable to fit GLM to estimate a collated index')
+      if(class(col_mod)[1] == "try-error") stop('Unable to fit GLM to estimate a collated index')
 
       yr_coefs = coef(summary(col_index))
       res <- yr_coefs[grepl("M_YEAR",row.names(yr_coefs)), c("Estimate","Std. Error")]

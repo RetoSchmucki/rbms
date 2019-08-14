@@ -2,44 +2,42 @@
 % Please edit documentation in R/rbms_index_modelling.r
 \name{impute_count}
 \alias{impute_count}
-\title{impute_count
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.}
+\title{impute_count}
 \usage{
-impute_count(ts_season_count, ts_flight_curve,
-  FamilyGlm = quasipoisson(), CompltSeason = TRUE, SelectYear = NULL,
-  KeepModel = TRUE, NearPheno = TRUE)
+impute_count(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL,
+  YearLimit = NULL, SelectYear = NULL, CompltSeason = TRUE)
 }
 \arguments{
 \item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}
 
 \item{ts_flight_curve}{data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.}
 
-\item{FamilyGlm}{string for the distribution to be used for the error term in the GLM, default='quasipoisson'.}
+\item{TimeUnit}{Character to define days 'd' or week 'w' as variable for the GAM.}
 
-\item{CompltSeason}{logical to define if only years where a complete season is available should be modelled.}
+\item{sp}{integer or string for the species ID or name.}
 
-\item{SelectYear}{vector of specific years of interest, can be a single value (e.g. 2015).}
+\item{YearLimit}{integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.}
 
-\item{KeepModel}{Logical to keep model output in a list object named \code{imp_glm_model}}
+\item{SelectYear}{integer to select a specific year to compute the flight curve, default=NULL.}
 
-\item{NearPheno}{Logical if flight curve from neirhest year should be used, if available within 5 years, default=TRUE}
+\item{CompltSeason}{Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.}
 }
 \value{
-A a list of one or two objects, i) **impute_count**: data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
-        a phenology is available \code{sp_ts_season_count} and ii) **model**: a glm object for the GLM model \code{glm_model}.
+A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
 }
 \description{
 impute_count
-Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.
 }
 \details{
-GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null.
+Site indices can be extracted from the data.table returned from this function.The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 }
 \seealso{
-\link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
+\link{flight_curve}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
 }
 \keyword{curve}
 \keyword{flight}
+\keyword{index,}
+\keyword{site}

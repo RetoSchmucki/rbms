@@ -337,7 +337,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
     }
 
 
-#' impute_count2
+#' impute_count
 #' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
 #' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.
 #' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
@@ -351,10 +351,10 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @seealso \link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
-#' @export impute_count2
+#' @export impute_count
 #'
 
-impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
+impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
 
         check_package('data.table')
 
@@ -393,7 +393,7 @@ impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL,
 
         YearCheck <- as.integer(as.character(unique(sp_count_flight[ is.na(NM), M_YEAR])))
 
-        if(length(YearCheck)>0){
+        if(length(YearCheck) > 0){
           a <- lapply(YearCheck, check_pheno, sp_count_flight=sp_count_flight, ts_flight_curve=ts_flight_curve, YearLimit=YearLimit, TimeUnit = TimeUnit)
           sp_count_flight <- rbind(data.table::rbindlist(a), sp_count_flight[!M_YEAR %in% data.table::rbindlist(a)[!is.na(NM), .N, by= M_YEAR][N>0, M_YEAR], ])
         }
@@ -407,242 +407,182 @@ impute_count2 <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL,
         sp_count_flight <- merge(sp_count_flight, merge(total_count, total_nm, all.x=TRUE)[, SINDEX := TOTAL_COUNT / TOTAL_NM], all.x = TRUE)
         sp_count_flight[, IMPUTED_COUNT:= COUNT][M_SEASON != 0 & is.na(COUNT), IMPUTED_COUNT := as.integer(round(SINDEX*NM))]
 
-        if(TimeUnit == 'd') {sp_count_flight[ , SINDEX := SINDEX / 7]}
+        if(TimeUnit == 'd') {
+          sp_count_flight[ , SINDEX := SINDEX / 7]
+          week_count <- unique(sp_count_flight[M_SEASON != 0 & !is.na(COUNT), .(M_YEAR, SITE_ID, WEEK)])[ , WEEK_COUNT := 1]
+          setkey(week_count, SITE_ID, M_YEAR, WEEK)
+          setkey(sp_count_flight, SITE_ID, M_YEAR, WEEK)
+          sp_count_flight <- merge(sp_count_flight, week_count, all.x = TRUE)
+          sp_count_flight[ , WEEK_NM := mean(NM * WEEK_COUNT, na.rm = TRUE), by = .(M_YEAR, SITE_ID, WEEK)][ ,
+                                             TOTAL_NM := sum(WEEK_NM, na.rm=TRUE), by = .(M_YEAR, SITE_ID)][ , WEEK_NM := NULL][, WEEK_COUNT := NULL]
+        }
 
      return(sp_count_flight)
   }
 
 
-#' fit_glm
-#' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset. Function used in \link{impute_count}.
-#' @param sp_count_flight_y data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year of interest,
-#'        or the nearest available.
-#' @param non_zero vector of sites with non-zero value to be included in the model (see detail)
-#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, inherited from \link{impute_count}, default='quasipoisson'.
-#' @return A a list of objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
-#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**:a glm object for the model \code{glm_obj_site}.
-#' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
-#' @keywords flight curve
-#' @seealso \link{impute_count}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @import data.table
-#' @export fit_glm
-#'
-
-fit_glm <- function(sp_count_flight_y, non_zero, FamilyGlm){
-
-            if(sp_count_flight_y[SITE_ID %in% non_zero,uniqueN(SITE_ID)] > 1){
-                glm_obj_site <- try(glm(COUNT ~ factor(SITE_ID) + offset(log(NM)) -1, data = sp_count_flight_y[SITE_ID %in% non_zero, ],
-                family = FamilyGlm, control = list(maxit = 100)), silent = TRUE)
-            } else {
-                glm_obj_site <- try(glm(COUNT ~ offset(log(NM)) -1, data = sp_count_flight_y[SITE_ID %in% non_zero, ],
-                family = FamilyGlm, control = list(maxit = 100)), silent = TRUE)
-            }
-
-            if (class(glm_obj_site)[1] == "try-error") {
-
-                sp_count_flight_y[SITE_ID %in% non_zero, c("FITTED","COUNT_IMPUTED") := .(NA, NA)]
-
-                print(paste("Computation of abundance indices for year",sp_count_flight_y[1, M_YEAR,],
-                            "failed with the RegionalGAM, verify the data you provided for that year"))
-                # next()
-
-            } else {
-                sp_count_flight_y[SITE_ID %in% non_zero, FITTED := predict.glm(glm_obj_site, newdata = sp_count_flight_y[SITE_ID %in% non_zero, ], type = "response")]
-            }
-
-            sp_count_flight_mod_y <- list(sp_count_flight_y = sp_count_flight_y, glm_obj_site = glm_obj_site)
-
-        return(sp_count_flight_mod_y)
-    }
-
-
-#' fit_glm.nb
-#' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset and the negative binomial error distribution
-#' as implemented in the package link[MASS]{glm.nb}. Function used in \link{impute_count}.
-#' @param sp_count_flight_y data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year of interest,
-#'        or the nearest available.
-#' @param non_zero vector of sites with non-zero value to be included in the model (see detail)
-#' @return A a list of two objects, i) **sp_count_flight_y**: data.table with data and expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
-#'         a fligh curve (phenology) is available \code{sp_count_flight_y} and ii) **glm_obj_site**: a glm object for the model \code{glm_obj_site}.
-#' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null
-#' @keywords flight curve
-#' @seealso \link{impute_count}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @import data.table
-#' @export fit_glm.nb
-#'
-
-fit_glm.nb <- function(sp_count_flight_y, non_zero){
-
-            if(sp_count_flight_y[SITE_ID %in% non_zero,uniqueN(SITE_ID)] > 1){
-                glm_obj_site <- try(MASS::glm.nb(COUNT ~ factor(SITE_ID) + offset(NM), data=sp_count_flight_y[SITE_ID %in% non_zero, ]), silent = TRUE)
-            } else {
-                glm_obj_site <- try(MASS::glm.nb(COUNT ~ offset(NM) -1, data = sp_count_flight_y[SITE_ID %in% non_zero, ]), silent = TRUE)
-            }
-
-            if (class(glm_obj_site)[1] == "try-error") {
-                sp_count_flight_y[SITE_ID %in% non_zero, c("FITTED", "COUNT_IMPUTED") := .(NA,NA)]
-
-                print(paste("Computation of abundance indices for year", sp_count_flight_y[1, M_YEAR, ],
-                "failed with the RegionalGAM, verify the data you provided for that year"))
-
-                # next()
-
-            } else {
-                sp_count_flight_y[SITE_ID %in% non_zero, FITTED := predict(glm_obj_site, newdata = sp_count_flight_y[SITE_ID %in% non_zero, ], type = "response")]
-            }
-
-            sp_count_flight_mod_y <- list(sp_count_flight_y = sp_count_flight_y, glm_obj_site = glm_obj_site)
-
-        return(sp_count_flight_mod_y)
-    }
-
-
-#' impute_count
-#' Fit a Generalized Linear Model (GLM) to predict daily count per site, using the regional flight curve as offset.
-#' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
-#' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.
-#' @param FamilyGlm string for the distribution to be used for the error term in the GLM, default='quasipoisson'.
-#' @param CompltSeason logical to define if only years where a complete season is available should be modelled.
-#' @param SelectYear vector of specific years of interest, can be a single value (e.g. 2015).
-#' @param NearPheno Logical if flight curve from neirhest year should be used, if available within 5 years, default=TRUE
-#' @param KeepModel Logical to keep model output in a list object named \code{imp_glm_model}
-#' @return A a list of one or two objects, i) **impute_count**: data.table with observed and expected butterfly counts per day imputed based on the flight curve of the year or the nearest year where
-#'         a phenology is available \code{sp_ts_season_count} and ii) **model**: a glm object for the GLM model \code{glm_model}.
-#' @details GLM model is only fitted for site with observations, non-zero, as the abundance for sites where count are only zeros is expected to be null.
-#' @keywords flight curve
-#' @seealso \link{fit_glm}, \link{fit_glm.nb}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @import data.table
-#' @export impute_count
-#'
-
-impute_count <- function(ts_season_count, ts_flight_curve, FamilyGlm = quasipoisson(), CompltSeason = TRUE,
-                                    SelectYear = NULL, KeepModel = TRUE, NearPheno = TRUE) {
-
-        if(ts_season_count$SPECIES[1] != ts_flight_curve$SPECIES[1]){
-            stop('Species in count data and flight curve must be the same!')
-        }
-
-        if(FamilyGlm[1]=='nb'){
-            stop('Negative binomial distribution for GLM is not resolved, please use quasipoisson distribution instead')
-        }
-
-        check_package('data.table')
-
-        if(isTRUE(CompltSeason)){
-            ts_season_count <- ts_season_count[COMPLT_SEASON==1]
-        }
-
-        sp_ts_season_count <- data.table::copy(ts_season_count)
-        data.table::setkey(sp_ts_season_count, DATE)
-        data.table::setkey(ts_flight_curve, DATE)
-        sp_count_flight <- merge(sp_ts_season_count, ts_flight_curve[, .(DATE, trimDAYNO, NM)], all.x=TRUE)
-        data.table::setkey(sp_count_flight, M_YEAR, DATE, SITE_ID)
-
-        glmMet <- "glm()"
-
-        if( FamilyGlm[1]=='nb'){
-            glmMet <- "glm.nb()"
-        }
-
-        if(is.null(SelectYear)){
-            year_series <- ts_season_count[, unique(as.integer(M_YEAR))]
-        } else {
-            year_series <- ts_season_count[M_YEAR %in% SelectYear, unique(as.integer(M_YEAR))]
-        }
-
-        i_glm_model <- list()
-
-        for(y in year_series){
-
-            sp_count_flight_y <-  data.table::copy(sp_count_flight[as.integer(M_YEAR) == y, ])
-
-            if(isTRUE(NearPheno)){
-                sp_count_flight_y <- check_pheno(sp_count_flight_y, sp_count_flight)
-            }
-
-            if(sp_count_flight_y[is.na(NM) & trimDAYNO != 366, .N] > 0){
-                print(paste("No glm model will be fitted for", sp_count_flight_y[1, M_YEAR]))
-            } else {
-                print(paste("Computing abundance indices for", sp_count_flight_y[1, SPECIES], "in", sp_count_flight_y[1, M_YEAR], "across",
-                        sp_count_flight_y[,uniqueN(SITE_ID)], "sites, using", glmMet, ":", Sys.time()))
-            }
-
-            sp_count_flight_y[M_SEASON == 0L, COUNT := NA]
-            sp_count_flight_y[M_SEASON != 0L & NM == 0, NM := 0.000001]
-            non_zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 > 0, SITE_ID]
-            zero <- sp_count_flight_y[, sum(COUNT, na.rm=TRUE), by=(SITE_ID)] [V1 == 0, SITE_ID]
-
-            if(length(non_zero) >= 1 & sp_count_flight_y[is.na(NM) & trimDAYNO != 366, .N] == 0){
-                if(FamilyGlm[1] == 'nb'){
-                    sp_count_flight_l <- fit_glm.nb(sp_count_flight_y, non_zero)
-                } else {
-                    sp_count_flight_l <- fit_glm(sp_count_flight_y, non_zero, FamilyGlm)
-                }
-            } else {
-               sp_count_flight_l <- list(sp_count_flight_y = sp_count_flight_y,
-                                    glm_obj_site = paste('No glm fitted for', sp_count_flight_y[1, M_YEAR]))
-            }
-
-            sp_count_flight_y <- sp_count_flight_l$sp_count_flight_y
-
-            sp_count_flight_y[SITE_ID %in% zero, FITTED := 0]
-            sp_count_flight_y[is.na(COUNT), COUNT_IMPUTED := FITTED][!is.na(COUNT), COUNT_IMPUTED := as.numeric(COUNT)] [M_SEASON == 0L, COUNT_IMPUTED := 0]
-
-            data.table::setkey(sp_ts_season_count, SITE_ID, DAY_SINCE)
-            data.table::setkey(sp_count_flight_y, SITE_ID, DAY_SINCE)
-
-            if("FITTED" %in% names(sp_ts_season_count)){
-                sp_ts_season_count[sp_count_flight_y, ':=' (trimDAYNO=i.trimDAYNO, NM=i.NM, FITTED=i.FITTED, COUNT_IMPUTED=i.COUNT_IMPUTED)]
-            } else {
-                sp_ts_season_count <- merge(sp_ts_season_count, sp_count_flight_y[, .(DAY_SINCE, SITE_ID, trimDAYNO, NM, FITTED, COUNT_IMPUTED)], all.x = TRUE)
-            }
-
-            if(isTRUE(KeepModel)){
-                    glm_model <- list(sp_count_flight_l$glm_obj_site)
-                    names(glm_model) <- paste0('glm_mod_', gsub(' ', '_', sp_count_flight_y[1, SPECIES]), '_', sp_count_flight_y[1, M_YEAR])
-                    i_glm_model <- c(i_glm_model, glm_model)
-                }
-            }
-
-
-        if(!is.null(SelectYear)){
-            sp_ts_season_count <- sp_ts_season_count[M_YEAR %in% SelectYear, ]
-        } else {
-            sp_ts_season_count <- sp_ts_season_count
-        }
-
-
-        if(isTRUE(KeepModel)){
-          return(list(impute_count = sp_ts_season_count, model = i_glm_model))
-        } else {
-          return(list(impute_count = sp_ts_season_count))
-        }
-}
-
-
-#' butterfly_day
-#' count cumulative butterfly count observed over one monitoring season.
-#' @param sp_ts_season_count list of objects, including a data.table with observed and expected butterfly counts per day imputed for each sites based by \link{impute_count}.
-#' @param WeekCount logical defining if butterfly day should be counted by week (default), using the 4th day of the week, or as a total of predicted daily counts.
-#' @return data.table with total butterfly day observed per species, year, and site.
+#' site_index
+#' extract abundance indices per sites and year based on flight curve imputation.
+#' @param butterfly_count data.table with observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2()
+#' @param MinFC value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL.
+#' @return data.table with estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
 #' @keywords butterfly count
 #' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
-#' @export butterfly_day
+#' @export site_index
 #'
 
-butterfly_day <- function(sp_ts_season_count, WeekCount = TRUE){
-            if (WeekCount == TRUE){
-                b_day <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
-            } else {
-                b_day <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
-            }
+site_index <- function(butterfly_count, MinFC = NULL){
 
-            data.table::setnames(b_day,"V1","BUTTERFLY_DAY")
+      if(is.null(MinFC)){
+        sindex <- unique(imp[!is.na(SINDEX), .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)])
+      } else {
+        if(!MinFC >= 0 & MinFC <= 1) stop('MinFC must be between 0 and 1, or NULL')
+        sindex <- unique(imp[!is.na(SINDEX) & TOTAL_NM >= MinFC, .(SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
+      }
 
-        return(b_day)
+    return(sindex)
+}
+
+
+#' collated_index_old
+#' compute a collated index from the site indices, using a Generalized Linear Model.
+#' @param site_indices data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.
+#' @param GlmWeight vector of weight used in the GLM.
+#' @param GlmFamily family used for the GLM model.
+#' @return a list of three objects, a vector of site, a glm model object, and a vector of collated indices per year.
+#' @keywords annual index
+#' @seealso \link{impute_count}, \link{flight_curve}
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @import data.table
+#' @export collated_index_old
+#'
+
+collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poisson()){
+
+      if(is.null(GlmWeight)){
+        col_mod <- try(speedglm::speedglm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily), silent = TRUE)
+      } else {
+        col_mod <- try(speedglm::speedglm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily, weigth = GlmWeight), silent = TRUE)
+      }
+
+      if(class(col_mod)[1] == "try-error")){
+        if(is.null(GlmWeight)){
+          col_mod <- try(glm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily), silent = TRUE)
+        } else {
+          col_mod <- try(glm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily, weigth = GlmWeight), silent = TRUE)
+        }
+      }
+
+      if(class(col_mod)[1] == "try-error")) stop('Unable to fit GLM to estimate a collated index')
+
+      yr_coefs = coef(summary(col_index))
+      res <- yr_coefs[grepl("M_YEAR",row.names(yr_coefs)), c("Estimate","Std. Error")]
+
+      res <- list(site = site_indices$SITE_ID, glm_model = col_mod, collated_index = res)
+
+    return(res)
+}
+
+#' collated_index
+#' compute a collated index from the site indices, using a Generalized Linear Model.
+#' @param data data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.
+#' @param s_sp string with with the species name to be found in the data.
+#' @param bootID integer with the n^th bootstrap.
+#' @param boot_ind data.table with in index of the bootstrap and the corresponding set of site id to be used for the specific bootstrap sample
+#' @param glm_weights logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weigth is used.
+#' @param rm_zero logical specifying if site where species has not been observed should be removed from the GLM fitting, this speed up the process without affecting the output, default TRUE.
+#' @return a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.
+#' @keywords annual index
+#' @seealso \link{impute_count}, \link{flight_curve}
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @import data.table
+#' @export collated_index
+#'
+
+collated_index <- function(data, s_sp, bootID=NULL, boot_ind=boot_ind, glm_weights=TRUE, rm_zero=TRUE){
+
+  data = data[SPECIES == s_sp, ]
+  y = as.numeric(as.character(unique(data$M_YEAR)))
+  boot_ind = boot_ind
+
+  if(is.null(bootID)){
+    bootID <- 0
+  }else{
+    booID <- bootID
+  }
+
+  if(bootID == 0){
+    if(is.null(boot_ind)){
+    a <- data.table(uID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))), SITE_ID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))))
+    }else{
+    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID+1, ]))), SITE_ID = as.character(boot_ind$site_id[seq_along(boot_ind$boot_ind[bootID+1, ])]))
     }
+  } else {
+    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID, ]))), SITE_ID = as.character(boot_ind$site_id[boot_ind$boot_ind[bootID, ]]))
+  }
+
+  s_y <- data.table(expand.grid(a$uID, y[order(y)]))
+  names(s_y) <- c("uID", "M_YEAR")
+  s_y[ , uID:=as.character(uID)]
+  s_y[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
+  data[ , SITE_ID:=as.character(SITE_ID)]
+  data[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
+
+  setkey(a, uID); setkey(s_y, uID)
+  s_y <- merge(s_y, a, all.x=TRUE)
+
+  setkey(s_y, SITE_ID, M_YEAR); setkey(data, SITE_ID, M_YEAR)
+  data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, SINDEX_1KM, TOTAL_NM)])
+
+  sum_data <- data.table( BOOTi = bootID,
+                          M_YEAR = y[order(y)],
+                          NSITE = data_boot[, uniqueN(SITE_ID), by = M_YEAR][order(M_YEAR), V1],
+                          NSITE_OBS = data_boot[, sum(SINDEX>0), by = M_YEAR][order(M_YEAR), V1])
+
+  setkey(sum_data, M_YEAR)
+
+  if(nrow(sum_data[NSITE_OBS > 0,]) != 0){
+
+    if(isTRUE(rm_zero)){
+      zero_site <- data_boot[ , V1:=sum(SINDEX>0), uID][V1==0, uID]
+      data_boot <- data_boot[!uID %in% zero_site, ]
+    }
+
+    pred_data_boot <- expand.grid(unique(data_boot$uID), unique(data_boot$M_YEAR))
+    names(pred_data_boot) <- c("uID", "M_YEAR")
+
+    mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, "I(round(2*SINDEX_1KM)) ~ factor(uID) + factor(M_YEAR) - 1", "I(round(2*SINDEX_1KM)) ~ factor(M_YEAR) - 1"))
+
+    if(!isTRUE(glm_weights)){
+      data_boot[ , weights := 1]
+    }else{
+      ## make sure that column TOTAL_NM exists
+      data_boot[ , weights := TOTAL_NM]
+    }
+
+    col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights), silent = TRUE)
+      if (class(col_index)[1] == "try-error") {
+        col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights, method = "qr"), silent = TRUE)
+        if (class(col_index)[1] == "try-error") {
+          col_index <- try(glm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights, method = "qr"), silent = TRUE)
+            if (class(col_index)[1] == "try-error") {
+              res <- sum_data[, COL_INDEX := NA]
+              return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
+            }
+        }
+     }
+
+    pred_data_boot$fitted <- predict(col_index, newdata = pred_data_boot, type = "response")
+
+    co_index_res <- data.table(pred_data_boot)[order(M_YEAR), sum(fitted)/length(unique(data$SITE_ID)), by = M_YEAR]
+    setnames(co_index_res, "V1", "COL_INDEX"); setkey(co_index_res, M_YEAR)
+    res <- merge(sum_data, co_index_res, all.x = TRUE)[is.na(COL_INDEX), COL_INDEX := 0]
+
+  } else {
+    res <- sum_data[, COL_INDEX := 0]
+  }
+
+  return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
+}

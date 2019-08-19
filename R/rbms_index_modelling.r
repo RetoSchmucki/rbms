@@ -572,7 +572,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
       if (class(col_index)[1] == "try-error") {
         col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights, method = "qr"), silent = TRUE)
         if (class(col_index)[1] == "try-error") {
-          col_index <- try(glm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights, method = "qr"), silent = TRUE)
+          col_index <- try(glm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights), silent = TRUE)
             if (class(col_index)[1] == "try-error") {
               res <- sum_data[, COL_INDEX := NA]
               return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))

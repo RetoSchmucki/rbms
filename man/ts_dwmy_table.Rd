@@ -24,7 +24,7 @@ ts_dwmy_table
 Generate a time-series of dates with day, week, month and year (dwmy) from one initial to an end years
 }
 \seealso{
-\link{ts_date_seq}, \link[data.table]{IDate}
+\link{ts_date_seq}, \link[data.table]{IDateTime}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

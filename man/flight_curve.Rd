@@ -7,10 +7,9 @@ Compute the annual flight curve from butterfly count data collated across multip
 \usage{
 flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
   MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
-  FcMethod = "regionalGAM", GamFamily = "poisson",
-  CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
-  OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE,
-  TimeUnit = "d", ...)
+  GamFamily = "poisson", CompltSeason = TRUE, SelectYear = NULL,
+  SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE,
+  KeepModelData = TRUE, TimeUnit = "d", ...)
 }
 \arguments{
 \item{ts_season_count}{data.table with complete time series of count and season information returned by \link{ts_monit_count_site}}
@@ -24,8 +23,6 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
 \item{MinNbrSite}{integer setting the minimum number of site required to compute the flight curve, default=1.}
 
 \item{MaxTrial}{integer setting the maximum number of trial to reach convergence of the model, default=3.}
-
-\item{FcMethod}{string defining the method to be used for computation of the flight curve, default='regionalGAM' (no other method is available yet).}
 
 \item{GamFamily}{string setting the distribution of the error term in the GAM, default='poisson', but can be 'nb' or 'quasipoisson'.}
 
@@ -46,7 +43,7 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
 \item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
-A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
+A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
 }
 \description{

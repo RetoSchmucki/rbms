@@ -14,7 +14,7 @@
 
 
 #' fit_gam
-#' fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site efffect when multiple are available.
+#' fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site effect when multiple are available.
 #' @param dataset_y data.table with filtered butterfly counts for species x over year y over all sites.
 #' @param NbrSample integer inherited from \link{flight_curve}, default=100.
 #' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
@@ -23,8 +23,8 @@
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
-#' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
-#'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. Thi is provide for one year 'y'.
+#' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
+#'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.
 #' @keywords gam
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -118,7 +118,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 
 #' get_nm
 #' Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.
-#' @param y integer of vector of years for wich to compute flight curve.
+#' @param y integer of vector of years for which to compute flight curve.
 #' @param ts_season_count data.table with complete time series of count and season information returned by \link{ts_monit_count_site}
 #' @param MinVisit integer setting the minimum number of visit required for a site to included in the computation, default=3.
 #' @param MinOccur integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.
@@ -129,7 +129,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 200 and gam for smaller dataset
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
-#' @return A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
+#' @return A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
 #' @keywords gam, spline
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
@@ -173,7 +173,6 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param MinOccur integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.
 #' @param MinNbrSite integer setting the minimum number of site required to compute the flight curve, default=1.
 #' @param MaxTrial integer setting the maximum number of trial to reach convergence of the model, default=3.
-#' @param FcMethod string defining the method to be used for computation of the flight curve, default='regionalGAM' (no other method is available yet).
 #' @param GamFamily string setting the distribution of the error term in the GAM, default='poisson', but can be 'nb' or 'quasipoisson'.
 #' @param CompltSeason Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.
 #' @param SelectYear integer to select a specific year to compute the flight curve, default=NULL.
@@ -183,7 +182,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param KeepModelData Logical to keep the data used for the GAM.
 #' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
-#' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abudance, normalize to sum to one over a full season,
+#' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
 #' @keywords gam, flight curve
 #' @seealso \link{fit_gam}
@@ -194,9 +193,9 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @export flight_curve
 #'
 
-flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3, FcMethod = 'regionalGAM',
-                            GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE,
-                            TimeUnit = 'd', ...) {
+flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
+                         GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
+                         OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, TimeUnit = 'd', ...) {
 
         check_package('data.table')
 
@@ -255,7 +254,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 #' get_nny
 #' find nearest year with flight period
 #' @param x year to find nearest flight period.
-#' @param y years with availabe flight period.
+#' @param y years with available flight period.
 #' @return z a value of the nearest year
 #' @keywords flight curve
 #' @seealso \link{check_pheno}
@@ -346,7 +345,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @param SelectYear integer to select a specific year to compute the flight curve, default=NULL.
 #' @param CompltSeason Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.
 #' @return A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
-#' @details Site indices can be extracted from the data.table returned from this function.The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
+#' @details Site indices can be extracted from the data.table returned from this function. The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 #' @keywords site index, flight curve
 #' @seealso \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -448,7 +447,7 @@ site_index <- function(butterfly_count, MinFC = NULL){
 
 #' collated_index_old
 #' compute a collated index from the site indices, using a Generalized Linear Model.
-#' @param site_indices data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.
+#' @param site_indices data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.
 #' @param GlmWeight vector of weight used in the GLM.
 #' @param GlmFamily family used for the GLM model.
 #' @return a list of three objects, a vector of site, a glm model object, and a vector of collated indices per year.
@@ -487,12 +486,12 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 
 #' collated_index
 #' compute a collated index from the site indices, using a Generalized Linear Model.
-#' @param data data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.
+#' @param data data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string with with the species name to be found in the data.
 #' @param sindex_value string defining the response variable to be used for collated index computation, default is "SINDEX", but could be other standardized values.
 #' @param bootID integer with the n^th bootstrap.
 #' @param boot_ind data.table with in index of the bootstrap and the corresponding set of site id to be used for the specific bootstrap sample
-#' @param glm_weights logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weigth is used.
+#' @param glm_weights logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weight is used.
 #' @param rm_zero logical specifying if site where species has not been observed should be removed from the GLM fitting, this speed up the process without affecting the output, default TRUE.
 #' @return a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.
 #' @keywords annual index
@@ -597,7 +596,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
 #' boot_sample
 #' generat n bootstrap sample from the site indices.
 #' @param data data.table or data.frame with site id.
-#' @param boot_n integer defining the number of bootstap sample to generate.
+#' @param boot_n integer defining the number of bootstrap sample to generate.
 #' @return a list with site id and bootstrap indices for n bootstrap sample.
 #' @keywords bootstrap collated index
 #' @seealso \link{impute_count}, \link{collated_index}

@@ -8,7 +8,7 @@ Generate a time-series of dates (per day) from the beginning of a starting year 
 ts_date_seq(InitYear = 1970, LastYear = format(Sys.Date(), "\%Y"))
 }
 \arguments{
-\item{InitYear}{start year of the time-series, 4 numbers format (e.g 1987)}
+\item{InitYear}{start year of the time-series, 4 numbers format (e.g. 1987)}
 
 \item{LastYear}{end year of the time-series, if not provided, current year is used instead}
 }

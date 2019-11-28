@@ -12,7 +12,7 @@
   \item{DAY}{integer, day within the month}
   \item{MONTH}{integer, month within the year}
   \item{YEAR}{integer, 4 digit year}
-  \item{COUNT}{integer, acctual butterfly count}
+  \item{COUNT}{integer, actual butterfly count}
 }}
 \usage{
 m_count

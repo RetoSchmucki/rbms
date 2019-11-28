@@ -2,182 +2,26 @@
 
 [![Build Status](https://travis-ci.org/RetoSchmucki/rbms.png?branch=master)](https://travis-ci.org/RetoSchmucki/rbms)
 
+With `rbms`, our aim is to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time-series of butterfly counts. These data are characterized by a strong phenology that must be accounted for when deriving abundance from counts.  As a toolbox, we plan to implement more methods to compute and visualize metrics as they develop. The rbms package will provide the option of being coupled and work in line with other tools available and developed by the community (e.g. [rtrim](https://cran.r-project.org/web/packages/rtrim/), [BRCindicators](https://github.com/BiologicalRecordsCentre/BRCindicators)). Together with the development of the 'rbms' R package, we also aim to provide tutorial to facilitate its use and understanding.
 
-### - A new package that replaces the former 'regionalGAM' -
+Although `rbms` implements methods that have been develop independently and for which the original source should be cited, user should also citing the `rbms` package and it version to ensure appropriate referencing and therefore improve transparency and repeatability of the work.
 
-With the rapid expansion of monitoring efforts and the usefulness of conducting integrative analyses to inform conservation initiatives, the choice of a robust abundance index is crucial to adequately assess the species status. Butterfly Monitoring Schemes (BMS) operate in increasing number of countries with broadly the same methodology, yet they differ in their observation frequencies and often in the method used to compute annual abundance indices.
+#### Suggested citation for the rbms package
 
-Here we implemented the method for computing an abundance index with the *regional GAM* approach, an extension of the two-stages model introduced by [Dennis et al. (2013)](http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12053/abstract). This index offers the best performance for a wide range of sampling frequency, providing greater robustness and unbiased estimates compared to the popular linear interpolation approach [(Schmucki et al. 2015)](http://onlinelibrary.wiley.com/doi/10.1111/1365-2664.12561/abstract).
-
-#### Suggested citation
-
-Schmucki R., Harrower C. Dennis E. (2019) rbms: Computing genaralized abundance indices for butterfly monitoring count data. R package version 1.0.0. https://github.com/RetoSchmucki/rbms
+Schmucki R., Harrower C. Dennis E. (2019) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.0.0. https://github.com/RetoSchmucki/rbms
 
 
 #### Installation
 
-To install this package from GitHub, you will first need to install the package `devtools` that is available from CRAN. From there, simply use the the function `install_github()` to install the `rbms` package on your system. Note that this package was build with R 3.4.2, so you might have to update your R installation. If you are unable to install this package, you might consider sourcing the R script that can be found here: [rbms source code] (https://github.com/RetoSchmucki/rbms/blob/master/R/)
+To install this package from GitHub, you need to install the package `devtools` available on CRAN. Once installed, use the function `devtools::install_github()` to install the `rbms` package on your system.
+
+> Note that `rbms` has been build with R 3.6.0, so you might have to update your R system before installation.
 
 ```R
 if(!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("RetoSchmucki/rbms")
 ```
 
+#### Reporting Issues
 
-> LINUX note:
-> You might have to install to following library to install the `sf package`.
->```
->sudo apt-get install libudunits2-dev
->```
-
-#### Usage example
-##### 1. load package and data included in the package
-
-```r
-library(rbms)
-data(m_visit)
-data(m_count)
-```
-
-##### 2. organize the data to cover the time period and monitoring season of the BMS
-
-This create a full time series for the period of interest with days and weeks
-
-```r
-ts_date <- ts_dwmy_table(InitYear = 2000, LastYear = 2003, WeekDay1 = 'monday')
-```
-
-You can then define use the time-series to define your monitoring season with the StartMonth and EndMonth arguments. You can refine this with more arguments (e.g. StartDay, AnchorLength, and so on).
-
-```r
-ts_season <- ts_monit_season(ts_date, StartMonth = 4, EndMonth = 9, StartDay = 1, EndDay = NULL,
-                      CompltSeason = TRUE, Anchor = TRUE, AnchorLength = 7, AnchorLag = 7)
-```
-
-Now that you have defined the monitoring season for the period of interest, you can add your data, starting with the visit date to inform about the sites and the visits
-
-```r
-ts_season_visit <- ts_monit_site(m_visit, ts_season)
-```
-
-Once the visit data have been integrated, you can add the count for the species of interest, here we use the count data provided with the package for species "2".
-
-```r
-ts_season_count <- ts_monit_count_site(ts_season_visit, m_count, sp = 2)
-```
-
-##### 3. Compute the yearly flight curve for the data you just created
-
-So far, I have only implemented the regionalGAM method. Here you can filter for the data used in your model by setting the Minimum number of visit, the minimum number of occurrence and number of site.
-It is important to remember that the resulting flight curve will depend on the quality of information provided to the model. In other words, "garbage in, garbage out". If you have only occurrence, sites, and few visits, you might have an issue to get a reliable flight curve.
-
-```r
- ts_flight_curve <- flight_curve(ts_season_count, NbrSample = 200, MinVisit = 5, MinOccur = 3, MinNbrSite = 1,
-                            MaxTrial = 3, FcMethod = 'regionalGAM', GamFamily = 'nb', SpeedGam = FALSE, CompltSeason = TRUE)
-```
-
-The output of the flight_curve() function is a list of 3 objects, the phenology, the GAM model, and the data used to fit the GAM. Each of these object can be accessed by specifying the name within the list (e.g. ts_flight_curve$pheno).
-So for example, you can produce a simple plot for the flight curves with the following script.
-
-```r
-
-plot(ts_flight_curve$pheno[M_YEAR == 2000, trimDAYNO], ts_flight_curve$pheno[M_YEAR == 2000, NM], type = 'l',
-      ylim = c(0, max(ts_flight_curve$pheno[, NM])), xlab = 'Monitoring Year Day', ylab = 'Relative Abundance')
-c <- 2
-for(y in 2001:2003){
-  points(ts_flight_curve$pheno[M_YEAR == y, trimDAYNO], ts_flight_curve$pheno[M_YEAR == y, NM], type = 'l', col = c)
-  c <- c + 1
-}
-legend('topright', legend = c(2000:2003), col = c(seq_along(c(2000:2003))), lty = 1, bty = 'n')
-```
-
-##### 4. Impute predicted counts for missing monitoring dates
-
-Using the shape of the flight curve computed in 3, you can now impute expected counts for each site, using a GLM with the site, the observations and the phenology as predictors of daily counts.
-This is done with the impute_count function, using the count data (ts_season_count) and the calculated flight curve (ts_flight_curve$pheno).
-
-```r
-site_year_sp_count <- impute_count(ts_season_count, ts_flight_curve$pheno, FamilyGlm = 'quasipoisson')
-```
-
-The output is again a list of object, including the imputed counts and the model used. To access and visualize the imputed data, you can
-use the object "site_year_sp_count$impute_count".
-
-For example, you can plot the imputed and observed counts for a specific site (e.g. 2) and a year (e.g. 2003).
-
-```r
-s <- 2
-y <- 2003
-
-plot(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, FITTED],
-    ylim=c(0, max(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, COUNT_IMPUTED])),
-    col = 'blue', type='l',
-    main = paste0('Site ', s, ', Season ', y),
-    xlab='Monitoring Month', ylab='Fitted Count')
-points(site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, DATE], site_year_sp_count$impute_count[SITE_ID == s & M_YEAR == y, COUNT],
-       col='red')
-```
-
-##### 5. Compute annual site indices
-
-The butterfly_day function compute the sum of weekly butterfly count, using the predicted count for every mid-week (day 4 - Thursday). The total annual count can also be computed by settign the WeekCount = FALSE, this result in using all daily count over the season. total re is no function implemented yet, but you can count the total of weekly butterfly count for each year and site, using one count a week during the defined monitoring period (e.g. Thursday - WEEK_DAY 4).
-
-```r
-b_index <- butterfly_day(site_year_sp_count, WeekCount = TRUE)
-```
-
-> This is how the total weekly butterfly count is computed this way (e.g. Thursday - WEEK_DAY 4).
->```r
-> week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)]
-> site_total_week_count <- site_year_sp_count$impute_count[COMPLT_SEASON == 1 & M_SEASON != 0 & WEEK_DAY == 4, FITTED, by = .(SITE_ID, M_YEAR, WEEK)][,sum(FITTED), by = .(SITE_ID, M_YEAR)]
-> data.frame(site_total_week_count)
-> plot(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], type='l')
-> points(week_count[SITE_ID == 1 & M_YEAR == 2000, .(WEEK, FITTED)], col = 'red')
->```
-
-##### 6. Compute general trend using a collated index
-
-> NOTE: this is just an example, you can also use the function available in the R package rtrim
-
-```r
-library(nlme)
-library(MASS)
-b_index_df <- data.frame(b_index)
-# compute collated annual indices
-glmm.mod_fullyear <- glmmPQL(BUTTERFLY_DAY ~ as.factor(M_YEAR) - 1, data = b_index_df , family = quasipoisson, random = ~1|SITE_ID,
-                          correlation = corAR1(form =~ as.numeric(M_YEAR)|SITE_ID), verbose = FALSE)
-summary(glmm.mod_fullyear)
-
-# extract collated index and plot against years
-col.index <- as.numeric(glmm.mod_fullyear$coefficients$fixed)
-year <- unique(b_index_df$M_YEAR)
-plot(year, col.index, type = 'o', xlab = "year", ylab = "collated index")
-```
-
-From the collated indices, you can now compute a temporal trend for that species in this region. Here we first use a simple linear model and explore for temporal autocorrelation that we will account in our final model.
-
-```r
-# model temporal trend with a simple linear regression
-mod1 <- gls(col.index ~ as.numeric(year))
-summary(mod1)
-
-# check for temporal autocorrelation in the residuals
-acf(residuals(mod1, type = "normalized"))
-
-# adjust the model to account for autocorrelation in the residuals
-mod2 <- gls(col.index ~ as.numeric(year), correlation = corARMA(p = 2))
-summary(mod2)
-
-# check for remaining autocorrelation in the residuals
-acf(residuals(mod2, type = "normalized"))
-
-# plot abundance with trend line
-plot(year, col.index, type='o', xlab = "year", ylab = "collated index")
-abline(mod1, lty = 2, col = "red")
-abline(mod2, lty = 2, col = "blue")
-```
-
-
-##### Reporting Issues
-
-For reporting errors and issues related to this package and its functions, please open a [issue here](https://github.com/RetoSchmucki/rbms/issues)
+For reporting issues related to this package, please visit the issue and see if your problem has not yet been reported before opening a new [issue here](https://github.com/RetoSchmucki/rbms/issues)

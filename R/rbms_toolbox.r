@@ -13,7 +13,7 @@
 ##==========================================
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(" Welcome to rbms, version 1.0.0 \n While this package has been tested by serveral users,\n it is still in active development and feedbacks are welcome \n https://github.com/RetoSchmucki/rbms/issues")
+  packageStartupMessage(" Welcome to rbms, version 1.0.0 \n While this package has been tested by several users,\n it is still in active development and feedbacks are welcome \n https://github.com/RetoSchmucki/rbms/issues")
 }
 
 
@@ -107,7 +107,7 @@ check_names <- function(x, y){
 
 #' ts_date_seq
 #' Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years.
-#' @param InitYear start year of the time-series, 4 numbers format (e.g 1987)
+#' @param InitYear start year of the time-series, 4 numbers format (e.g. 1987)
 #' @param LastYear end year of the time-series, if not provided, current year is used instead
 #' @return return a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'
 #' @keywords time series

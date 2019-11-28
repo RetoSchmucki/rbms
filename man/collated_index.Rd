@@ -9,7 +9,7 @@ collated_index(data, s_sp, sindex_value = "SINDEX", bootID = NULL,
   boot_ind = boot_ind, glm_weights = TRUE, rm_zero = TRUE)
 }
 \arguments{
-\item{data}{data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.}
+\item{data}{data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.}
 
 \item{s_sp}{string with with the species name to be found in the data.}
 
@@ -19,7 +19,7 @@ collated_index(data, s_sp, sindex_value = "SINDEX", bootID = NULL,
 
 \item{boot_ind}{data.table with in index of the bootstrap and the corresponding set of site id to be used for the specific bootstrap sample}
 
-\item{glm_weights}{logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weigth is used.}
+\item{glm_weights}{logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weight is used.}
 
 \item{rm_zero}{logical specifying if site where species has not been observed should be removed from the GLM fitting, this speed up the process without affecting the output, default TRUE.}
 }

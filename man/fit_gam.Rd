@@ -3,7 +3,7 @@
 \name{fit_gam}
 \alias{fit_gam}
 \title{fit_gam
-fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site efffect when multiple are available.}
+fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site effect when multiple are available.}
 \usage{
 fit_gam(dataset_y, NbrSample = NULL, GamFamily = "poisson",
   MaxTrial = 4, SpeedGam = TRUE, OptiGam = TRUE, TimeUnit = "d")
@@ -26,12 +26,12 @@ fit_gam(dataset_y, NbrSample = NULL, GamFamily = "poisson",
 \item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
-A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
-        ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. Thi is provide for one year 'y'.
+A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
+        ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.
 }
 \description{
 fit_gam
-fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site efffect when multiple are available.
+fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site effect when multiple are available.
 }
 \seealso{
 \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}

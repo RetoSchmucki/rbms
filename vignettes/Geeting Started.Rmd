@@ -1,0 +1,77 @@
+---
+title: 1. Getting Started with rbms
+---
+
+> LINUX note:
+> You might have to install to following library to install the `sf package`.
+>```
+>sudo apt-get install libudunits2-dev
+>```
+
+#### Usage example
+##### 1. load package and data included in the package
+
+```{r data}
+library(rbms)
+data(m_visit)
+data(m_count)
+m_visit
+m_count
+```
+
+##### 2. organize the data to cover the time period and monitoring season of the BMS
+
+This create a full time series for the period of interest with days and weeks
+
+```{r init_timeseries}
+ts_date <- rbms::ts_dwmy_table(InitYear = 2000, LastYear = 2003, WeekDay1 = 'monday')
+```
+
+You can then define use the time-series to define your monitoring season with the StartMonth and EndMonth arguments. You can refine this with more arguments (e.g. StartDay, AnchorLength). The last argument in this expression is very important, where [TimeUnit = 'w'], meaning that you will compute the analysis (phenology) on a week basis. The alternative would be to set it to 'd' for daily basis.
+
+```{r monitoring_season}
+ts_season <- rbms::ts_monit_season(ts_date, StartMonth = 4, EndMonth = 9, StartDay = 1, EndDay = NULL, CompltSeason = TRUE, Anchor = TRUE, AnchorLength = 2, AnchorLag = 2, TimeUnit = 'w')
+```
+
+Now that you have defined the monitoring season for the period of interest, you can add your data, starting with the visit date to inform about the sites and the visits
+
+```{r visit_season}
+ts_season_visit <- rbms::ts_monit_site(m_visit, ts_season)
+```
+
+Once the visit data have been integrated, you can add the count for the species of interest, here we use the count data provided with the package for species "2".
+
+```{r count_visit}
+ts_season_count <- rbms::ts_monit_count_site(ts_season_visit, m_count, sp = 2)
+ts_season_count
+```
+
+##### 3. Compute the yearly flight curve for the data you just created
+
+Here you can filter for the data used in your model by setting the Minimum number of visit, the minimum number of occurrence and number of site.
+It is important to remember that the resulting flight-curve will depend on the quality of information provided to the model. In other words, "garbage in, garbage out". If you have only few rare occurrence, in few sites, and not many visits, it will be difficult to derive a reliable flight curve from your data.
+
+```{r flight_curve}
+
+ ts_flight_curve <- rbms::flight_curve(ts_season_count, NbrSample = 300, MinVisit = 5, MinOccur = 3, MinNbrSite = 5, MaxTrial = 4, GamFamily = 'nb', SpeedGam = FALSE, CompltSeason = TRUE, SelectYear = NULL, TimeUnit = 'w')
+
+```
+
+The flight_curve() function produce a list of 3 objects:
+  1. [pheno] that contain the standardized phenology curve derived by fitting a GAM model, with a cubic spline to the count data.
+  2. [model] that contain the result of the fitted GAM model.
+  3. [data] the data that where used to fit the GAM model.
+
+From this object, you can extract the [pheno] and produce a figure with the different flight curves.
+
+```{r fc, fig.cap='Flight curve.', tidy=FALSE}
+pheno <- ts_flight_curve$pheno
+plot(pheno[M_YEAR == 2000, trimWEEKNO], ts_flight_curve$pheno[M_YEAR == 2000, NM], type = 'l', ylim = c(0, max(pheno[, NM])), xlab = 'Monitoring Week', ylab = 'Relative Abundance')
+
+c <- 2
+for(y in 2001:2003){
+  points(pheno[M_YEAR == y, trimWEEKNO], pheno[M_YEAR == y, NM], type = 'l', col = c)
+  c <- c + 1
+}
+legend('topright', legend = c(2000:2003), col = c(seq_along(c(2000:2003))), lty = 1, bty = 'n')
+```

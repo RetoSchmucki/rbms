@@ -29,7 +29,7 @@ A data.table based on the entry count data, augmented with site indices 'SINDEX'
 impute_count
 }
 \details{
-Site indices can be extracted from the data.table returned from this function.The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
+Site indices can be extracted from the data.table returned from this function. The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 }
 \seealso{
 \link{flight_curve}

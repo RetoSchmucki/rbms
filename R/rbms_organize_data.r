@@ -8,7 +8,7 @@
 ##
 ##      Date:   02.01.2018
 ##
-##      organize_data: functions for organizing BMS datad for modelling flight curve and compute indices
+##      organize_data: functions for organizing BMS data for modelling flight curve and compute indices
 ##
 ##==========================================
 
@@ -16,7 +16,7 @@
 #' Generate a time-series of dates with day, week, month and year (dwmy) from one initial to an end years
 #' @param InitYear start year of the time-series, 4 numbers format (e.g 1987)
 #' @param LastYear end year of the time-series, if not provided, current year is used instead
-#' @param WeekDay1 to start the week on monday, use 'monday', otherwise the week start on sunday
+#' @param WeekDay1 to start the week on Monday, use 'monday', otherwise the week start on Sunday
 #' @return a data.table object with the date, the day since the first date, the week since the first week, the year, the month,
 #'          the day in the month, the ISO week number and the day in the week.
 #' @keywords time series

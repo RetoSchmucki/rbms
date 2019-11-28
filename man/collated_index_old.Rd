@@ -9,7 +9,7 @@ collated_index_old(site_indices, GlmWeight = NULL,
   GlmFamily = poisson())
 }
 \arguments{
-\item{site_indices}{data.table or data.frame with site indices per year and proportion of fligth curve covered by the monitoring.}
+\item{site_indices}{data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.}
 
 \item{GlmWeight}{vector of weight used in the GLM.}
 

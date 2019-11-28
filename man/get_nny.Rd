@@ -10,7 +10,7 @@ get_nny(x, y)
 \arguments{
 \item{x}{year to find nearest flight period.}
 
-\item{y}{years with availabe flight period.}
+\item{y}{years with available flight period.}
 }
 \value{
 z a value of the nearest year

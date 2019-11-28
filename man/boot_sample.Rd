@@ -10,7 +10,7 @@ boot_sample(data, boot_n = 1000)
 \arguments{
 \item{data}{data.table or data.frame with site id.}
 
-\item{boot_n}{integer defining the number of bootstap sample to generate.}
+\item{boot_n}{integer defining the number of bootstrap sample to generate.}
 }
 \value{
 a list with site id and bootstrap indices for n bootstrap sample.

@@ -13,7 +13,7 @@ ts_dwmy_table(InitYear = 1970, LastYear = format(Sys.Date(), "\%Y"),
 
 \item{LastYear}{end year of the time-series, if not provided, current year is used instead}
 
-\item{WeekDay1}{to start the week on monday, use 'monday', otherwise the week start on sunday}
+\item{WeekDay1}{to start the week on Monday, use 'monday', otherwise the week start on Sunday}
 }
 \value{
 a data.table object with the date, the day since the first date, the week since the first week, the year, the month,

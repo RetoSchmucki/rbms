@@ -9,7 +9,7 @@ get_nm(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample,
   GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit)
 }
 \arguments{
-\item{y}{integer of vector of years for wich to compute flight curve.}
+\item{y}{integer of vector of years for which to compute flight curve.}
 
 \item{ts_season_count}{data.table with complete time series of count and season information returned by \link{ts_monit_count_site}}
 
@@ -32,7 +32,7 @@ get_nm(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample,
 \item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
 }
 \value{
-A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abudance, normalize to sum to one over a full season,
+A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
 }
 \description{

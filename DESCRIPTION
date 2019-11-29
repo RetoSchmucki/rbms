@@ -2,14 +2,24 @@ Package: rbms
 Title: Compute abundance index Butterfly Monitoring Schemes and flight curves, using the Generalize Abundance Index, using the spline approach.
 Version: 1.0.0
 Date: 28-11-2019
-Authors@R: c(
-		person("Reto", "Schmucki", email = "reto.schmucki@mail.mcgill.ca", role = c("aut", "cre")),
-		person("Colin", "A. Harrower", email = "corr@ceh.ac.uk", role = "aut"),
-		person("Emily", "Dennis", email = "edennis@butterfly-conservation.org", role = "ctb"))
+Authors@R:
+	c(person(given = "Reto",
+					family ="Schmucki",
+					email = "reto.schmucki@mail.mcgill.ca",
+					role = c("aut", "cre"),
+					comment = c(ORCID = "0000-0003-3064-7553")),
+		person(given = "Colin",
+					family = "A. Harrower",
+					email = "corr@ceh.ac.uk",
+					role = "aut"),
+		person(given = "Emily",
+		 			family = "Dennis",
+					email = "edennis@butterfly-conservation.org",
+					role = "ctb"))
 Description: Implementation of the Generalize Abundance Index using the Spline method presented in Dennis et al. 2016, an adaptation of the two-stage model developed by Dennis et al. 2013 and extended in Schmucki et al. 2017. This package compute the flight curve from a set of monitoring sites and compute the abundance index, using the flight curve to impute values where weekly counts are missing. This is a fully revised version of the former RegionalGAM package. The rbms package has been totally rewritten and build on a more robust and efficient programming framework, providing more functionality and flexibility to the end-user.
 Depends: R (>= 3.4.0)
-URL: https://retoschmucki.github.io/rbms/
 License: MIT + file LICENSE.md
+URL: https://retoschmucki.github.io/rbms/
 LazyData: true
 Imports:
 	mgcv,

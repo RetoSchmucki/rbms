@@ -11,12 +11,14 @@ Authors@R:
 		person(given = "Colin",
 					family = "A. Harrower",
 					email = "corr@ceh.ac.uk",
-					role = "aut"),
+					role = "aut",
+					comment = c(ORCID = "0000-0001-5070-5293")),
 		person(given = "Emily",
 		 			family = "Dennis",
 					email = "edennis@butterfly-conservation.org",
-					role = "ctb"))
-Description: Implementation of the Generalize Abundance Index using the Spline method presented in Dennis et al. 2016, an adaptation of the two-stage model developed by Dennis et al. 2013 and extended in Schmucki et al. 2017. This package compute the flight curve from a set of monitoring sites and compute the abundance index, using the flight curve to impute values where weekly counts are missing. This is a fully revised version of the former RegionalGAM package. The rbms package has been totally rewritten and build on a more robust and efficient programming framework, providing more functionality and flexibility to the end-user.
+					role = "ctb",
+					comment = c(ORCID = "0000-0003-2692-4415")))
+Description: Implementation of the Generalize Abundance Index using the Spline method presented in Dennis et al. 2016. rbms package has been totally rewritten to increase its functionality and flexibility to the end-user.
 Depends: R (>= 3.4.0)
 License: MIT + file LICENSE.md
 URL: https://retoschmucki.github.io/rbms/
@@ -27,3 +29,4 @@ Imports:
 	MASS,
 	speedglm
 RoxygenNote: 6.1.1
+Encoding: UTF-8

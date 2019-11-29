@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1. Getting Started with rbms • rbms</title>
+<title>1. Get started with rbms • rbms</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="1. Getting Started with rbms">
+<script src="../pkgdown.js"></script><meta property="og:title" content="1. Get started with rbms">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Geeting%20Started.html">1. Getting Started with rbms</a>
+      <a href="../articles/Get_Started.html">1. Get started with rbms</a>
     </li>
   </ul>
 </li>
@@ -72,11 +72,11 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>1. Getting Started with rbms</h1>
+      <h1>1. Get started with rbms</h1>
             
       
       
-      <div class="hidden name"><code>Geeting Started.Rmd</code></div>
+      <div class="hidden name"><code>Get_Started.Rmd</code></div>
 
     </div>
 
@@ -144,10 +144,10 @@
 <a href="#compute-the-yearly-flight-curve-for-the-data-you-just-created" class="anchor"></a>3. Compute the yearly flight curve for the data you just created</h5>
 <p>Here you can filter for the data used in your model by setting the Minimum number of visit, the minimum number of occurrence and number of site. It is important to remember that the resulting flight-curve will depend on the quality of information provided to the model. In other words, “garbage in, garbage out”. If you have only few rare occurrence, in few sites, and not many visits, it will be difficult to derive a reliable flight curve from your data.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"> ts_flight_curve &lt;-<span class="st"> </span>rbms<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/rbms/man/flight_curve.html">flight_curve</a></span>(ts_season_count, <span class="dt">NbrSample =</span> <span class="dv">300</span>, <span class="dt">MinVisit =</span> <span class="dv">5</span>, <span class="dt">MinOccur =</span> <span class="dv">3</span>, <span class="dt">MinNbrSite =</span> <span class="dv">5</span>, <span class="dt">MaxTrial =</span> <span class="dv">4</span>, <span class="dt">GamFamily =</span> <span class="st">'nb'</span>, <span class="dt">SpeedGam =</span> <span class="ot">FALSE</span>, <span class="dt">CompltSeason =</span> <span class="ot">TRUE</span>, <span class="dt">SelectYear =</span> <span class="ot">NULL</span>, <span class="dt">TimeUnit =</span> <span class="st">'w'</span>)</a></code></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2019-11-29 23:11:24 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2019-11-29 23:11:26 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2019-11-29 23:11:27 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2019-11-29 23:11:29 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2019-11-29 23:21:56 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2019-11-29 23:21:57 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2019-11-29 23:21:58 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2019-11-29 23:22:00 -&gt; trial 1"</code></pre>
 <p>The flight_curve() function produce a list of 3 objects: 1. [pheno] that contain the standardized phenology curve derived by fitting a GAM model, with a cubic spline to the count data. 2. [model] that contain the result of the fitted GAM model. 3. [data] the data that where used to fit the GAM model.</p>
 <p>From this object, you can extract the [pheno] and produce a figure with the different flight curves.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">pheno &lt;-<span class="st"> </span>ts_flight_curve<span class="op">$</span>pheno</a>
@@ -160,7 +160,7 @@
 <a class="sourceLine" id="cb14-8" data-line-number="8">}</a>
 <a class="sourceLine" id="cb14-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span>(<span class="st">'topright'</span>, <span class="dt">legend =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2003</span>), <span class="dt">col =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2003</span>))), <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">bty =</span> <span class="st">'n'</span>)</a></code></pre></div>
 <div class="figure">
-<img src="Geeting%20Started_files/figure-html/fc-1.png" alt="Flight curve." width="700"><p class="caption">
+<img src="Get_Started_files/figure-html/fc-1.png" alt="Flight curve." width="700"><p class="caption">
 Flight curve.
 </p>
 </div>

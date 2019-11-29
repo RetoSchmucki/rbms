@@ -1,5 +1,5 @@
 ---
-title: 1. Getting Started with rbms
+title: 1. Get started with rbms
 ---
 
 > LINUX note:

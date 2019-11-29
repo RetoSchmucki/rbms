@@ -2,5 +2,5 @@ pandoc: 2.2.2.1
 pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
-  Geeting Started: Geeting Started.html
+  Get_Started: Get_Started.html
 

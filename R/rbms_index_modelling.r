@@ -501,11 +501,19 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 #' @export collated_index
 #'
 
-collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boot_ind=boot_ind, glm_weights=TRUE, rm_zero=TRUE){
+collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE){
 
   data = data[SPECIES == s_sp, ]
   y = as.numeric(as.character(unique(data$M_YEAR)))
-  boot_ind = boot_ind
+
+  if(is.null(boot_ind)){
+    site_id_ <- unique(data[, SITE_ID])
+    boot_ind_ <- matrix(NA, nrow = 1, ncol = length(site_id_))
+    boot_ind_[1, ] <- seq_len(length(site_id_))
+    boot_ind <- list(site_id = site_id_, boot_ind = boot_ind_)
+  } else {
+    boot_ind = boot_ind
+  }
 
   if(is.null(bootID)){
     bootID <- 0

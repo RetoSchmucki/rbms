@@ -199,6 +199,7 @@ df_visit_season <- function(m_visit, ts_season, DateFormat="%Y-%m-%d"){
 
             check_package('data.table')
             m_visit <- data.table::data.table(m_visit)
+            names(m_visit) <- toupper(names(m_visit))
             m_visit <- data.table::copy(m_visit[, .(DATE, SITE_ID)])
             m_visit[, DATE := data.table::as.IDate(as.Date(m_visit$DATE, format = DateFormat))]
 

@@ -1,0 +1,125 @@
+---
+title: 1. Get started with rbms - phenology
+subtitle: From counts to flight curve
+author: Reto Schmucki (UKCEH)
+date: 28 November 2019
+---
+---------
+In this short tutorial, we will show how to fit a flight curve function on butterfly count recorded on a weekly base.
+We will use R functions implemented in the `rbms` package and data bundled within the same package. The data we use are real Butterfly Monitoring Scheme counts and transect visit dates. The flight curve are based on spline fitted on count collected over multiple sites and standardized to sum to 1 (area under the curve is one).
+
+##### 1. load package and data included in the package
+
+```{r data}
+library(rbms)
+data(m_visit)
+data(m_count)
+```
+
+The visit and count data are packaged in `data.table` format, but can also be provided as `data.frame`. The function will convert them into `data.table` as this format allow us to deal with large data sets in a more efficient way. On the other hand, header names need to be consistent and some columns are essential for the functions to work.
+
+Visit data are the visit date at which each site has been visited and thereby monitored for butterfly count. If no butterfly was observed during the visit, the abundance for the that day will be set to zero [0]. This allow you to only document the positive non-zero count in the count data set and thereby handle a smaller object. The visit data can contain a many column as you want, but two are essential
+
+1) **SITE_ID** (can be numbers of characters and treated as non-numeric factor )
+2) **DATE** (by default, the format is "%Y-%m-%d" (e.g. 2019-11-28]). If different the format need to be specified with the argument `DateFormat`)
+
+```{r data_visit, echo = FALSE}
+m_visit
+```
+
+Count data must also be provided with specific columns with the following heading, more can be provided but will not be used in the function.
+
+1) **SITE_ID**
+2) **DATE**
+3) **SPECIES**
+4) **COUNT**
+
+```{r data_count, echo = FALSE}
+m_count
+```
+
+##### 2. organize the data to cover the time period and monitoring season of the BMS
+One you have your visit and count data, we need to merge them together into a `data.table` object the covers that complete time-series of interest and contains information about the start and end of the monitoring season and if the flight curve should be computed weekly or daily.
+
+**2.1.** In a first step, we will initialize a time-series with day-week-month-year information.
+
+```{r init_timeseries}
+ts_date <- rbms::ts_dwmy_table(InitYear = 2000, LastYear = 2003, WeekDay1 = 'monday')
+```
+
+**2.2.** You can then add the monitoring season to the time-series, providing the StartMonth and EndMonth arguments. You can refine this with more arguments (StartDay, EndDay). Here you will also define if the series is on a weekly or daily basis, where `TimeUnit = 'w'`, means that the flight curve will defined on a week basis. The alternative is `'d'` for daily basis. The `ANCHOR` argument will add zeros (0) before and after the monitoring season to ensure that the flight curve starts at zero.
+
+```{r monitoring_season}
+ts_season <- rbms::ts_monit_season(ts_date, StartMonth = 4, EndMonth = 9, StartDay = 1, EndDay = NULL, CompltSeason = TRUE, Anchor = TRUE, AnchorLength = 2, AnchorLag = 2, TimeUnit = 'w')
+```
+> NOTE: for species having overwintering adult, with early counts, having an Anchor set to zero might sound wrong and we are currently working on finding an alternative for these case to better represent the flight curve of those species.
+
+
+**2.3.** After having defined the monitoring season for a specific the time period and monitoring scheme, we will use the `ts_monit_site()` function to expend inform where each site was visited along the time-series.
+you can add your data, starting with the visit date to inform about the sites and the visits
+
+```{r visit_season}
+ts_season_visit <- rbms::ts_monit_site(m_visit, ts_season)
+```
+
+**2.4.** We can then add the observed count for the species of interest to the `data.table` object. Here we use the count recorded for species "2" (species names can also be character).
+
+```{r count_visit}
+ts_season_count <- rbms::ts_monit_count_site(ts_season_visit, m_count, sp = 2)
+```
+
+This result in a `data.table` object that contains the zeros and count recorded along the BMS transect for species "2" over the time-series of interest and within the monitoring season of the schemes. This time-series also contains the week, or days, where count are missing because the site has not been visited. These missing week are marked as `NA` in the count.
+
+```{r count_visit_obj, echo=FALSE}
+ts_season_count
+```
+
+##### 3. Compute the yearly flight curve for the data you just created
+
+With the object constructed above, you can now compute the flight curve for each year where sufficient data are available. The `flight_curve` function assumes that the phenology follow the same shape across the sites.
+
+The objective of this function is to extract the shape of your flight curve, so you might want to impose some minimal quality thresholds to the data used to inform this model. This can be done by setting the Minimum number of visit `MinNbrVisit`, the minimum number of occurrence `MinOccur` and number of site `MinNbrSite`.
+
+These values are likely to influence your model and will differ across species and data set, but `MinOccur` should be set >= 2, the `MinNbrVisit` > `MinOccur` and `MinNbrSite` >= 5. The chose for these threshold will affect how well your model is informed and the with higher value you might have less site and therefore will have to revise the chose.
+
+```{r flight_curve}
+ ts_flight_curve <- rbms::flight_curve(ts_season_count, NbrSample = 300, MinVisit = 5, MinOccur = 3, MinNbrSite = 5, MaxTrial = 4, GamFamily = 'nb', SpeedGam = FALSE, CompltSeason = TRUE, SelectYear = NULL, TimeUnit = 'w')
+```
+> NOTE: for the `flight_curve` furnction, you will also have to define some parameters for the distribution for the GAM model as well as the maximum number of time to try to fit the model and the number of sample to use. The later will take a random sample from the data set if it contain more site than the number specified.
+
+From the `flight_curve()` function, you will retrieve a list of 3 objects:
+-  `pheno` that contain the standardized phenology curve derived by fitting a GAM model, with a cubic spline to the count data.
+-  `model` that contain the result of the fitted GAM model.
+-  `data` the data that where used to fit the GAM model.
+
+You can extract the `pheno` object which is a `data.frame` that contains the shape of the annual flight curves, standardized to sum to 1. These can be illustrated in a figure with the following line of codes.
+
+```{r fc, fig.cap='Flight curve.', tidy=FALSE}
+## Extract phenology part
+pheno <- ts_flight_curve$pheno
+
+## add the line of the first year
+yr <- unique(pheno[order(M_YEAR), as.numeric(as.character(M_YEAR))])
+
+if("trimWEEKNO" %in% names(pheno)){
+  plot(pheno[M_YEAR == yr[1], trimWEEKNO], pheno[M_YEAR == yr[1], NM], type = 'l', ylim = c(0, max(pheno[, NM])), xlab = 'Monitoring Week', ylab = 'Relative Abundance')
+} else {
+  plot(pheno[M_YEAR == yr[1], trimDAYNO], pheno[M_YEAR == yr[1], NM], type = 'l', ylim = c(0, max(pheno[, NM])), xlab = 'Monitoring Day', ylab = 'Relative Abundance')
+
+}
+## add individual curves for additional years
+if(length(yr) > 1) {
+i <- 2
+  for(y in yr[-1]){
+    if("trimWEEKNO" %in% names(pheno)){
+      points(pheno[M_YEAR == y , trimWEEKNO], pheno[M_YEAR == y, NM], type = 'l', col = i)
+    } else {
+      points(pheno[M_YEAR == y, trimDAYNO], pheno[M_YEAR == y, NM], type = 'l', col = i)
+    }
+    i <- i + 1
+  }
+}
+
+## add legend
+legend('topright', legend = c(yr), col = c(seq_along(c(yr))), lty = 1, bty = 'n')
+```

@@ -1,5 +1,7 @@
 
 
+
+
 ##### 4. Impute predicted counts for missing monitoring dates
 
 Using the shape of the flight curve computed in 3, you can now impute expected counts for each site, using a GLM with the site, the observations and the phenology as predictors of daily counts.

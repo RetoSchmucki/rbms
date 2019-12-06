@@ -128,7 +128,7 @@ co_index <- list()
 
 for(i in c(0,seq_len(dim(bootsample$boot_ind)[1]))){
 
- co_index[[i+1]] <- rbmsD::collated_index(data = sindex, s_sp = 2, sindex_value = "SINDEX", bootID=i, boot_ind= bootsample, glm_weights=TRUE, rm_zero=TRUE)
+ co_index[[i+1]] <- rbms::collated_index(data = sindex, s_sp = 2, sindex_value = "SINDEX", bootID=i, boot_ind= bootsample, glm_weights=TRUE, rm_zero=TRUE)
 
 ## for progression bar, uncomment the following
 ## setTxtProgressBar(pb, i)

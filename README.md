@@ -17,7 +17,8 @@ Schmucki R., Harrower C.A.,  Dennis E.B. (2019) rbms: Computing generalised abun
 Once you have successfully installed the [R programming system](https://cran.r-project.org/), you can install the `rbms package` from GitHub, you need to install the package `devtools` available on CRAN. Once installed, use the function `devtools::install_github()` to install the `rbms` package on your system.
 
 > Note that `rbms` has been build with R 3.6.0, so you might have to update your R system before installation.
-> To install devtools, you might have to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
+> To install devtools on Windows system, you might need to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
+> If you are new to `R` or need to refresh your coding skills, try the tutorials at [ourcodingclub](https://ourcodingclub.github.io/) :thumbsup:
 
 ```R
 if(!requireNamespace("devtools")) install.packages("devtools")

@@ -107,10 +107,10 @@
 <a class="sourceLine" id="cb5-5" data-line-number="5">ts_season_visit &lt;-<span class="st"> </span>rbms<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/rbms/man/ts_monit_site.html">ts_monit_site</a></span>(m_visit, ts_season)</a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">ts_season_count &lt;-<span class="st"> </span>rbms<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/rbms/man/ts_monit_count_site.html">ts_monit_count_site</a></span>(ts_season_visit, m_count, <span class="dt">sp =</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb5-7" data-line-number="7">ts_flight_curve &lt;-<span class="st"> </span>rbms<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/rbms/man/flight_curve.html">flight_curve</a></span>(ts_season_count, <span class="dt">NbrSample =</span> <span class="dv">300</span>, <span class="dt">MinVisit =</span> <span class="dv">5</span>, <span class="dt">MinOccur =</span> <span class="dv">3</span>, <span class="dt">MinNbrSite =</span> <span class="dv">5</span>, <span class="dt">MaxTrial =</span> <span class="dv">4</span>, <span class="dt">GamFamily =</span> <span class="st">'nb'</span>, <span class="dt">SpeedGam =</span> <span class="ot">FALSE</span>, <span class="dt">CompltSeason =</span> <span class="ot">TRUE</span>, <span class="dt">SelectYear =</span> <span class="ot">NULL</span>, <span class="dt">TimeUnit =</span> <span class="st">'w'</span>)</a></code></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2019-12-10 12:21:31 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2019-12-10 12:21:33 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2019-12-10 12:21:33 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2019-12-10 12:21:35 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2019-12-10 12:35:07 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2019-12-10 12:35:08 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2019-12-10 12:35:09 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2019-12-10 12:35:11 -&gt; trial 1"</code></pre>
 <div id="impute-predicted-counts-for-missing-monitoring-dates" class="section level5">
 <h5 class="hasAnchor">
 <a href="#impute-predicted-counts-for-missing-monitoring-dates" class="anchor"></a>4. Impute predicted counts for missing monitoring dates</h5>

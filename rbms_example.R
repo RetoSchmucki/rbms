@@ -1,5 +1,6 @@
 R --vanilla
 
+## THIS EXAMPLE IS OUTDATED AND DOES NOT WORK WITH THE latest rbms
 ## add a comment that is very important!
 
 if(!requireNamespace("devtools")) install.packages("devtools")

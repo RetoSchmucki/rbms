@@ -10,19 +10,25 @@ Although `rbms` implements methods that have been develop independently and for 
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C. Dennis E. (2019) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.0.0. https://github.com/RetoSchmucki/rbms
-
+Schmucki R., Harrower C.A.,  Dennis E.B. (2019) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.0.0. https://github.com/RetoSchmucki/rbms
 
 #### Installation
 
-To install this package from GitHub, you need to install the package `devtools` available on CRAN. Once installed, use the function `devtools::install_github()` to install the `rbms` package on your system.
+Once you have successfully installed the [R programming system](https://cran.r-project.org/), you can install the `rbms package` from GitHub, you need to install the package `devtools` available on CRAN. Once installed, use the function `devtools::install_github()` to install the `rbms` package on your system.
 
 > Note that `rbms` has been build with R 3.6.0, so you might have to update your R system before installation.
+> To install devtools, you might have to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
 
 ```R
 if(!requireNamespace("devtools")) install.packages("devtools")
 devtools::install_github("RetoSchmucki/rbms")
 ```
+
+#### Get Started
+
+Consult the [tutorial vignettes / Articles](https://retoschmucki.github.io/rbms/articles/Get_Started_1.html) to learn about `rbms` data format and the workflow how to compute flight curves, abundance indices and collated index with bootstrap confidence interval
+
+Documentation is also available through the help in R or the [online references](https://retoschmucki.github.io/rbms/reference/index.html)
 
 #### Reporting Issues
 

@@ -615,8 +615,6 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
 
 boot_sample <- function(data, boot_n = 1000){
 
-  SITE_ID = NULL
-
   site_id <- unique(data[, SITE_ID])
   boot_n <- boot_n
   boot_ind <- matrix(NA, nrow = boot_n, ncol = length(site_id))

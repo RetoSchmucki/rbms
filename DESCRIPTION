@@ -20,7 +20,7 @@ Authors@R:
 					comment = c(ORCID = "0000-0003-2692-4415")))
 Description: Implementation of the Generalize Abundance Index using the Spline method presented in Dennis et al. 2016. rbms package has been totally rewritten to increase its functionality and flexibility to the end-user.
 Depends: R (>= 3.4.0)
-License: MIT
+License: MIT + file LICENSE
 URL: https://retoschmucki.github.io/rbms/
 LazyData: true
 Imports:

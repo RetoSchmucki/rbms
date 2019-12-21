@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ts_monit_count_site
-Generate a full time series of observed count, for all sites and each day since a starting and ending years of the defined time-series — ts_monit_count_site • rbms</title>
+<title>License • rbms</title>
 
 
 <!-- jquery -->
@@ -30,17 +29,13 @@ Generate a full time series of observed count, for all sites and each day since 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="ts_monit_count_site
-Generate a full time series of observed count, for all sites and each day since a starting and ending years of the defined time-series — ts_monit_count_site" />
-<meta property="og:description" content="ts_monit_count_site
-Generate a full time series of observed count, for all sites and each day since a starting and ending years of the defined time-series" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="License" />
 
 
 
@@ -69,7 +64,7 @@ Generate a full time series of observed count, for all sites and each day since 
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -81,7 +76,7 @@ Generate a full time series of observed count, for all sites and each day since 
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">rbms</a>
+        <a class="navbar-link" href="index.html">rbms</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
@@ -89,13 +84,13 @@ Generate a full time series of observed count, for all sites and each day since 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
+  <a href="index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -105,10 +100,10 @@ Generate a full time series of observed count, for all sites and each day since 
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Get_Started_1.html">1. Get started with rbms - phenology</a>
+      <a href="articles/Get_Started_1.html">1. Get started with rbms - phenology</a>
     </li>
     <li>
-      <a href="../articles/Get_Started_2.html">2. Get started with rbms - collate index</a>
+      <a href="articles/Get_Started_2.html">2. Get started with rbms - collate index</a>
     </li>
   </ul>
 </li>
@@ -126,64 +121,19 @@ Generate a full time series of observed count, for all sites and each day since 
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-    <h1>ts_monit_count_site
-Generate a full time series of observed count, for all sites and each day since a starting and ending years of the defined time-series</h1>
-    
-    <div class="hidden name"><code>ts_monit_count_site.Rd</code></div>
+      <h1>License</h1>
     </div>
 
-    <div class="ref-description">
-    <p>ts_monit_count_site
-Generate a full time series of observed count, for all sites and each day since a starting and ending years of the defined time-series</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>ts_monit_count_site</span>(<span class='no'>m_season_visit</span>, <span class='no'>m_count</span>, <span class='kw'>sp</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>DateFormat</span> <span class='kw'>=</span> <span class='st'>"%Y-%m-%d"</span>)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>m_season_visit</th>
-      <td><p>data.table with potential absence based on visit data as returned by <code>ts_monit_site</code></p></td>
-    </tr>
-    <tr>
-      <th>m_count</th>
-      <td><p>data.table or data.frame with monitoring count data</p></td>
-    </tr>
-    <tr>
-      <th>sp</th>
-      <td><p>integer or string for the species ID or name</p></td>
-    </tr>
-    <tr>
-      <th>DateFormat</th>
-      <td><p>format used for the date in the count data, default="%Y-%m-%d".</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A data.table with a complete time-series where absences (0) and recorded counts for a specific species are implemented for each
-        site.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><a href='ts_monit_site.html'>ts_monit_site</a></p></div>
+<pre>YEAR: 2019
+COPYRIGHT HOLDER: Reto Schmucki
+</pre>
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-    </ul>
 
-    <h2>Author</h2>
-    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
-  </div>
 </div>
+
 
 
       <footer>

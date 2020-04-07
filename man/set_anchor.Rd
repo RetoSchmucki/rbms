@@ -6,8 +6,7 @@
 Add Anchors of "zeros" at determined distance on each side of the monitoring season with specific weight (length),
 this function is used by ts_monit_season()}
 \usage{
-set_anchor(FirstObs, LastObs, AnchorLength = 7, AnchorLag = 7,
-  TimeUnit = "d")
+set_anchor(FirstObs, LastObs, AnchorLength = 7, AnchorLag = 7, TimeUnit = "d")
 }
 \arguments{
 \item{FirstObs}{integer defining the start of the monitoring season - correspond to the day since}

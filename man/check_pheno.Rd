@@ -5,8 +5,7 @@
 \title{check_pheno
 Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.}
 \usage{
-check_pheno(sp_count_flight, ts_flight_curve, YearCheck, YearLimit,
-  TimeUnit)
+check_pheno(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, TimeUnit)
 }
 \arguments{
 \item{sp_count_flight}{data.table with the flight curve, relative abundance (NM), for a specific year.}

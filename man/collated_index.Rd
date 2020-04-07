@@ -5,8 +5,15 @@
 \title{collated_index
 compute a collated index from the site indices, using a Generalized Linear Model.}
 \usage{
-collated_index(data, s_sp, sindex_value = "SINDEX", bootID = NULL,
-  boot_ind = NULL, glm_weights = TRUE, rm_zero = TRUE)
+collated_index(
+  data,
+  s_sp,
+  sindex_value = "SINDEX",
+  bootID = NULL,
+  boot_ind = NULL,
+  glm_weights = TRUE,
+  rm_zero = TRUE
+)
 }
 \arguments{
 \item{data}{data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.}

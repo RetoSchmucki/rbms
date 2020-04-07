@@ -4,8 +4,15 @@
 \alias{impute_count}
 \title{impute_count}
 \usage{
-impute_count(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL,
-  YearLimit = NULL, SelectYear = NULL, CompltSeason = TRUE)
+impute_count(
+  ts_season_count,
+  ts_flight_curve,
+  TimeUnit,
+  sp = NULL,
+  YearLimit = NULL,
+  SelectYear = NULL,
+  CompltSeason = TRUE
+)
 }
 \arguments{
 \item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}

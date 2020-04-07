@@ -1,7 +1,7 @@
 Package: rbms
 Title: Compute abundance index Butterfly Monitoring Schemes and flight curves, using the Generalize Abundance Index, using the spline approach
-Version: 1.0.0
-Date: 28-11-2019
+Version: 1.0.1
+Date: 07-04-2020
 Authors@R:
 	c(person(given = "Reto",
 					family ="Schmucki",
@@ -28,5 +28,5 @@ Imports:
 	data.table,
 	MASS,
 	speedglm
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Encoding: UTF-8

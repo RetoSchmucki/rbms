@@ -5,8 +5,12 @@
 \title{ts_monit_count_site
 Generate a full time series of observed count, for all sites and each day since a starting and ending years of the defined time-series}
 \usage{
-ts_monit_count_site(m_season_visit, m_count, sp = 1,
-  DateFormat = "\%Y-\%m-\%d")
+ts_monit_count_site(
+  m_season_visit,
+  m_count,
+  sp = 1,
+  DateFormat = "\%Y-\%m-\%d"
+)
 }
 \arguments{
 \item{m_season_visit}{data.table with potential absence based on visit data as returned by \code{ts_monit_site}}

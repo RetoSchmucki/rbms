@@ -6,14 +6,14 @@
 ##      OBJECT: object_snake_name
 ##      VARIABLE NAME: UPPER_CASE
 ##
-##      Date:   02.01.2018
+##      Date:   07.04.2020
 ##
 ##      rbms_toolbox: useful functions for the rbms package
 ##
 ##==========================================
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(" Welcome to rbms, version 1.0.0 \n While this package has been tested by several users,\n it is still in active development and feedbacks are welcome \n https://github.com/RetoSchmucki/rbms/issues")
+  packageStartupMessage(" Welcome to rbms, version 1.0.1 \n While this package has been tested by several users,\n it is still in active development and feedbacks are welcome \n https://github.com/RetoSchmucki/rbms/issues")
 }
 
 

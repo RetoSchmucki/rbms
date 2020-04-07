@@ -5,11 +5,25 @@
 \title{flight_curve
 Compute the annual flight curve from butterfly count data collated across multiple sites.}
 \usage{
-flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
-  MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
-  GamFamily = "poisson", CompltSeason = TRUE, SelectYear = NULL,
-  SpeedGam = TRUE, OptiGam = TRUE, KeepModel = TRUE,
-  KeepModelData = TRUE, TimeUnit = "d", ...)
+flight_curve(
+  ts_season_count,
+  NbrSample = 100,
+  MinVisit = 3,
+  MinOccur = 2,
+  MinNbrSite = 1,
+  MaxTrial = 3,
+  GamFamily = "poisson",
+  CompltSeason = TRUE,
+  SelectYear = NULL,
+  SpeedGam = TRUE,
+  OptiGam = TRUE,
+  KeepModel = TRUE,
+  KeepModelData = TRUE,
+  ConLikelihood = TRUE,
+  TimeUnit = "d",
+  MultiVisit = "mean",
+  ...
+)
 }
 \arguments{
 \item{ts_season_count}{data.table with complete time series of count and season information returned by \link{ts_monit_count_site}}
@@ -38,7 +52,11 @@ flight_curve(ts_season_count, NbrSample = 100, MinVisit = 3,
 
 \item{KeepModelData}{Logical to keep the data used for the GAM.}
 
+\item{ConLikelihood}{Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).}
+
 \item{TimeUnit}{Character to define days 'd' or week 'w' as variable for the GAM.}
+
+\item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
 
 \item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }

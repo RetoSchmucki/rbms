@@ -5,8 +5,11 @@
 \title{ts_dwmy_table
 Generate a time-series of dates with day, week, month and year (dwmy) from one initial to an end years}
 \usage{
-ts_dwmy_table(InitYear = 1970, LastYear = format(Sys.Date(), "\%Y"),
-  WeekDay1 = "monday")
+ts_dwmy_table(
+  InitYear = 1970,
+  LastYear = format(Sys.Date(), "\%Y"),
+  WeekDay1 = "monday"
+)
 }
 \arguments{
 \item{InitYear}{start year of the time-series, 4 numbers format (e.g 1987)}

@@ -5,8 +5,17 @@
 \title{fit_gam
 fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site effect when multiple are available.}
 \usage{
-fit_gam(dataset_y, NbrSample = NULL, GamFamily = "poisson",
-  MaxTrial = 4, SpeedGam = TRUE, OptiGam = TRUE, TimeUnit = "d")
+fit_gam(
+  dataset_y,
+  NbrSample = NULL,
+  GamFamily = "poisson",
+  MaxTrial = 4,
+  SpeedGam = TRUE,
+  OptiGam = TRUE,
+  ConLikelihood = TRUE,
+  TimeUnit = "d",
+  MultiVisit = "mean"
+)
 }
 \arguments{
 \item{dataset_y}{data.table with filtered butterfly counts for species x over year y over all sites.}
@@ -21,7 +30,11 @@ fit_gam(dataset_y, NbrSample = NULL, GamFamily = "poisson",
 
 \item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset}
 
-\item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
+\item{ConLikelihood}{Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).}
+
+\item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'w'.}
+
+\item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
 
 \item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }

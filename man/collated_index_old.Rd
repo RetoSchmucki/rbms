@@ -5,8 +5,7 @@
 \title{collated_index_old
 compute a collated index from the site indices, using a Generalized Linear Model.}
 \usage{
-collated_index_old(site_indices, GlmWeight = NULL,
-  GlmFamily = poisson())
+collated_index_old(site_indices, GlmWeight = NULL, GlmFamily = poisson())
 }
 \arguments{
 \item{site_indices}{data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.}

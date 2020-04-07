@@ -5,8 +5,21 @@
 \title{get_nm
 Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.}
 \usage{
-get_nm(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample,
-  GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit)
+get_nm(
+  y,
+  ts_season_count,
+  MinVisit,
+  MinOccur,
+  MinNbrSite,
+  NbrSample,
+  GamFamily,
+  MaxTrial,
+  SpeedGam,
+  OptiGam,
+  TimeUnit,
+  ConLikelihood,
+  MultiVisit
+)
 }
 \arguments{
 \item{y}{integer of vector of years for which to compute flight curve.}
@@ -30,6 +43,10 @@ get_nm(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample,
 \item{OptiGam}{Logical to set use bam when data are larger than 200 and gam for smaller dataset}
 
 \item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
+
+\item{ConLikelihood}{Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).}
+
+\item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
 }
 \value{
 A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,

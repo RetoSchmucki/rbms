@@ -280,6 +280,8 @@ ts_monit_site = function(m_visit, ts_season, DateFormat="%Y-%m-%d") {
 ts_monit_count_site = function(m_season_visit, m_count, sp=1, DateFormat="%Y-%m-%d") {
 
         check_package('data.table')
+        if (is.null(sp)) stop("Argument 'sp' not defined, you need to specify the species as found in your count data")
+
         names(m_season_visit) <- toupper(names(m_season_visit))
         check_names(m_season_visit, c("DATE", "SITE_ID", "COUNT"))
         m_season_visit_copy <- data.table::copy(m_season_visit)
@@ -293,8 +295,8 @@ ts_monit_count_site = function(m_season_visit, m_count, sp=1, DateFormat="%Y-%m-
             stop(paste("Species", sp, "is not found in your dataset, check your \"sp\" argument."))
         }else{
             m_sp_count <- m_count[SPECIES %in% sp, ]
-            data.table::setkey(m_sp_count, DATE, SITE_ID, SPECIES)
-            data.table::setkey(m_season_visit, DATE, SITE_ID)
+            data.table::setkey(m_sp_count, DATE, SITE_ID)
+            data.table::setkey(m_season_visit_copy, DATE, SITE_ID)
             spcount_site_series <- m_season_visit_copy[m_sp_count, COUNT := m_sp_count[, as.integer(COUNT)]]
             spcount_site_series[, SPECIES := sp]
         }

@@ -20,8 +20,10 @@
 #' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
 #' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
+#' @param ConLikelihood Logical to use the concentrated likehood approach with not site parameters.
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
-#' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
+#' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'w'.
+#' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.
@@ -33,7 +35,7 @@
 #'
 
 fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial = 4,
-                    SpeedGam = TRUE, OptiGam = TRUE, TimeUnit = 'd'){
+                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = NULL){
 
         check_package('data.table')
 
@@ -66,17 +68,37 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
             print(paste("Fitting the flight curve spline for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
                         sp_data_all[, uniqueN(SITE_ID)], "sites, using", gamMethod, ":", Sys.time(), "-> trial", tr))
 
-            if(TimeUnit == 'd'){
-              tp_col <- "trimDAYNO"
-              dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-              sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
+            if(MultiVisit == "max") {
+                if(TimeUnit == 'd'){
+                  tp_col <- "trimDAYNO"
+                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
+                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
+                } else {
+                  tp_col <- "trimWEEKNO"
+                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
+                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
+                }
             } else {
-              tp_col <- "trimWEEKNO"
-              dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-              sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
+                if (TimeUnit == "d") {
+                  tp_col <- "trimDAYNO"
+                  sp_data_all[ , meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)), by = .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)]
+                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, meanCOUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
+                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, meanCOUNT), ][dup, ]
+                  sp_data_all <- sp_data_all[ , COUNT := meanCOUNT][ , meanCOUNT := NULL]
+                } else {
+                  tp_col <- "trimWEEKNO"
+                  sp_data_all[, meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)), by = .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)]
+                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, meanCOUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
+                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, meanCOUNT), ][dup, ]
+                  sp_data_all <- sp_data_all[, COUNT := meanCOUNT][, meanCOUNT := NULL]
+                }
             }
 
-            mod_form <- as.formula(paste0("COUNT ~ s(",tp_col,",bs =\"cr\")",ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)","")))
+            if(isTRUE(ConLikelihood)){
+            mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")"))
+            } else {
+            mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")", ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)", "")))
+            }
 
               if(isTRUE(SpeedGam)){
                 gam_obj_site <- try(mgcv::bam(mod_form, data=sp_data_all, family=GamFamily), silent = TRUE)
@@ -89,7 +111,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
         }
 
         if (class(gam_obj_site)[1] == "try-error") {
-            print(paste("Error in fitting the RegionalGAM for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1],
+            print(paste("Error in fitting the GAM for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1],
                     "; Model did not converge after", tr, "trials"))
             sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
         } else {
@@ -129,6 +151,8 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 200 and gam for smaller dataset
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
+#' @param ConLikelihood Logical to use the concentrated likehood approach with not site parameters.
+#' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
 #' @return A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
 #' @keywords gam, spline
@@ -138,7 +162,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @export get_nm
 #'
 #ts_season_count_d <- ts_season_count
-get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit){
+get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit, ConLikelihood, MultiVisit){
 
   dataset_y <- ts_season_count[as.integer(M_YEAR) == y, ]
   visit_occ_site <- merge(dataset_y[!is.na(COUNT) & ANCHOR == 0L, .N, by=SITE_ID],
@@ -160,7 +184,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
     print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
   } else {
     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
-                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit)
+                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, ConLikelihood = ConLikelihood,  MultiVisit = MultiVisit)
   }
   return(f_curve_mod)
 }
@@ -195,7 +219,8 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
                          GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
-                         OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, TimeUnit = 'd', ...) {
+                         OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, , ConLikelihood = TRUE,
+                         TimeUnit = 'd', MultiVisit = NULL, ...) {
 
         check_package('data.table')
 
@@ -566,7 +591,13 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
     pred_data_boot <- expand.grid(unique(data_boot$uID), unique(data_boot$M_YEAR))
     names(pred_data_boot) <- c("uID", "M_YEAR")
 
-    mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, paste0("I(round(", sindex_value,")) ~ factor(uID) + factor(M_YEAR) - 1"), paste0("I(round(", sindex_value,"))) ~ factor(M_YEAR) - 1")))
+    if (data_boot[, uniqueN(M_YEAR)] == 1 & data_boot[, uniqueN(SITE_ID)] == 1) warning(paste0(sindex_value, " available for only one site and one year: no collated index computed for ", s_sp, " - ", unique(data_boot$M_YEAR)), call. = FALSE)
+    
+    if (data_boot[, uniqueN(M_YEAR)] == 1) {
+      mod_form <- as.formula(paste0("I(round(", sindex_value, ")) ~ factor(uID) - 1"))
+    } else {
+      mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, paste0("I(round(", sindex_value, ")) ~ factor(uID) + factor(M_YEAR) - 1"), paste0("I(round(", sindex_value, "))) ~ factor(M_YEAR) - 1")))
+    }
 
     if(!isTRUE(glm_weights)){
       data_boot[ , weights := 1]

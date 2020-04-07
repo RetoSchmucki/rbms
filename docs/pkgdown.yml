@@ -1,7 +1,8 @@
-pandoc: 2.2.2.1
-pkgdown: 1.4.1
+pandoc: 2.9.1.1
+pkgdown: 1.5.0
 pkgdown_sha: ~
 articles:
   Get_Started_1: Get_Started_1.html
   Get_Started_2: Get_Started_2.html
+last_built: 2020-04-07T19:16Z
 

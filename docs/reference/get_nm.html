@@ -11,23 +11,27 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -40,7 +44,6 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
 Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data. — get_nm" />
 <meta property="og:description" content="get_nm
 Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -68,7 +71,7 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -82,7 +85,7 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -139,8 +142,21 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
 Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_nm</span>(<span class='no'>y</span>, <span class='no'>ts_season_count</span>, <span class='no'>MinVisit</span>, <span class='no'>MinOccur</span>, <span class='no'>MinNbrSite</span>, <span class='no'>NbrSample</span>,
-  <span class='no'>GamFamily</span>, <span class='no'>MaxTrial</span>, <span class='no'>SpeedGam</span>, <span class='no'>OptiGam</span>, <span class='no'>TimeUnit</span>)</pre>
+    <pre class="usage"><span class='fu'>get_nm</span>(
+  <span class='no'>y</span>,
+  <span class='no'>ts_season_count</span>,
+  <span class='no'>MinVisit</span>,
+  <span class='no'>MinOccur</span>,
+  <span class='no'>MinNbrSite</span>,
+  <span class='no'>NbrSample</span>,
+  <span class='no'>GamFamily</span>,
+  <span class='no'>MaxTrial</span>,
+  <span class='no'>SpeedGam</span>,
+  <span class='no'>OptiGam</span>,
+  <span class='no'>TimeUnit</span>,
+  <span class='no'>ConLikelihood</span>,
+  <span class='no'>MultiVisit</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,6 +205,14 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
       <th>TimeUnit</th>
       <td><p>Character defining if the spline should be computed at the day 'd' or the week 'd'.</p></td>
     </tr>
+    <tr>
+      <th>ConLikelihood</th>
+      <td><p>Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).</p></td>
+    </tr>
+    <tr>
+      <th>MultiVisit</th>
+      <td><p>function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -200,16 +224,10 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
     <div class='dont-index'><p><a href='flight_curve.html'>flight_curve</a>, <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a>, <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a></p></div>
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -220,7 +238,7 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

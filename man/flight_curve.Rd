@@ -52,7 +52,7 @@ flight_curve(
 
 \item{KeepModelData}{Logical to keep the data used for the GAM.}
 
-\item{ConLikelihood}{Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).}
+\item{ConLikelihood}{Logical to use the concentrated likelihood approach without site parameters (default = TRUE).}
 
 \item{TimeUnit}{Character to define days 'd' or week 'w' as variable for the GAM.}
 

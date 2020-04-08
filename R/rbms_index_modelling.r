@@ -20,7 +20,7 @@
 #' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
 #' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
-#' @param ConLikelihood Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).
+#' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'w'.
 #' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
@@ -151,7 +151,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 200 and gam for smaller dataset
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
-#' @param ConLikelihood Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).
+#' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 #' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
 #' @return A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
@@ -204,7 +204,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset.
 #' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}.
 #' @param KeepModelData Logical to keep the data used for the GAM.
-#' @param ConLikelihood Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).
+#' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 #' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
 #' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.

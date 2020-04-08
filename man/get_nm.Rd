@@ -44,7 +44,7 @@ get_nm(
 
 \item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
 
-\item{ConLikelihood}{Logical to use the concentrated likelihood approach with not site parameters (default = TRUE).}
+\item{ConLikelihood}{Logical to use the concentrated likelihood approach without site parameters (default = TRUE).}
 
 \item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
 }

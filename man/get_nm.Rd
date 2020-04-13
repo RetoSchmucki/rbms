@@ -17,7 +17,6 @@ get_nm(
   SpeedGam,
   OptiGam,
   TimeUnit,
-  ConLikelihood,
   MultiVisit
 )
 }
@@ -43,8 +42,6 @@ get_nm(
 \item{OptiGam}{Logical to set use bam when data are larger than 200 and gam for smaller dataset}
 
 \item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
-
-\item{ConLikelihood}{Logical to use the concentrated likelihood approach without site parameters (default = TRUE).}
 
 \item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
 }

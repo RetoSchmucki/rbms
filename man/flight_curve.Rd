@@ -19,7 +19,6 @@ flight_curve(
   OptiGam = TRUE,
   KeepModel = TRUE,
   KeepModelData = TRUE,
-  ConLikelihood = TRUE,
   TimeUnit = "d",
   MultiVisit = "mean",
   ...
@@ -51,8 +50,6 @@ flight_curve(
 \item{KeepModel}{Logical to keep model output in a list object named \code{flight_curve_model}.}
 
 \item{KeepModelData}{Logical to keep the data used for the GAM.}
-
-\item{ConLikelihood}{Logical to use the concentrated likelihood approach without site parameters (default = TRUE).}
 
 \item{TimeUnit}{Character to define days 'd' or week 'w' as variable for the GAM.}
 

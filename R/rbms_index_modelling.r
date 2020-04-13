@@ -20,7 +20,7 @@
 #' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
 #' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
-#' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
+##' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'w'.
 #' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
@@ -94,11 +94,11 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
                 }
             }
 
-            if(isTRUE(ConLikelihood)){
-            mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")"))
-            } else {
+           # if(isTRUE(ConLikelihood)){
+           # mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")"))
+           # } else {
             mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")", ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)", "")))
-            }
+           # }
 
               if(isTRUE(SpeedGam)){
                 gam_obj_site <- try(mgcv::bam(mod_form, data=sp_data_all, family=GamFamily), silent = TRUE)
@@ -151,7 +151,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
 #' @param OptiGam Logical to set use bam when data are larger than 200 and gam for smaller dataset
 #' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
-#' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
+##' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 #' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
 #' @return A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
@@ -162,7 +162,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @export get_nm
 #'
 #ts_season_count_d <- ts_season_count
-get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit, ConLikelihood, MultiVisit){
+get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit, MultiVisit){ #ConLikelihood
 
   dataset_y <- ts_season_count[as.integer(M_YEAR) == y, ]
   visit_occ_site <- merge(dataset_y[!is.na(COUNT) & ANCHOR == 0L, .N, by=SITE_ID],
@@ -184,7 +184,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
     print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
   } else {
     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
-                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, ConLikelihood = ConLikelihood,  MultiVisit = MultiVisit)
+                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit) #ConLikelihood = ConLikelihood,
   }
   return(f_curve_mod)
 }
@@ -204,7 +204,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset.
 #' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}.
 #' @param KeepModelData Logical to keep the data used for the GAM.
-#' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
+##' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 #' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
 #' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
 #' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
@@ -221,8 +221,8 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
                          GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
-                         OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, ConLikelihood = TRUE,
-                         TimeUnit = 'd', MultiVisit = "mean", ...) {
+                         OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, 
+                         TimeUnit = 'd', MultiVisit = "mean", ...) { #ConLikelihood = TRUE,
 
         check_package('data.table')
 
@@ -257,7 +257,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
         result_fc <- lapply(year_series, get_nm, ts_season_count=ts_season_count, MinVisit=MinVisit, MinOccur=MinOccur, MinNbrSite=MinNbrSite,
                                                   NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, SpeedGam = SpeedGam,
-                                                  OptiGam = OptiGam, ConLikelihood = ConLikelihood, TimeUnit = TimeUnit, MultiVisit = MultiVisit)
+                                                  OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit) #ConLikelihood = ConLikelihood, 
 
         result_fcurve <- data.table::rbindlist(lapply(result_fc, function(x) x$f_curve), fill = TRUE)
         result_fdata <- data.table::rbindlist(lapply(result_fc, function(x) x$f_data), fill = TRUE)

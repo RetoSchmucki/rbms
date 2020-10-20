@@ -138,22 +138,22 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
     return(f_curve_mod)
 }
 
-#' get_nm
-#' Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.
-#' @param y integer of vector of years for which to compute flight curve.
-#' @param ts_season_count data.table with complete time series of count and season information returned by \link{ts_monit_count_site}
-#' @param MinVisit integer setting the minimum number of visit required for a site to included in the computation, default=3.
-#' @param MinOccur integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.
-#' @param MinNbrSite integer setting the minimum number of site required to compute the flight curve, default=1.
-#' @param NbrSample integer inherited from \link{flight_curve}, when set to 'NULL' (default), all site are considered in the GAM model
-#' @param GamFamily string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
-#' @param MaxTrial integer inherited from \link{flight_curve}, default=3.
-#' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
-#' @param OptiGam Logical to set use bam when data are larger than 200 and gam for smaller dataset
-#' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
 
-#' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
-#' @return A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
+#' get_nm
+#' Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.
+#' @param y integer Vector of years for which to compute the flight curve.
+#' @param ts_season_count data.table Time-series of count and season information returned by \link{ts_monit_count_site}
+#' @param MinVisit integer The minimum number of visits required for a site to be included in the computation, default=3.
+#' @param MinOccur integer The minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.
+#' @param MinNbrSite integer The minimum number of sites required to compute the flight curve, default=1.
+#' @param NbrSample integer Value inherited from \link{flight_curve}, when set to 'NULL' (default), all site are considered in the GAM model
+#' @param GamFamily string Value inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.
+#' @param MaxTrial integer Value inherited from \link{flight_curve}, default=3.
+#' @param SpeedGam logical Set if the \link[mgcv]{bam} method should be used, default instead of the default \link[mgcv]{gam} method.
+#' @param OptiGam logical Set the use the \link[mgcv]{bam} method when data are larger than 200 and gam for smaller datasets
+#' @param TimeUnit character Time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @param MultiVisit string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).
+#' @return A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalised to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
 #' @keywords gam, spline
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
@@ -161,8 +161,8 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @import data.table
 #' @export get_nm
 #'
-#ts_season_count_d <- ts_season_count
-get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit, MultiVisit){ #ConLikelihood
+
+get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit, MultiVisit){
 
   dataset_y <- ts_season_count[as.integer(M_YEAR) == y, ]
   visit_occ_site <- merge(dataset_y[!is.na(COUNT) & ANCHOR == 0L, .N, by=SITE_ID],
@@ -189,24 +189,25 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
   return(f_curve_mod)
 }
 
+
 #' flight_curve
-#' Compute the annual flight curve from butterfly count data collated across multiple sites.
-#' @param ts_season_count data.table with complete time series of count and season information returned by \link{ts_monit_count_site}
-#' @param NbrSample integer setting the maximum number of site to use to compute the flight curve, default=100.
-#' @param MinVisit integer setting the minimum number of visit required for a site to included in the computation, default=3.
-#' @param MinOccur integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.
-#' @param MinNbrSite integer setting the minimum number of site required to compute the flight curve, default=1.
-#' @param MaxTrial integer setting the maximum number of trial to reach convergence of the model, default=3.
-#' @param GamFamily string setting the distribution of the error term in the GAM, default='poisson', but can be 'nb' or 'quasipoisson'.
+#' Compute the annual flight curve from butterfly count data collated across sites.
+#' @param ts_season_count data.table Time-series of counts and season information returned by \link{ts_monit_count_site}
+#' @param NbrSample integer The maximum number of sites to use for computing the flight curve, default=100.
+#' @param MinVisit integer The minimum number of visits required for a site to be included, default=3.
+#' @param MinOccur integer The minimum number of positive records (e.g. >= 1) required in one year for a site to be included, default=2.
+#' @param MinNbrSite integer The minimum number of sites required to compute a flight curve, default=1.
+#' @param MaxTrial integer The maximum number of trials for model convergence, default=3.
+#' @param GamFamily string The distribution of the error term used in the GAM, default='poisson', but can be the negative-binomial 'nb' or 'quasipoisson'.
 #' @param CompltSeason Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.
-#' @param SelectYear integer to select a specific year to compute the flight curve, default=NULL.
-#' @param SpeedGam Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.
-#' @param OptiGam Logical to set use bam when data are larger than 100 and gam for smaller dataset.
+#' @param SelectYear integer Select a specific year to compute the flight curve, default=NULL.
+#' @param SpeedGam Logical Set if the \link[mgcv]{bam} method should be used, default instead of the default \link[mgcv]{gam} method.
+#' @param OptiGam Logical Set the use of the \link[mgcv]{bam} method when data are larger than 200 and gam for smaller datasets
 #' @param KeepModel Logical to keep model output in a list object named \code{flight_curve_model}.
 #' @param KeepModelData Logical to keep the data used for the GAM.
-#' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
-#' @param MultiVisit function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).
-#' @param ... additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
+#' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
+#' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
 #' @keywords gam, flight curve
@@ -221,7 +222,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
                          GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
                          OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, 
-                         TimeUnit = 'd', MultiVisit = "mean", ...) { #ConLikelihood = TRUE,
+                         TimeUnit = 'd', MultiVisit = "mean", ...) {
 
         check_package('data.table')
 
@@ -277,11 +278,12 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
     return(result_fc)
 }
 
+
 #' get_nny
-#' find nearest year with flight period
-#' @param x year to find nearest flight period.
-#' @param y years with available flight period.
-#' @return z a value of the nearest year
+#' find the nearest year with a computed flight curve
+#' @param x integer Year for which to find the nearest flight curve.
+#' @param y vector Years with available flight curve.
+#' @return z integer The value of the nearest year with flight curve.
 #' @keywords flight curve
 #' @seealso \link{check_pheno}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -298,13 +300,13 @@ get_nny <- function(x, y) {
 
 
 #' check_pheno
-#' Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
-#' @param sp_count_flight data.table with the flight curve, relative abundance (NM), for a specific year.
-#' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.
-#' @param YearCheck integer or vector of year to check for nearest phenology, set internally in \link{impute_count}.
-#' @param YearLimit integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.
-#' @param TimeUnit Character defining if the spline should be computed at the day 'd' or the week 'd'.
-#' @return A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+#' Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in \link{impute_count}.
+#' @param sp_count_flight data.table Object with the flight curve, relative abundance (NM), for a specific year.
+#' @param ts_flight_curve data.table Object with the all flight curves and relative abundance (NM) for the years available for the search as returned by \link{flight_curve}.
+#' @param YearCheck integer or vector Year to check for nearest flight curve, set internally in \link{impute_count}.
+#' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
+#' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @return A data.table with time-series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
 #'         phenology is available.
 #' @keywords flight curve
 #' @seealso \link{impute_count}, \link{flight_curve}
@@ -363,15 +365,15 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 
 
 #' impute_count
-#' @param ts_season_count data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
-#' @param ts_flight_curve data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.
-#' @param TimeUnit Character to define days 'd' or week 'w' as variable for the GAM.
-#' @param sp integer or string for the species ID or name.
-#' @param YearLimit integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.
-#' @param SelectYear integer to select a specific year to compute the flight curve, default=NULL.
-#' @param CompltSeason Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.
+#' @param ts_season_count data.table Time-series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
+#' @param ts_flight_curve data.table Flight curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.
+#' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @param sp integer or string Species ID or name.
+#' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
+#' @param SelectYear integer Select a specific year to compute the flight curve, default=NULL.
+#' @param CompltSeason logical Restrict computation of flight curve for years where the complete season was sampled, default=TRUE.
 #' @return A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
-#' @details Site indices can be extracted from the data.table returned from this function. The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
+#' @details Site indices can be extracted from the data.table returned by this function. The site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 #' @keywords site index, flight curve
 #' @seealso \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -447,10 +449,10 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, 
 
 
 #' site_index
-#' extract abundance indices per sites and year based on flight curve imputation.
-#' @param butterfly_count data.table with observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2()
-#' @param MinFC value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.
-#' @return data.table with estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
+#' extract abundance indices per site and year based on flight curve imputation.
+#' @param butterfly_count data.table Observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2().
+#' @param MinFC numeric Value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.
+#' @return data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
 #' @keywords butterfly count
 #' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -512,7 +514,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 
 #' collated_index
 #' compute a collated index from the site indices, using a Generalized Linear Model.
-#' @param data data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.
+#' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string with with the species name to be found in the data.
 #' @param sindex_value string defining the response variable to be used for collated index computation, default is "SINDEX", but could be other standardized values.
 #' @param bootID integer with the n^th bootstrap.

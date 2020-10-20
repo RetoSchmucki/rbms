@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>get_nm
-Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data. — get_nm • rbms</title>
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data. — get_nm • rbms</title>
 
 
 <!-- jquery -->
@@ -41,9 +41,9 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
 
 
 <meta property="og:title" content="get_nm
-Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data. — get_nm" />
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data. — get_nm" />
 <meta property="og:description" content="get_nm
-Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data." />
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data." />
 
 
 
@@ -132,91 +132,94 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>get_nm
-Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.</h1>
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.</h1>
     
     <div class="hidden name"><code>get_nm.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>get_nm
-Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.</p>
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_nm</span>(
-  <span class='no'>y</span>,
-  <span class='no'>ts_season_count</span>,
-  <span class='no'>MinVisit</span>,
-  <span class='no'>MinOccur</span>,
-  <span class='no'>MinNbrSite</span>,
-  <span class='no'>NbrSample</span>,
-  <span class='no'>GamFamily</span>,
-  <span class='no'>MaxTrial</span>,
-  <span class='no'>SpeedGam</span>,
-  <span class='no'>OptiGam</span>,
-  <span class='no'>TimeUnit</span>,
-  <span class='no'>MultiVisit</span>
-)</pre>
+    <pre class="usage"><span class='fu'>get_nm</span><span class='op'>(</span>
+  <span class='va'>y</span>,
+  <span class='va'>ts_season_count</span>,
+  <span class='va'>MinVisit</span>,
+  <span class='va'>MinOccur</span>,
+  <span class='va'>MinNbrSite</span>,
+  <span class='va'>NbrSample</span>,
+  <span class='va'>GamFamily</span>,
+  <span class='va'>MaxTrial</span>,
+  <span class='va'>SpeedGam</span>,
+  <span class='va'>OptiGam</span>,
+  <span class='va'>TimeUnit</span>,
+  <span class='va'>MultiVisit</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>y</th>
-      <td><p>integer of vector of years for which to compute flight curve.</p></td>
+      <td><p>integer Vector of years for which to compute the flight curve.</p></td>
     </tr>
     <tr>
       <th>ts_season_count</th>
-      <td><p>data.table with complete time series of count and season information returned by <a href='ts_monit_count_site.html'>ts_monit_count_site</a></p></td>
+      <td><p>data.table Time-series of count and season information returned by <a href='ts_monit_count_site.html'>ts_monit_count_site</a></p></td>
     </tr>
     <tr>
       <th>MinVisit</th>
-      <td><p>integer setting the minimum number of visit required for a site to included in the computation, default=3.</p></td>
+      <td><p>integer The minimum number of visits required for a site to be included in the computation, default=3.</p></td>
     </tr>
     <tr>
       <th>MinOccur</th>
-      <td><p>integer setting the minimum number of positive records (e.g. &gt;= 1) observed over the year in a site default=2.</p></td>
+      <td><p>integer The minimum number of positive records (e.g. &gt;= 1) observed over the year in a site default=2.</p></td>
     </tr>
     <tr>
       <th>MinNbrSite</th>
-      <td><p>integer setting the minimum number of site required to compute the flight curve, default=1.</p></td>
+      <td><p>integer The minimum number of sites required to compute the flight curve, default=1.</p></td>
     </tr>
     <tr>
       <th>NbrSample</th>
-      <td><p>integer inherited from <a href='flight_curve.html'>flight_curve</a>, when set to 'NULL' (default), all site are considered in the GAM model</p></td>
+      <td><p>integer Value inherited from <a href='flight_curve.html'>flight_curve</a>, when set to 'NULL' (default), all site are considered in the GAM model</p></td>
     </tr>
     <tr>
       <th>GamFamily</th>
-      <td><p>string inherited from <a href='flight_curve.html'>flight_curve</a>, default='poisson', but can be 'nb' or 'quasipoisson'.</p></td>
+      <td><p>string Value inherited from <a href='flight_curve.html'>flight_curve</a>, default='poisson', but can be 'nb' or 'quasipoisson'.</p></td>
     </tr>
     <tr>
       <th>MaxTrial</th>
-      <td><p>integer inherited from <a href='flight_curve.html'>flight_curve</a>, default=3.</p></td>
+      <td><p>integer Value inherited from <a href='flight_curve.html'>flight_curve</a>, default=3.</p></td>
     </tr>
     <tr>
       <th>SpeedGam</th>
-      <td><p>Logical to use the <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a> method instead of the <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> method.</p></td>
+      <td><p>logical Set if the <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a> method should be used, default instead of the default <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> method.</p></td>
     </tr>
     <tr>
       <th>OptiGam</th>
-      <td><p>Logical to set use bam when data are larger than 200 and gam for smaller dataset</p></td>
+      <td><p>logical Set the use the <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a> method when data are larger than 200 and gam for smaller datasets</p></td>
     </tr>
     <tr>
       <th>TimeUnit</th>
-      <td><p>Character defining if the spline should be computed at the day 'd' or the week 'd'.</p></td>
+      <td><p>character Time-step for which the spline should be computed, 'd' day or 'w' week.</p></td>
     </tr>
     <tr>
       <th>MultiVisit</th>
-      <td><p>function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).</p></td>
+      <td><p>string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve <code>f_curve</code> with expected relative abundance, normalize to sum to one over a full season,
+    <p>A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve <code>f_curve</code> with expected relative abundance, normalised to sum to one over a full season,
         ii) **f_model**: the resulting gam model <code>f_model</code> fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='flight_curve.html'>flight_curve</a>, <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a>, <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -233,7 +236,7 @@ Compute the Normalized flight curve by fitting a spline in a Generalized Additiv
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

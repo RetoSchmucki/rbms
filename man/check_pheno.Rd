@@ -3,28 +3,28 @@
 \name{check_pheno}
 \alias{check_pheno}
 \title{check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.}
+Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in \link{impute_count}.}
 \usage{
 check_pheno(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, TimeUnit)
 }
 \arguments{
-\item{sp_count_flight}{data.table with the flight curve, relative abundance (NM), for a specific year.}
+\item{sp_count_flight}{data.table Object with the flight curve, relative abundance (NM), for a specific year.}
 
-\item{ts_flight_curve}{data.table with the flight curves, relative abundance (NM), for all years available for search as returned by \link{flight_curve}.}
+\item{ts_flight_curve}{data.table Object with the all flight curves and relative abundance (NM) for the years available for the search as returned by \link{flight_curve}.}
 
-\item{YearCheck}{integer or vector of year to check for nearest phenology, set internally in \link{impute_count}.}
+\item{YearCheck}{integer or vector Year to check for nearest flight curve, set internally in \link{impute_count}.}
 
-\item{YearLimit}{integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.}
+\item{YearLimit}{integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.}
 
-\item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
+\item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 }
 \value{
-A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+A data.table with time-series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
         phenology is available.
 }
 \description{
 check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in \link{impute_count}.
+Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in \link{impute_count}.
 }
 \seealso{
 \link{impute_count}, \link{flight_curve}

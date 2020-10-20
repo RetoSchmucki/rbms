@@ -142,46 +142,46 @@ compute a collated index from the site indices, using a Generalized Linear Model
 compute a collated index from the site indices, using a Generalized Linear Model.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>collated_index</span>(
-  <span class='no'>data</span>,
-  <span class='no'>s_sp</span>,
-  <span class='kw'>sindex_value</span> <span class='kw'>=</span> <span class='st'>"SINDEX"</span>,
-  <span class='kw'>bootID</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>boot_ind</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>glm_weights</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>rm_zero</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>collated_index</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  <span class='va'>s_sp</span>,
+  sindex_value <span class='op'>=</span> <span class='st'>"SINDEX"</span>,
+  bootID <span class='op'>=</span> <span class='cn'>NULL</span>,
+  boot_ind <span class='op'>=</span> <span class='cn'>NULL</span>,
+  glm_weights <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  rm_zero <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.</p></td>
+      <td><p>data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.</p></td>
     </tr>
     <tr>
       <th>s_sp</th>
-      <td><p>string with with the species name to be found in the data.</p></td>
+      <td><p>string Species name to be found in the data.</p></td>
     </tr>
     <tr>
       <th>sindex_value</th>
-      <td><p>string defining the response variable to be used for collated index computation, default is "SINDEX", but could be other standardized values.</p></td>
+      <td><p>string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.</p></td>
     </tr>
     <tr>
       <th>bootID</th>
-      <td><p>integer with the n^th bootstrap.</p></td>
+      <td><p>integer Identify the n^th bootstrap.</p></td>
     </tr>
     <tr>
       <th>boot_ind</th>
-      <td><p>data.table with in index of the bootstrap and the corresponding set of site id to be used for the specific bootstrap sample</p></td>
+      <td><p>data.table Index of the bootstrap and the site ids of the specific bootstrap sample.</p></td>
     </tr>
     <tr>
       <th>glm_weights</th>
-      <td><p>logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weight is used.</p></td>
+      <td><p>logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.</p></td>
     </tr>
     <tr>
       <th>rm_zero</th>
-      <td><p>logical specifying if site where species has not been observed should be removed from the GLM fitting, this speed up the process without affecting the output, default TRUE.</p></td>
+      <td><p>logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.</p></td>
     </tr>
     </table>
 
@@ -191,6 +191,9 @@ compute a collated index from the site indices, using a Generalized Linear Model
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='impute_count.html'>impute_count</a>, <a href='flight_curve.html'>flight_curve</a></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -207,7 +210,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

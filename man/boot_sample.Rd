@@ -3,21 +3,21 @@
 \name{boot_sample}
 \alias{boot_sample}
 \title{boot_sample
-generat n bootstrap sample from the site indices.}
+Generate n bootstrap sample of the monitoring sites to be used for each iteration.}
 \usage{
 boot_sample(data, boot_n = 1000)
 }
 \arguments{
-\item{data}{data.table or data.frame with site id.}
+\item{data}{data.table or data.frame Data with all site id.}
 
-\item{boot_n}{integer defining the number of bootstrap sample to generate.}
+\item{boot_n}{integer The number of bootstrap samples to be generated.}
 }
 \value{
-a list with site id and bootstrap indices for n bootstrap sample.
+A list with site id and bootstrap indices for n bootstrap sample.
 }
 \description{
 boot_sample
-generat n bootstrap sample from the site indices.
+Generate n bootstrap sample of the monitoring sites to be used for each iteration.
 }
 \seealso{
 \link{impute_count}, \link{collated_index}

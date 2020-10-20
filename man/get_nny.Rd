@@ -3,21 +3,21 @@
 \name{get_nny}
 \alias{get_nny}
 \title{get_nny
-find nearest year with flight period}
+find the nearest year with a computed flight curve}
 \usage{
 get_nny(x, y)
 }
 \arguments{
-\item{x}{year to find nearest flight period.}
+\item{x}{integer Year for which to find the nearest flight curve.}
 
-\item{y}{years with available flight period.}
+\item{y}{vector Years with available flight curve.}
 }
 \value{
-z a value of the nearest year
+z integer The value of the nearest year with flight curve.
 }
 \description{
 get_nny
-find nearest year with flight period
+find the nearest year with a computed flight curve
 }
 \seealso{
 \link{check_pheno}

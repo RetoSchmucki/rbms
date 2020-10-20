@@ -3,21 +3,21 @@
 \name{site_index}
 \alias{site_index}
 \title{site_index
-extract abundance indices per sites and year based on flight curve imputation.}
+Extract abundance indices per site and year based on flight curve imputation.}
 \usage{
 site_index(butterfly_count, MinFC = NULL)
 }
 \arguments{
-\item{butterfly_count}{data.table with observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2()}
+\item{butterfly_count}{data.table Observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2().}
 
-\item{MinFC}{value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.}
+\item{MinFC}{numeric Value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.}
 }
 \value{
-data.table with estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
+data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
 }
 \description{
 site_index
-extract abundance indices per sites and year based on flight curve imputation.
+Extract abundance indices per site and year based on flight curve imputation.
 }
 \seealso{
 \link{impute_count}, \link{flight_curve}

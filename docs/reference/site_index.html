@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>site_index
-extract abundance indices per sites and year based on flight curve imputation. — site_index • rbms</title>
+Extract abundance indices per site and year based on flight curve imputation. — site_index • rbms</title>
 
 
 <!-- jquery -->
@@ -41,9 +41,9 @@ extract abundance indices per sites and year based on flight curve imputation. �
 
 
 <meta property="og:title" content="site_index
-extract abundance indices per sites and year based on flight curve imputation. — site_index" />
+Extract abundance indices per site and year based on flight curve imputation. — site_index" />
 <meta property="og:description" content="site_index
-extract abundance indices per sites and year based on flight curve imputation." />
+Extract abundance indices per site and year based on flight curve imputation." />
 
 
 
@@ -132,37 +132,40 @@ extract abundance indices per sites and year based on flight curve imputation." 
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>site_index
-extract abundance indices per sites and year based on flight curve imputation.</h1>
+Extract abundance indices per site and year based on flight curve imputation.</h1>
     
     <div class="hidden name"><code>site_index.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>site_index
-extract abundance indices per sites and year based on flight curve imputation.</p>
+Extract abundance indices per site and year based on flight curve imputation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>site_index</span>(<span class='no'>butterfly_count</span>, <span class='kw'>MinFC</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>site_index</span><span class='op'>(</span><span class='va'>butterfly_count</span>, MinFC <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>butterfly_count</th>
-      <td><p>data.table with observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2()</p></td>
+      <td><p>data.table Observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2().</p></td>
     </tr>
     <tr>
       <th>MinFC</th>
-      <td><p>value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.</p></td>
+      <td><p>numeric Value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.table with estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.</p>
+    <p>data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='impute_count.html'>impute_count</a>, <a href='flight_curve.html'>flight_curve</a></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -179,7 +182,7 @@ extract abundance indices per sites and year based on flight curve imputation.</
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

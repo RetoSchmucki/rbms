@@ -142,7 +142,7 @@ Generate a time-series of dates (per day) from the beginning of a starting year 
 Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ts_date_seq</span>(<span class='kw'>InitYear</span> <span class='kw'>=</span> <span class='fl'>1970</span>, <span class='kw'>LastYear</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y"</span>))</pre>
+    <pre class="usage"><span class='fu'>ts_date_seq</span><span class='op'>(</span>InitYear <span class='op'>=</span> <span class='fl'>1970</span>, LastYear <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"%Y"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -160,6 +160,9 @@ Generate a time-series of dates (per day) from the beginning of a starting year 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>return a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -176,7 +179,7 @@ Generate a time-series of dates (per day) from the beginning of a starting year 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

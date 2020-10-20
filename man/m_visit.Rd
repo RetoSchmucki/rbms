@@ -4,11 +4,13 @@
 \name{m_visit}
 \alias{m_visit}
 \title{Toy data set with the date when the sites have been visited for monitoring}
-\format{data.table object with visit date long format
+\format{
+data.table object with visit date long format
 \describe{
   \item{SITE_ID}{number used as site id, the can be and integer or a string}
   \item{DATE}{date when the observation/count was recorded, format YEAR-MM-DD}
-}}
+}
+}
 \usage{
 m_visit
 }

@@ -3,7 +3,7 @@
 \name{flight_curve}
 \alias{flight_curve}
 \title{flight_curve
-Compute the annual flight curve from butterfly count data collated across multiple sites.}
+Compute the annual flight curve from butterfly count data collated across sites.}
 \usage{
 flight_curve(
   ts_season_count,
@@ -25,37 +25,37 @@ flight_curve(
 )
 }
 \arguments{
-\item{ts_season_count}{data.table with complete time series of count and season information returned by \link{ts_monit_count_site}}
+\item{ts_season_count}{data.table Time-series of counts and season information returned by \link{ts_monit_count_site}}
 
-\item{NbrSample}{integer setting the maximum number of site to use to compute the flight curve, default=100.}
+\item{NbrSample}{integer The maximum number of sites to use for computing the flight curve, default=100.}
 
-\item{MinVisit}{integer setting the minimum number of visit required for a site to included in the computation, default=3.}
+\item{MinVisit}{integer The minimum number of visits required for a site to be included, default=3.}
 
-\item{MinOccur}{integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.}
+\item{MinOccur}{integer The minimum number of positive records (e.g. >= 1) required in one year for a site to be included, default=2.}
 
-\item{MinNbrSite}{integer setting the minimum number of site required to compute the flight curve, default=1.}
+\item{MinNbrSite}{integer The minimum number of sites required to compute a flight curve, default=1.}
 
-\item{MaxTrial}{integer setting the maximum number of trial to reach convergence of the model, default=3.}
+\item{MaxTrial}{integer The maximum number of trials for model convergence, default=3.}
 
-\item{GamFamily}{string setting the distribution of the error term in the GAM, default='poisson', but can be 'nb' or 'quasipoisson'.}
+\item{GamFamily}{string The distribution of the error term used in the GAM, default='poisson', but can be the negative-binomial 'nb' or 'quasipoisson'.}
 
 \item{CompltSeason}{Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.}
 
-\item{SelectYear}{integer to select a specific year to compute the flight curve, default=NULL.}
+\item{SelectYear}{integer Select a specific year to compute the flight curve, default=NULL.}
 
-\item{SpeedGam}{Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.}
+\item{SpeedGam}{Logical Set if the \link[mgcv]{bam} method should be used, default instead of the default \link[mgcv]{gam} method.}
 
-\item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset.}
+\item{OptiGam}{Logical Set the use of the \link[mgcv]{bam} method when data are larger than 200 and gam for smaller datasets}
 
 \item{KeepModel}{Logical to keep model output in a list object named \code{flight_curve_model}.}
 
 \item{KeepModelData}{Logical to keep the data used for the GAM.}
 
-\item{TimeUnit}{Character to define days 'd' or week 'w' as variable for the GAM.}
+\item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 
-\item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
+\item{MultiVisit}{string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
 
-\item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
+\item{...}{Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
 A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
@@ -63,7 +63,7 @@ A list with three objects, i) **pheno**: a vector with annual flight curves \cod
 }
 \description{
 flight_curve
-Compute the annual flight curve from butterfly count data collated across multiple sites.
+Compute the annual flight curve from butterfly count data collated across sites.
 }
 \seealso{
 \link{fit_gam}

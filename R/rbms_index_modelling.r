@@ -449,7 +449,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, 
 
 
 #' site_index
-#' extract abundance indices per site and year based on flight curve imputation.
+#' Extract abundance indices per site and year based on flight curve imputation.
 #' @param butterfly_count data.table Observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2().
 #' @param MinFC numeric Value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.
 #' @return data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
@@ -487,6 +487,8 @@ site_index <- function(butterfly_count, MinFC = NULL){
 #'
 
 collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poisson()){
+      
+      site_indices <- setDT(site_indices)
 
       if(is.null(GlmWeight)){
         col_mod <- try(speedglm::speedglm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily), silent = TRUE)
@@ -515,12 +517,12 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 #' collated_index
 #' compute a collated index from the site indices, using a Generalized Linear Model.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
-#' @param s_sp string with with the species name to be found in the data.
-#' @param sindex_value string defining the response variable to be used for collated index computation, default is "SINDEX", but could be other standardized values.
-#' @param bootID integer with the n^th bootstrap.
-#' @param boot_ind data.table with in index of the bootstrap and the corresponding set of site id to be used for the specific bootstrap sample
-#' @param glm_weights logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weight is used.
-#' @param rm_zero logical specifying if site where species has not been observed should be removed from the GLM fitting, this speed up the process without affecting the output, default TRUE.
+#' @param s_sp string Species name to be found in the data.
+#' @param sindex_value string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.
+#' @param bootID integer Identify the n^th bootstrap.
+#' @param boot_ind data.table Index of the bootstrap and the site ids of the specific bootstrap sample.
+#' @param glm_weights logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.
+#' @param rm_zero logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.
 #' @return a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.
 #' @keywords annual index
 #' @seealso \link{impute_count}, \link{flight_curve}
@@ -531,6 +533,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 
 collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE){
 
+  data <- setDT(data)
   data = data[SPECIES == s_sp, ]
   y = as.numeric(as.character(unique(data$M_YEAR)))
 
@@ -636,10 +639,10 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
 
 
 #' boot_sample
-#' generat n bootstrap sample from the site indices.
-#' @param data data.table or data.frame with site id.
-#' @param boot_n integer defining the number of bootstrap sample to generate.
-#' @return a list with site id and bootstrap indices for n bootstrap sample.
+#' Generate n bootstrap sample of the monitoring sites to be used for each iteration.
+#' @param data data.table or data.frame Data with all site id.
+#' @param boot_n integer The number of bootstrap samples to be generated.
+#' @return A list with site id and bootstrap indices for n bootstrap sample.
 #' @keywords bootstrap collated index
 #' @seealso \link{impute_count}, \link{collated_index}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}

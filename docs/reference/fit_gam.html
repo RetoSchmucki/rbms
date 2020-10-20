@@ -142,17 +142,17 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
 fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site effect when multiple are available.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fit_gam</span>(
-  <span class='no'>dataset_y</span>,
-  <span class='kw'>NbrSample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>GamFamily</span> <span class='kw'>=</span> <span class='st'>"poisson"</span>,
-  <span class='kw'>MaxTrial</span> <span class='kw'>=</span> <span class='fl'>4</span>,
-  <span class='kw'>SpeedGam</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>OptiGam</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>ConLikelihood</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>TimeUnit</span> <span class='kw'>=</span> <span class='st'>"d"</span>,
-  <span class='kw'>MultiVisit</span> <span class='kw'>=</span> <span class='st'>"mean"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>fit_gam</span><span class='op'>(</span>
+  <span class='va'>dataset_y</span>,
+  NbrSample <span class='op'>=</span> <span class='cn'>NULL</span>,
+  GamFamily <span class='op'>=</span> <span class='st'>"poisson"</span>,
+  MaxTrial <span class='op'>=</span> <span class='fl'>4</span>,
+  SpeedGam <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  OptiGam <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  ConLikelihood <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  TimeUnit <span class='op'>=</span> <span class='st'>"d"</span>,
+  MultiVisit <span class='op'>=</span> <span class='st'>"mean"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -202,6 +202,9 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='flight_curve.html'>flight_curve</a>, <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a>, <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -218,7 +221,7 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

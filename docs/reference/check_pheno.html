@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in <a href='impute_count.html'>impute_count</a>. — check_pheno • rbms</title>
+Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in impute_count. — check_pheno • rbms</title>
 
 
 <!-- jquery -->
@@ -41,9 +41,9 @@ Check for the flight curve of a specific year and if missing, impute the nearest
 
 
 <meta property="og:title" content="check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in <a href='impute_count.html'>impute_count</a>. — check_pheno" />
+Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in impute_count. — check_pheno" />
 <meta property="og:description" content="check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in impute_count." />
+Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in impute_count." />
 
 
 
@@ -132,50 +132,53 @@ Check for the flight curve of a specific year and if missing, impute the nearest
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in <a href='impute_count.html'>impute_count</a>.</h1>
+Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in <a href='impute_count.html'>impute_count</a>.</h1>
     
     <div class="hidden name"><code>check_pheno.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>check_pheno
-Check for the flight curve of a specific year and if missing, impute the nearest available within a span of 5 years.Function used in <a href='impute_count.html'>impute_count</a>.</p>
+Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in <a href='impute_count.html'>impute_count</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_pheno</span>(<span class='no'>sp_count_flight</span>, <span class='no'>ts_flight_curve</span>, <span class='no'>YearCheck</span>, <span class='no'>YearLimit</span>, <span class='no'>TimeUnit</span>)</pre>
+    <pre class="usage"><span class='fu'>check_pheno</span><span class='op'>(</span><span class='va'>sp_count_flight</span>, <span class='va'>ts_flight_curve</span>, <span class='va'>YearCheck</span>, <span class='va'>YearLimit</span>, <span class='va'>TimeUnit</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>sp_count_flight</th>
-      <td><p>data.table with the flight curve, relative abundance (NM), for a specific year.</p></td>
+      <td><p>data.table Object with the flight curve, relative abundance (NM), for a specific year.</p></td>
     </tr>
     <tr>
       <th>ts_flight_curve</th>
-      <td><p>data.table with the flight curves, relative abundance (NM), for all years available for search as returned by <a href='flight_curve.html'>flight_curve</a>.</p></td>
+      <td><p>data.table Object with the all flight curves and relative abundance (NM) for the years available for the search as returned by <a href='flight_curve.html'>flight_curve</a>.</p></td>
     </tr>
     <tr>
       <th>YearCheck</th>
-      <td><p>integer or vector of year to check for nearest phenology, set internally in <a href='impute_count.html'>impute_count</a>.</p></td>
+      <td><p>integer or vector Year to check for nearest flight curve, set internally in <a href='impute_count.html'>impute_count</a>.</p></td>
     </tr>
     <tr>
       <th>YearLimit</th>
-      <td><p>integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.</p></td>
+      <td><p>integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.</p></td>
     </tr>
     <tr>
       <th>TimeUnit</th>
-      <td><p>Character defining if the spline should be computed at the day 'd' or the week 'd'.</p></td>
+      <td><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data.table with time series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+    <p>A data.table with time-series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
         phenology is available.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='impute_count.html'>impute_count</a>, <a href='flight_curve.html'>flight_curve</a></p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -192,7 +195,7 @@ Check for the flight curve of a specific year and if missing, impute the nearest
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

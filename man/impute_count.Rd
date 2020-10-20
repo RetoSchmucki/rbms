@@ -15,19 +15,19 @@ impute_count(
 )
 }
 \arguments{
-\item{ts_season_count}{data.table with time series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}
+\item{ts_season_count}{data.table Time-series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}
 
-\item{ts_flight_curve}{data.table with the flight curves, relative abundance (NM), for a specific species as returned by \link{flight_curve}.}
+\item{ts_flight_curve}{data.table Flight curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.}
 
-\item{TimeUnit}{Character to define days 'd' or week 'w' as variable for the GAM.}
+\item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 
-\item{sp}{integer or string for the species ID or name.}
+\item{sp}{integer or string Species ID or name.}
 
-\item{YearLimit}{integer defining the range (+/- number of year) of year to look for a flight curve, if NULL no restriction is set.}
+\item{YearLimit}{integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.}
 
-\item{SelectYear}{integer to select a specific year to compute the flight curve, default=NULL.}
+\item{SelectYear}{integer Select a specific year to compute the flight curve, default=NULL.}
 
-\item{CompltSeason}{Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.}
+\item{CompltSeason}{logical Restrict computation of flight curve for years where the complete season was sampled, default=TRUE.}
 }
 \value{
 A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
@@ -36,7 +36,7 @@ A data.table based on the entry count data, augmented with site indices 'SINDEX'
 impute_count
 }
 \details{
-Site indices can be extracted from the data.table returned from this function. The Site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
+Site indices can be extracted from the data.table returned by this function. The site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 }
 \seealso{
 \link{flight_curve}

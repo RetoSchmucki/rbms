@@ -16,19 +16,19 @@ collated_index(
 )
 }
 \arguments{
-\item{data}{data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.}
+\item{data}{data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.}
 
-\item{s_sp}{string with with the species name to be found in the data.}
+\item{s_sp}{string Species name to be found in the data.}
 
-\item{sindex_value}{string defining the response variable to be used for collated index computation, default is "SINDEX", but could be other standardized values.}
+\item{sindex_value}{string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.}
 
-\item{bootID}{integer with the n^th bootstrap.}
+\item{bootID}{integer Identify the n^th bootstrap.}
 
-\item{boot_ind}{data.table with in index of the bootstrap and the corresponding set of site id to be used for the specific bootstrap sample}
+\item{boot_ind}{data.table Index of the bootstrap and the site ids of the specific bootstrap sample.}
 
-\item{glm_weights}{logical if collated index should be calculated with weighting for the proportion of the flight curve, if FALSE, equal weight is used.}
+\item{glm_weights}{logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.}
 
-\item{rm_zero}{logical specifying if site where species has not been observed should be removed from the GLM fitting, this speed up the process without affecting the output, default TRUE.}
+\item{rm_zero}{logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.}
 }
 \value{
 a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.

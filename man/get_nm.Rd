@@ -3,7 +3,7 @@
 \name{get_nm}
 \alias{get_nm}
 \title{get_nm
-Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.}
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.}
 \usage{
 get_nm(
   y,
@@ -21,37 +21,37 @@ get_nm(
 )
 }
 \arguments{
-\item{y}{integer of vector of years for which to compute flight curve.}
+\item{y}{integer Vector of years for which to compute the flight curve.}
 
-\item{ts_season_count}{data.table with complete time series of count and season information returned by \link{ts_monit_count_site}}
+\item{ts_season_count}{data.table Time-series of count and season information returned by \link{ts_monit_count_site}}
 
-\item{MinVisit}{integer setting the minimum number of visit required for a site to included in the computation, default=3.}
+\item{MinVisit}{integer The minimum number of visits required for a site to be included in the computation, default=3.}
 
-\item{MinOccur}{integer setting the minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.}
+\item{MinOccur}{integer The minimum number of positive records (e.g. >= 1) observed over the year in a site default=2.}
 
-\item{MinNbrSite}{integer setting the minimum number of site required to compute the flight curve, default=1.}
+\item{MinNbrSite}{integer The minimum number of sites required to compute the flight curve, default=1.}
 
-\item{NbrSample}{integer inherited from \link{flight_curve}, when set to 'NULL' (default), all site are considered in the GAM model}
+\item{NbrSample}{integer Value inherited from \link{flight_curve}, when set to 'NULL' (default), all site are considered in the GAM model}
 
-\item{GamFamily}{string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.}
+\item{GamFamily}{string Value inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.}
 
-\item{MaxTrial}{integer inherited from \link{flight_curve}, default=3.}
+\item{MaxTrial}{integer Value inherited from \link{flight_curve}, default=3.}
 
-\item{SpeedGam}{Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.}
+\item{SpeedGam}{logical Set if the \link[mgcv]{bam} method should be used, default instead of the default \link[mgcv]{gam} method.}
 
-\item{OptiGam}{Logical to set use bam when data are larger than 200 and gam for smaller dataset}
+\item{OptiGam}{logical Set the use the \link[mgcv]{bam} method when data are larger than 200 and gam for smaller datasets}
 
-\item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'd'.}
+\item{TimeUnit}{character Time-step for which the spline should be computed, 'd' day or 'w' week.}
 
-\item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
+\item{MultiVisit}{string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
 }
 \value{
-A list of lists, each containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
+A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalised to sum to one over a full season,
         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
 }
 \description{
 get_nm
-Compute the Normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.
 }
 \seealso{
 \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}

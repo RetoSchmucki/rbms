@@ -18,23 +18,23 @@ fit_gam(
 )
 }
 \arguments{
-\item{dataset_y}{data.table with filtered butterfly counts for species x over year y over all sites.}
+\item{dataset_y}{data.table Filtered butterfly counts for species x over year y over all sites.}
 
-\item{NbrSample}{integer inherited from \link{flight_curve}, default=100.}
+\item{NbrSample}{integer Inherited from \link{flight_curve}, default=100.}
 
-\item{GamFamily}{string inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.}
+\item{GamFamily}{string Inherited from \link{flight_curve}, default='poisson', but can be 'nb' or 'quasipoisson'.}
 
-\item{MaxTrial}{integer inherited from \link{flight_curve}, default=3.}
+\item{MaxTrial}{integer Inherited from \link{flight_curve}, default=3.}
 
-\item{SpeedGam}{Logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.}
+\item{SpeedGam}{logical to use the \link[mgcv]{bam} method instead of the \link[mgcv]{gam} method.}
 
-\item{OptiGam}{Logical to set use bam when data are larger than 100 and gam for smaller dataset}
+\item{OptiGam}{logical Set if the \link[mgcv]{bam} method should be used, default instead of the default \link[mgcv]{gam} method.}
 
-\item{TimeUnit}{Character defining if the spline should be computed at the day 'd' or the week 'w'.}
+\item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 
-\item{MultiVisit}{function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).}
+\item{MultiVisit}{string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
 
-\item{...}{additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
+\item{...}{Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
 A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,

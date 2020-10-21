@@ -63,11 +63,11 @@ initiate_project <- function(project_name, project_home = NULL){
 
 
 #' check_package
-#' Internal function to check if a package is installed
-#' @param pkgName The package name
-#' @param message1 Inform about the dependency
-#' @param message2 Inform what happen if not installed
-#' @return If package is not installed, the function ask to install the package.
+#' Internal function to check if a package is installed.
+#' @param pkgName The package name to be verified.
+#' @param message1 Inform the user about the package dependency.
+#' @param message2 Inform the user what happen if the package is not installed.
+#' @return If package is not found, the user is offered the option to install the missing package.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @export check_package
 #'
@@ -92,10 +92,10 @@ check_package <- function(pkgName = NULL, message1 = 'You need to install ', mes
 
 
 #' check_names
-#' Verify for the required column names in the data
-#' @param x Data object in which the variables names are verified
-#' @param y Variable names to be verified
-#' @return Verify if column names listed in \code{y} are found in the data set \code{x}, if not, a message identifies the
+#' Verify for the required column names in the data object.
+#' @param x Data object in which the variables names are verified.
+#' @param y Variable names to be verified.
+#' @return Verifyies if column names listed in \code{y} are found in the data set \code{x}, if not, a message identifies the
 #' missing column name and stops.
 #' @details This function is not case sensitive, but it does not accept different names or spelling.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -117,11 +117,11 @@ check_names <- function(x, y){
 
 
 #' ts_date_seq
-#' Generate a time-series with dates (per day) from January of the starting year to December of the ending years.
+#' Generate a time-series with dates starting from January of the starting year to December of the ending years.
 #' @param InitYear First year of the time-series, four digits format (e.g. 1987).
 #' @param LastYear Last year of the time-series, if not provided, the current year is used.
 #' @return Returns a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'
-#' @keywords time series
+#' @keywords time-series
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @export ts_date_seq
 #'

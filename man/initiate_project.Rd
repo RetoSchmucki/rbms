@@ -3,18 +3,18 @@
 \name{initiate_project}
 \alias{initiate_project}
 \title{initiate_project
-Build the initial folder structure for a typical research project}
+Build the folder structure for a generic research project}
 \usage{
 initiate_project(project_name, project_home = NULL)
 }
 \arguments{
-\item{project_name}{name of the project name to be used for the parent folder}
+\item{project_name}{Name of the project to be used for the parent folder}
 
-\item{project_home}{path to where the project folder structure to be built, default is the current working directory}
+\item{project_home}{Path where the project folder structure to be built, default is the current working directory}
 }
 \description{
 initiate_project
-Build the initial folder structure for a typical research project
+Build the folder structure for a generic research project
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

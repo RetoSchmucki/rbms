@@ -3,24 +3,23 @@
 \name{ts_date_seq}
 \alias{ts_date_seq}
 \title{ts_date_seq
-Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years.}
+Generate a time-series with dates starting from January of the starting year to December of the ending years.}
 \usage{
 ts_date_seq(InitYear = 1970, LastYear = format(Sys.Date(), "\%Y"))
 }
 \arguments{
-\item{InitYear}{start year of the time-series, 4 numbers format (e.g. 1987)}
+\item{InitYear}{First year of the time-series, four digits format (e.g. 1987).}
 
-\item{LastYear}{end year of the time-series, if not provided, current year is used instead}
+\item{LastYear}{Last year of the time-series, if not provided, the current year is used.}
 }
 \value{
-return a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'
+Returns a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'
 }
 \description{
 ts_date_seq
-Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years.
+Generate a time-series with dates starting from January of the starting year to December of the ending years.
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
 }
-\keyword{series}
-\keyword{time}
+\keyword{time-series}

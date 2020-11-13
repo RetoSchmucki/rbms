@@ -3,27 +3,27 @@
 \name{check_package}
 \alias{check_package}
 \title{check_package
-Internal function to verified the required package is installed}
+Internal function to check if a package is installed.}
 \usage{
 check_package(
   pkgName = NULL,
-  message1 = "you need to install the package ",
-  message2 = "This version requires "
+  message1 = "You need to install ",
+  message2 = "This version requires"
 )
 }
 \arguments{
-\item{pkgName}{A string with the package name}
+\item{pkgName}{The package name to be verified.}
 
-\item{message1}{A string to inform about the dependency}
+\item{message1}{Inform the user about the package dependency.}
 
-\item{message2}{A string to inform what happen if not installed}
+\item{message2}{Inform the user what happen if the package is not installed.}
 }
 \value{
-If package is not installed, the function ask to install the package.
+If package is not found, the user is offered the option to install the missing package.
 }
 \description{
 check_package
-Internal function to verified the required package is installed
+Internal function to check if a package is installed.
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

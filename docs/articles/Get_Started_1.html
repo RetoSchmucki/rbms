@@ -78,7 +78,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="Get_Started_1_files/header-attrs-2.4/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>1. Get started with rbms - phenology</h1>
@@ -177,10 +177,10 @@
 <p>These values are likely to influence your model and will differ across species and data set, but <code>MinOccur</code> should be set &gt;= 2, the <code>MinNbrVisit</code> &gt; <code>MinOccur</code> and <code>MinNbrSite</code> &gt;= 5. The chose for these threshold will affect how well your model is informed and the with higher value you might have less site and therefore will have to revise the chose.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
  <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2020-10-20 18:38:13 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2020-10-20 18:38:15 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2020-10-20 18:38:16 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2020-10-20 18:38:18 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2020-11-13 09:40:04 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2020-11-13 09:40:06 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2020-11-13 09:40:07 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2020-11-13 09:40:08 -&gt; trial 1"</code></pre>
 <blockquote>
 <p>NOTE: for the <code>flight_curve</code> furnction, you will also have to define some parameters for the distribution for the GAM model as well as the maximum number of time to try to fit the model and the number of sample to use. The later will take a random sample from the data set if it contain more site than the number specified.</p>
 </blockquote>

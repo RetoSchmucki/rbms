@@ -602,7 +602,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
     if (data_boot[, uniqueN(M_YEAR)] == 1) {
       mod_form <- as.formula(paste0("I(round(", sindex_value, ")) ~ factor(uID) - 1"))
     } else {
-      mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, paste0("I(round(", sindex_value, ")) ~ factor(uID) + factor(M_YEAR) - 1"), paste0("I(round(", sindex_value, "))) ~ factor(M_YEAR) - 1")))
+      mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, paste0("I(round(", sindex_value, ")) ~ factor(uID) + factor(M_YEAR) - 1"), paste0("I(round(", sindex_value, ")) ~ factor(M_YEAR) - 1")))
     }
 
     if(!isTRUE(glm_weights)){

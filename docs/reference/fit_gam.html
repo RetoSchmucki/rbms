@@ -159,39 +159,39 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dataset_y</th>
-      <td><p>data.table with filtered butterfly counts for species x over year y over all sites.</p></td>
+      <td><p>data.table Filtered butterfly counts for species x over year y over all sites.</p></td>
     </tr>
     <tr>
       <th>NbrSample</th>
-      <td><p>integer inherited from <a href='flight_curve.html'>flight_curve</a>, default=100.</p></td>
+      <td><p>integer Inherited from <a href='flight_curve.html'>flight_curve</a>, default=100.</p></td>
     </tr>
     <tr>
       <th>GamFamily</th>
-      <td><p>string inherited from <a href='flight_curve.html'>flight_curve</a>, default='poisson', but can be 'nb' or 'quasipoisson'.</p></td>
+      <td><p>string Inherited from <a href='flight_curve.html'>flight_curve</a>, default='poisson', but can be 'nb' or 'quasipoisson'.</p></td>
     </tr>
     <tr>
       <th>MaxTrial</th>
-      <td><p>integer inherited from <a href='flight_curve.html'>flight_curve</a>, default=3.</p></td>
+      <td><p>integer Inherited from <a href='flight_curve.html'>flight_curve</a>, default=3.</p></td>
     </tr>
     <tr>
       <th>SpeedGam</th>
-      <td><p>Logical to use the <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a> method instead of the <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> method.</p></td>
+      <td><p>logical to use the <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a> method instead of the <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> method.</p></td>
     </tr>
     <tr>
       <th>OptiGam</th>
-      <td><p>Logical to set use bam when data are larger than 100 and gam for smaller dataset</p></td>
+      <td><p>logical Set if the <a href='https://rdrr.io/pkg/mgcv/man/bam.html'>bam</a> method should be used, default instead of the default <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> method.</p></td>
     </tr>
     <tr>
       <th>TimeUnit</th>
-      <td><p>Character defining if the spline should be computed at the day 'd' or the week 'w'.</p></td>
+      <td><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></td>
     </tr>
     <tr>
       <th>MultiVisit</th>
-      <td><p>function to be applied on multiple count within a single time unit, 'max' or 'mean' (default).</p></td>
+      <td><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional parameters passed to gam or bam function from the <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> package.</p></td>
+      <td><p>Additional parameters passed to gam or bam function from the <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> package.</p></td>
     </tr>
     </table>
 

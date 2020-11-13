@@ -1,6 +1,6 @@
 ---
 title: 2. Get started with rbms - collate index
-subtitle: Imputing missing counts
+subtitle: Inputting missing counts
 author: Reto Schmucki (UKCEH)
 date: 28 November 2019
 ---
@@ -120,7 +120,7 @@ bootsample <- rbms::boot_sample(sindex, boot_n = 200)
 
 Using the `collated_index()` function in a loop, with bootstrap sample to inform the argument `boot_ind`, we can produce *k* collated index for each year.
 
-```{r, collated_index_boot}
+```{r, collated_index_boot, message=FALSE, warning=FALSE}
 co_index <- list()
 
 ## for progression bar, uncomment the following

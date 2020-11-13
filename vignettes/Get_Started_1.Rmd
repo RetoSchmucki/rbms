@@ -1,8 +1,11 @@
 ---
-title: 1. Get started with rbms - phenology
+title: "1. Get started with rbms - phenology"
+author: "Reto Schmucki (UKCEH)"
+date: "28 November 2019"
+output:
+  word_document: default
+  pdf_document: default
 subtitle: From counts to flight curve
-author: Reto Schmucki (UKCEH)
-date: 28 November 2019
 ---
 ---------
 In this short tutorial, we will show how to fit a flight curve function on butterfly count recorded on a weekly base.

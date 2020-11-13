@@ -3,22 +3,22 @@
 \name{check_names}
 \alias{check_names}
 \title{check_names
-Verify for the required column names in the data}
+Verify for the required column names in the data object.}
 \usage{
 check_names(x, y)
 }
 \arguments{
-\item{x}{a data.table object with column names}
+\item{x}{Data object in which the variables names are verified.}
 
-\item{y}{vector with the required variable names}
+\item{y}{Variable names to be verified.}
 }
 \value{
-Verify if column names listed in \code{y} vector are found in the data set \code{x}, if not, a message identifies the
+Verifyies if column names listed in \code{y} are found in the data set \code{x}, if not, a message identifies the
 missing column name and stops.
 }
 \description{
 check_names
-Verify for the required column names in the data
+Verify for the required column names in the data object.
 }
 \details{
 This function is not case sensitive, but it does not accept different names or spelling.

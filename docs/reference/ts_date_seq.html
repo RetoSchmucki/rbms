@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>ts_date_seq
-Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years. — ts_date_seq • rbms</title>
+Generate a time-series with dates starting from January of the starting year to December of the ending years. — ts_date_seq • rbms</title>
 
 
 <!-- jquery -->
@@ -41,9 +41,9 @@ Generate a time-series of dates (per day) from the beginning of a starting year 
 
 
 <meta property="og:title" content="ts_date_seq
-Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years. — ts_date_seq" />
+Generate a time-series with dates starting from January of the starting year to December of the ending years. — ts_date_seq" />
 <meta property="og:description" content="ts_date_seq
-Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years." />
+Generate a time-series with dates starting from January of the starting year to December of the ending years." />
 
 
 
@@ -132,14 +132,14 @@ Generate a time-series of dates (per day) from the beginning of a starting year 
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>ts_date_seq
-Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years.</h1>
+Generate a time-series with dates starting from January of the starting year to December of the ending years.</h1>
     
     <div class="hidden name"><code>ts_date_seq.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>ts_date_seq
-Generate a time-series of dates (per day) from the beginning of a starting year to the end of an ending years.</p>
+Generate a time-series with dates starting from January of the starting year to December of the ending years.</p>
     </div>
 
     <pre class="usage"><span class='fu'>ts_date_seq</span><span class='op'>(</span>InitYear <span class='op'>=</span> <span class='fl'>1970</span>, LastYear <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"%Y"</span><span class='op'>)</span><span class='op'>)</span></pre>
@@ -149,17 +149,17 @@ Generate a time-series of dates (per day) from the beginning of a starting year 
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>InitYear</th>
-      <td><p>start year of the time-series, 4 numbers format (e.g. 1987)</p></td>
+      <td><p>First year of the time-series, four digits format (e.g. 1987).</p></td>
     </tr>
     <tr>
       <th>LastYear</th>
-      <td><p>end year of the time-series, if not provided, current year is used instead</p></td>
+      <td><p>Last year of the time-series, if not provided, the current year is used.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>return a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'</p>
+    <p>Returns a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>

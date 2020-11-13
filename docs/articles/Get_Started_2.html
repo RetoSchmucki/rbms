@@ -95,16 +95,15 @@
     
     
 <hr>
-<p>From the flight curve and the observed count, we can derive expected values for weeks or days where a site has not been monitored. Together, observed and imputed counts will then be used to compute an abundance index for each site. Site indices can then be use to calculate annual collated indices.</p>
+<p>From the flight curve and the observed counts, we can derive expected values for weeks or days where a site has not been monitored. Together, observed and imputed counts are used to compute abundance indices for across sites. Site indices are then used to calculate annual collated indices.</p>
 <blockquote>
-<p>see 1. Get started with rbms to compute the flight curve object used below (Step 1, 2 and 3)</p>
+<p>see 1. Get started with <code>rbms</code> to compute the flight curve object used below (Step 1, 2 and 3)</p>
 </blockquote>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://r-datatable.com">data.table</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://retoschmucki.github.io/rbms/">rbms</a></span><span class="op">)</span></pre></div>
 <pre><code>##  Welcome to rbms, version 1.0.2 
-##  While this package has been tested by several users,
-##  it is still in active development and feedbacks are welcome 
+##  This package has been tested, but is still in active development and feedbacks are welcome
 ##  https://github.com/RetoSchmucki/rbms/issues</code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">m_visit</span><span class="op">)</span>
@@ -114,21 +113,20 @@
 <span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">m_visit</span>, <span class="va">ts_season</span><span class="op">)</span>
 <span class="va">ts_season_count</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_count_site.html">ts_monit_count_site</a></span><span class="op">(</span><span class="va">ts_season_visit</span>, <span class="va">m_count</span>, sp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2020-11-13 09:40:31 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2020-11-13 09:40:33 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2020-11-13 09:40:34 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2020-11-13 09:40:36 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2020-11-13 11:20:03 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2020-11-13 11:20:05 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2020-11-13 11:20:06 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2020-11-13 11:20:08 -&gt; trial 1"</code></pre>
 <div id="impute-predicted-counts-for-missing-monitoring-dates" class="section level5">
 <h5 class="hasAnchor">
-<a href="#impute-predicted-counts-for-missing-monitoring-dates" class="anchor"></a>4. Impute predicted counts for missing monitoring dates</h5>
-<p>The <code><a href="../reference/impute_count.html">impute_count()</a></code> function is using the count data generated from the <code>ts_season_count()</code> function and the outcome of the <code><a href="../reference/flight_curve.html">flight_curve()</a></code> function to and the calculated flight curve (ts_flight_curve$pheno). To estimate value of missing week, the function will look for the phenology from the nearest year, the extent of the search can be limited by setting the parameter <code>YearLimit</code> parameter which by default is not restricted. Like in the previous function, the imputation can be made on a weekly or daily basis (<code>'w'</code> or <code>'d'</code>).</p>
+<a href="#impute-predicted-counts-for-missing-monitoring-dates" class="anchor"></a><strong>4.</strong> Impute predicted counts for missing monitoring dates</h5>
+<p>The <code><a href="../reference/impute_count.html">impute_count()</a></code> function uses the count data generated from the <code>ts_season_count()</code> function and the outcome of the <code><a href="../reference/flight_curve.html">flight_curve()</a></code> function to calculate the flight curves (ts_flight_curve$pheno). the function looks for the phenology available (using the nearest year) to estimate and inpute missing values; the extent of the search can be limited by setting the YearLimit parameter, which by default is not restricted. Like in other rbms functions, the imputation can be made on a weekly or daily basis (‘w’ or ‘d’).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="co">## extract phenology data from the ts_fligh_curve list</span>
 <span class="va">pheno</span> <span class="op">&lt;-</span> <span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span>
 
 <span class="va">impt_counts</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/impute_count.html">impute_count</a></span><span class="op">(</span>ts_season_count<span class="op">=</span><span class="va">ts_season_count</span>, ts_flight_curve<span class="op">=</span><span class="va">pheno</span>, YearLimit<span class="op">=</span> <span class="cn">NULL</span>, TimeUnit<span class="op">=</span><span class="st">'w'</span><span class="op">)</span></pre></div>
-<p>The <code><a href="../reference/impute_count.html">impute_count()</a></code> function produces a <code>data.table</code> that contains the original <code>COUNT</code> values, a series of <code>IMPUTED_COUNT</code> over monitoring season, <code>TOTAL_COUNT</code> per site and year, <code>TOTAL_NM</code> which is the proportion of the flight curve covered by the visits, the <code>SINDEX</code> which is the site index and correspond to the sum of both observed and imputed counts over the sampling season.</p>
-<p>If the flight curve of a year is missing, the <code><a href="../reference/impute_count.html">impute_count()</a></code> function will look and use the nearest phenology found. If none is found within the limit of years set by the <code>YearLimit</code> parameter, the function will compute no <code>SINDEX</code> for that specific year.</p>
+<p>The <code><a href="../reference/impute_count.html">impute_count()</a></code> function produces a data.table that contains the original COUNT values, a series of IMPUTED_COUNT over monitoring season, TOTAL_COUNT per site and year, TOTAL_NM which is the proportion of the flight curve covered by the visits, and the SINDEX which is the site index and corresponds to the sum of both observed and imputed counts over the sampling season. If the flight curve is missing of a specific year, the <code><a href="../reference/impute_count.html">impute_count()</a></code> function uses the nearest phenology found. If none is available within the limit of years set by the YearLimit parameter, the function will return no SINDEX for that specific year.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="va">impt_counts_1year</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/impute_count.html">impute_count</a></span><span class="op">(</span>ts_season_count<span class="op">=</span><span class="va">ts_season_count</span>, ts_flight_curve<span class="op">=</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">!=</span> <span class="fl">2001</span>, <span class="op">]</span>, YearLimit<span class="op">=</span> <span class="fl">1</span>, TimeUnit<span class="op">=</span><span class="st">'w'</span><span class="op">)</span></pre></div>
 <pre><code>## Warning in FUN(X[[i]], ...): We used the flight curve of 2000 to compute
@@ -139,11 +137,11 @@
 </div>
 <div id="site-and-collated-indices" class="section level5">
 <h5 class="hasAnchor">
-<a href="#site-and-collated-indices" class="anchor"></a>5 Site and collated indices</h5>
-<p>From the imputed count, site index can be extracted with a filter that will only keep the indices that have been monitored of a minimum proportion of the flight curve. Here we set this threshold to a minimum value of 10% with the <code>MinFC</code> parameter.</p>
+<a href="#site-and-collated-indices" class="anchor"></a><strong>5.</strong> Site and collated indices</h5>
+<p>From the imputed count, site index can be calculated for each site or with a filter that will only keep the sites that have been monitored at least a certain proportion of the flight curve. In this example, we set the threshold to 10%, using the MinFC parameter.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="va">sindex</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/site_index.html">site_index</a></span><span class="op">(</span>butterfly_count <span class="op">=</span> <span class="va">impt_counts</span>, MinFC <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></pre></div>
-<p>Using the site indices, annual collated indices can be calculated by fitting a Generalized Linear Model (GLM), where sites and years are set as factors. Here we use the proportion of the flight curve sampled by the observation as a weight for the GLM. To facilitate the fit, we can remove all site where the species was not observed by setting the parameter <code>rm_zero = TRUE</code>. The collated index computed by the <code><a href="../reference/collated_index.html">collated_index()</a></code> function corresponds to the mean total butterfly count expected on a BMS transect in a given year.</p>
+<p>With the site indices, annual collated indices can be estimated by fitting a Generalised Linear Model (GLM), where sites and years are modelled as factors. Here we also use the proportion of the flight curve sampled by the observation as a weight for the GLM. Finally, we also remove all sites where the species was not observed, setting the parameter rm_zero = TRUE, this facilitates the model fit.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="va">co_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collated_index.html">collated_index</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sindex</span>, s_sp <span class="op">=</span> <span class="fl">2</span>, sindex_value <span class="op">=</span> <span class="st">"SINDEX"</span>, glm_weights <span class="op">=</span> <span class="cn">TRUE</span>, rm_zero <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 <pre><code>## Warning in if (class(X) != "dgCMatrix") X &lt;- as(X, "dgCMatrix"): the condition
@@ -163,7 +161,7 @@
 
 ## Warning in if (class(X) != "dgCMatrix") X &lt;- as(X, "dgCMatrix"): the condition
 ## has length &gt; 1 and only the first element will be used</code></pre>
-<p>The collated index computed by the <code><a href="../reference/collated_index.html">collated_index()</a></code> function corresponds to the mean total butterfly count expected on a BMS transect in a given year.</p>
+<p>The collated index computed by the <code><a href="../reference/collated_index.html">collated_index()</a></code> function can be interpreted as the mean total butterfly count expected on a BMS transect in a given year.</p>
 <pre><code>## $col_index
 ##    BOOTi M_YEAR NSITE NSITE_OBS COL_INDEX
 ## 1:     0   2000   124       108  19.23040
@@ -184,7 +182,7 @@
 ## [109] "127" "128" "129" "130" "132" "133" "10"  "134" "135" "136" "137" "139"
 ## [121] "140" "141" "142" "143" "144" "12"  "145" "146" "147" "148" "149" "150"
 ## [133] "151" "153" "155" "156"</code></pre>
-<p>This number can then be rescaled on a log(10) scale</p>
+<p>The index can be transformed to a log(10) scale</p>
 <div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="va">co_index</span> <span class="op">&lt;-</span> <span class="va">co_index</span><span class="op">$</span><span class="va">col_index</span>
 <span class="va">co_index_b</span> <span class="op">&lt;-</span> <span class="va">co_index</span><span class="op">[</span><span class="va">COL_INDEX</span> <span class="op">&gt;</span> <span class="fl">0.0001</span> <span class="op">&amp;</span> <span class="va">COL_INDEX</span> <span class="op">&lt;</span> <span class="fl">100000</span>, <span class="op">]</span>
@@ -193,7 +191,7 @@
 <span class="co">## merge the mean log index with the full bootstrap dataset</span>
 <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setattr.html">setnames</a></span><span class="op">(</span><span class="va">co_index_logInd</span>, <span class="st">"V1"</span>, <span class="st">"logInd"</span><span class="op">)</span>; <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setkey.html">setkey</a></span><span class="op">(</span><span class="va">co_index_logInd</span>, <span class="va">M_YEAR</span><span class="op">)</span>; <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setkey.html">setkey</a></span><span class="op">(</span><span class="va">co_index_b</span>, <span class="va">M_YEAR</span><span class="op">)</span>
 <span class="va">co_index_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/merge.html">merge</a></span><span class="op">(</span><span class="va">co_index_b</span>, <span class="va">co_index_logInd</span>, all.x <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
-<p>This log scaled indices can then be plotted with the following code, where the average is centred on 2.</p>
+<p>The log scaled indices can then be plotted with the following code, here we represent the data so the time-series average is centred to two (i.e. <code><a href="https://rdrr.io/r/base/Log.html">log10(100)</a></code>).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit">
 <span class="va">col_pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cyan4"</span>, <span class="st">"orange"</span>, <span class="st">"orangered2"</span><span class="op">)</span>
 
@@ -226,12 +224,11 @@ Collated index.
 </div>
 <div id="bootstrap-confidence-interval" class="section level5">
 <h5 class="hasAnchor">
-<a href="#bootstrap-confidence-interval" class="anchor"></a>6 Bootstrap confidence interval</h5>
-<p>Confidence interval around the collated indices can be computed by a bootstrap method, where <em>n</em> site indices are randomly resampled <em>k</em> time to produce a distribution of annual collated indices from which confidence interval can be derived.</p>
-<p>First we build define <em>k</em> bootstrap sample, with replacement, with the function <code><a href="../reference/boot_sample.html">boot_sample()</a></code>, here we will set 200 samples, but for reliable confidence interval, this number should be set to 1000.</p>
+<a href="#bootstrap-confidence-interval" class="anchor"></a><strong>6.</strong> Bootstrap confidence interval</h5>
+<p>The confidence interval around the collated indices can be computed from a bootstrap sample, where <em>n</em> site indices are randomly resampled (with replacement) <em>k</em> time to produce a distribution of the annual collated indices. From this distribution, we can derive the confidence intervals around the collated indices. We first define <em>k</em> bootstrap sample using the function boot_sample(). Here we set <em>k</em> to 200 samples, but for a reliable confidence interval, <em>k</em> should be at least 1000.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
 <span class="va">bootsample</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/boot_sample.html">boot_sample</a></span><span class="op">(</span><span class="va">sindex</span>, boot_n <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></pre></div>
-<p>Using the <code><a href="../reference/collated_index.html">collated_index()</a></code> function in a loop, with bootstrap sample to inform the argument <code>boot_ind</code>, we can produce <em>k</em> collated index for each year.</p>
+<p>Using the <code><a href="../reference/collated_index.html">collated_index()</a></code> function in a loop, with bootstrap samples informing the argument <code>boot_ind</code>, we can now compute <em>k</em> collated indies over the entire time-series.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="va">co_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -249,7 +246,7 @@ Collated index.
 
 <span class="co">## collate and append all the result in a data.table format</span>
 <span class="va">co_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">rbindlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">co_index</span>, FUN <span class="op">=</span> <span class="st">"[["</span>,<span class="st">"col_index"</span><span class="op">)</span><span class="op">)</span></pre></div>
-<p>Annual log indices and the average are then computed from the original sample. Similarly, annual log indices are then computed for each bootstrap sample.</p>
+<p>Annual log indices, as well as their average, are then computed from the original sample. Similarly, we compute annual log indices for each bootstrap sample.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit">
 <span class="va">co_index_b</span> <span class="op">&lt;-</span> <span class="va">co_index</span><span class="op">[</span><span class="va">COL_INDEX</span> <span class="op">&gt;</span> <span class="fl">0.0001</span> <span class="op">&amp;</span> <span class="va">COL_INDEX</span> <span class="op">&lt;</span> <span class="fl">100000</span>, <span class="op">]</span>
 <span class="va">co_index_logInd</span> <span class="op">&lt;-</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fu">.</span><span class="op">(</span><span class="va">M_YEAR</span>, <span class="va">COL_INDEX</span><span class="op">)</span><span class="op">]</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">COL_INDEX</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">M_YEAR</span><span class="op">]</span><span class="op">[</span>, <span class="va">mean_logInd</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">V1</span><span class="op">)</span><span class="op">]</span>
@@ -260,7 +257,7 @@ Collated index.
 
 <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setkey.html">setkey</a></span><span class="op">(</span><span class="va">co_index_b</span>, <span class="va">BOOTi</span>, <span class="va">M_YEAR</span><span class="op">)</span>
 <span class="va">co_index_b</span><span class="op">[</span> , <span class="va">boot_logInd</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">COL_INDEX</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">]</span></pre></div>
-<p>From the bootstrap sample, we can now derive a 95% Confidence Interval from the corresponding percentiles</p>
+<p>From the bootstrap samples, we can derive a 95% Confidence Interval, using the corresponding percentiles (i.e., 0.025 and 0.975).</p>
 <div class="sourceCode" id="cb19"><pre class="downlit">
 <span class="va">b1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span>M_YEAR <span class="op">=</span> <span class="va">co_index_b</span><span class="op">$</span><span class="va">M_YEAR</span>, LCI <span class="op">=</span> <span class="fl">2</span> <span class="op">+</span> <span class="va">co_index_b</span><span class="op">$</span><span class="va">boot_logInd</span> <span class="op">-</span> <span class="va">co_index_b</span><span class="op">$</span><span class="va">mean_logInd</span><span class="op">)</span>
 <span class="va">b2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span><span class="op">(</span>M_YEAR <span class="op">=</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="va">M_YEAR</span><span class="op">]</span>, LCI<span class="op">=</span> <span class="fl">2</span> <span class="op">+</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="va">logInd</span><span class="op">]</span> <span class="op">-</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="va">mean_logInd</span><span class="op">]</span><span class="op">)</span>

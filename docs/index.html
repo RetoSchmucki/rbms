@@ -86,7 +86,7 @@
 
 <p><img style="float: right;" src="rbmshexOR200.png" hspace="20"></p>
 <p>With <code>rbms</code>, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time-series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time-series of counts. As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and work in line with other tools available and developed by the community (e.g. <a href="https://cran.r-project.org/web/packages/rtrim/">rtrim</a>, <a href="https://github.com/BiologicalRecordsCentre/BRCindicators">BRCindicators</a>). With the development of the ‘rbms’ R package, we also provide a tutorial to facilitate its usage and understanding.</p>
-<p>Although <code>rbms</code> implements methods that have been developed independently and for which the source should be cited. Users should also be citing the <code>rbms</code> package and its version to ensure appropriate referencing improve transparency as well as the reproducibility of the work.</p>
+<p>Although <code>rbms</code> implements methods that were developed independently and for which the source should be cited, users should also cite the <code>rbms</code> package and its version to ensure appropriate referencing and improve the reproducibility of the work.</p>
 <div id="suggested-citation-for-the-rbms-package" class="section level4">
 <h4 class="hasAnchor">
 <a href="#suggested-citation-for-the-rbms-package" class="anchor"></a>Suggested citation for the rbms package</h4>
@@ -95,9 +95,9 @@
 <div id="installation" class="section level4">
 <h4 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h4>
-<p>Once you have successfully installed the <a href="https://cran.r-project.org/">R programming system</a>, you can install the <code>rbms package</code> from GitHub, you need to install the package <code>devtools</code> available on CRAN. Once installed, use the function <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github()</a></code> to install the <code>rbms</code> package on your system.</p>
+<p>Once the <a href="https://cran.r-project.org/">R programming system</a> is successfully installed, you can install the <code>rbms package</code> from GitHub. For this you will need to install the package <code>devtools</code> or <code>remotes</code>, both available on CRAN. Once installed, use the function <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github()</a></code> to install the <code>rbms</code> package on your system.</p>
 <blockquote>
-<p>Note that <code>rbms</code> is build with R &gt; 3.6.0, so you might need to update your R system before installation. To install devtools on Windows system, you will need to install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> - note Rtools40 for R 4.x.x New to <code>R</code> or want to refresh your R coding skills, try the excellent tutorials available at <a href="https://ourcodingclub.github.io/">ourcodingclub</a> <span class="emoji" data-emoji="thumbsup">👍</span></p>
+<p>Note that <code>rbms</code> is build with R &gt; 3.6.0, so you might need to update your R system before installation. To install devtools on Windows system, you will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> - note Rtools40 for R 4.x.x New to <code>R</code> or want to refresh your R coding skills, try the excellent tutorials available at <a href="https://ourcodingclub.github.io/">ourcodingclub</a> <span class="emoji" data-emoji="thumbsup">👍</span></p>
 </blockquote>
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
@@ -112,7 +112,7 @@
 <div id="reporting-issues" class="section level4">
 <h4 class="hasAnchor">
 <a href="#reporting-issues" class="anchor"></a>Reporting Issues</h4>
-<p>For reporting issues related to this package, please visit the issue and see if your problem has not yet been reported before opening a new <a href="https://github.com/RetoSchmucki/rbms/issues">issue here</a></p>
+<p>For reporting issues related to this package or workflow, please visit the issue and before opening a new, see if your problem is not already in the list reported <a href="https://github.com/RetoSchmucki/rbms/issues">issues here</a></p>
 </div>
 </div>
   </div>

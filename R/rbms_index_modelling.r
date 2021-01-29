@@ -710,37 +710,3 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
 
 return(ts_season_count_summary)
 }
-
-ts_season_count_summary[ , unique(COUNT)]
-
-
-
-            if(MultiVisit == "max") {
-                if(TimeUnit == 'd'){
-                  tp_col <- "trimDAYNO"
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), 
-                                                     .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
-                } else {
-                  tp_col <- "trimWEEKNO"
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), 
-                                                     .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
-                }
-            } else {
-                if (TimeUnit == "d") {
-                  tp_col <- "trimDAYNO"
-                  sp_data_all[ , meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)), by = .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)]
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, meanCOUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, meanCOUNT), ][dup, ]
-                  sp_data_all <- sp_data_all[ , COUNT := meanCOUNT][ , meanCOUNT := NULL]
-                } else {
-                  tp_col <- "trimWEEKNO"
-                  sp_data_all[, meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)), by = .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)]
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, meanCOUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, meanCOUNT), ][dup, ]
-                  sp_data_all <- sp_data_all[, COUNT := meanCOUNT][, meanCOUNT := NULL]
-                }
-            }
-  return(boot_ind)
-}

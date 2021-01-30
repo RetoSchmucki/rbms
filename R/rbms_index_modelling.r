@@ -39,6 +39,12 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 
         check_package('data.table')
 
+          if(TimeUnit == 'd'){
+            tp_col <- "trimDAYNO"
+          } else {
+            tp_col <- "trimWEEKNO"
+          }
+
         tr <- 1
         gam_obj_site <- c()
 
@@ -215,7 +221,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
         if(length(year_series) == 0) stop(paste0(" No count data found for year ", SelectYear))
 
-      ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
+        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
 
         result_fc <- lapply(year_series, get_nm, ts_season_count=ts_season_count, MinVisit=MinVisit, MinOccur=MinOccur, MinNbrSite=MinNbrSite,
                                                   NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, SpeedGam = SpeedGam,
@@ -236,7 +242,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         if(isTRUE(KeepModelData) & isTRUE(KeepModel)){
           result_fc <- list(pheno = result_fcurve, model = result_fmodel, data = result_fdata)
         }
-
+    class(result_fc) <- "pheno_curve"
     return(result_fc)
 }
 
@@ -673,6 +679,8 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
                                                               WEEK_SINCE, trimWEEKNO, M_SEASON, 
                                                               COMPLT_SEASON, ANCHOR, meanCOUNT)])[, COUNT := meanCOUNT][,
                                                               meanCOUNT := NULL]
+
+                ts_season_count_summary <- ts_season_count_summary[!duplicated(ts_season_count_summary[, .(SPECIES, SITE_ID, WEEK_SINCE)]), ]
             }
   } else {
             if(TimeUnit == 'd'){
@@ -705,6 +713,8 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
                                                               WEEK_SINCE, trimWEEKNO, M_SEASON, 
                                                               COMPLT_SEASON, ANCHOR, maxCOUNT)])[, COUNT := maxCOUNT][,
                                                               maxCOUNT := NULL]
+                
+                ts_season_count_summary <- ts_season_count_summary[!duplicated(ts_season_count_summary[, .(SPECIES, SITE_ID, WEEK_SINCE)]), ]
             }
   }
 

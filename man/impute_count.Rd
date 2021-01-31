@@ -7,7 +7,8 @@
 impute_count(
   ts_season_count,
   ts_flight_curve,
-  TimeUnit,
+  TimeUnit = "d",
+  MultiVisit = "mean",
   sp = NULL,
   YearLimit = NULL,
   SelectYear = NULL,
@@ -20,6 +21,8 @@ impute_count(
 \item{ts_flight_curve}{data.table Flight curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.}
 
 \item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
+
+\item{MultiVisit}{string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
 
 \item{sp}{integer or string Species ID or name.}
 

@@ -35,7 +35,7 @@
 #'
 
 fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial = 4,
-                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = "mean"){
+                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = 'mean'){
 
         check_package('data.table')
 
@@ -336,6 +336,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @param ts_season_count data.table Time-series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
 #' @param ts_flight_curve data.table Flight curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param sp integer or string Species ID or name.
 #' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
 #' @param SelectYear integer Select a specific year to compute the flight curve, default=NULL.
@@ -349,7 +350,8 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @export impute_count
 #'
 
-impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
+impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', MultiVisit = 'mean', 
+                         sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
 
         check_package('data.table')
 
@@ -365,19 +367,22 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, 
             stop('Species in count data must be in the flight curve data!')
         }
 
-        if(TimeUnit == 'd'){
-            tp_col <- "trimDAYNO"
-            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
-            ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
-            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        } else {
-            tp_col <- "trimWEEKNO"
-            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
-            ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
-            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        }
+        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
+        # if(TimeUnit == 'd'){
+        #     tp_col <- "trimDAYNO"
+        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
+        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
+        #     ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
+        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, 
+        #                                             WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, 
+        #                                             M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
+        # } else {
+        #     tp_col <- "trimWEEKNO"
+        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
+        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
+        #     ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
+        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
+        # }
 
         keycol <- c("SPECIES", "M_YEAR", tp_col)
         data.table::setkeyv(ts_season_count, keycol)

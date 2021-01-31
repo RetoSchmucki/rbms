@@ -6,7 +6,7 @@
 ##      OBJECT: object_snake_name
 ##      VARIABLE NAME: UPPER_CASE
 ##
-##      Date:   07.04.2020
+##      Date:   31.01.2021
 ##
 ##      rbms_toolbox: useful functions for the rbms package
 ##

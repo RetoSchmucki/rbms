@@ -11,7 +11,6 @@
 #'
 
 plot.pheno_curve <- function(data, year = NULL, weekday = 3, ...) {
-    data <- ts_flight_curve
 
     if ("DAY" %in% names(data$pheno)) {
         data$pheno[, DATE := data.table::as.IDate(as.Date(paste(YEAR, MONTH, DAY, sep = "-")))]
@@ -70,7 +69,6 @@ plot.pheno_curve <- function(data, year = NULL, weekday = 3, ...) {
 #'
 
 points.pheno_curve <- function(data, year = NULL, weekday = 3, ...) {
-    data <- ts_flight_curve
 
     if ("DAY" %in% names(data$pheno)) {
         data$pheno[, DATE := data.table::as.IDate(as.Date(paste(YEAR, MONTH, DAY, sep = "-")))]

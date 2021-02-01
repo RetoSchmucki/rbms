@@ -367,6 +367,12 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
             stop('Species in count data must be in the flight curve data!')
         }
 
+        if(TimeUnit == 'd'){
+            tp_col <- "trimDAYNO"
+        } else {
+            tp_col <- "trimWEEKNO"
+        }
+        
         ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
         # if(TimeUnit == 'd'){
         #     tp_col <- "trimDAYNO"

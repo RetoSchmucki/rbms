@@ -6,8 +6,7 @@
 #' @param ... additional parameters for base plot.
 #' @return Returns a base plot with relative abundance (y) over time (x)
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @import data.table
-#' @export plot.pheno_curve
+#' @export
 #'
 
 plot.pheno_curve <- function(data, year = NULL, weekday = 3, ...) {
@@ -52,9 +51,8 @@ plot.pheno_curve <- function(data, year = NULL, weekday = 3, ...) {
         y <- data$pheno[YEAR == year, .(NM, ANCHOR)]
     }
 
-    plot(x$DATE, y$NM, type = "l", ...)
+    plot(x$DATE, y$NM, type = "l", xlab = "Time", ylab = "Relative abundance (NM)", ...)
 }
-
 
 #' points.pheno_curve
 #' Generic method to add points on a plot of the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)
@@ -64,8 +62,7 @@ plot.pheno_curve <- function(data, year = NULL, weekday = 3, ...) {
 #' @param ... additional parameters for base plot.
 #' @return Returns a base plot with relative abundance (y) over time (x)
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
-#' @import data.table
-#' @export plot.pheno_curve
+#' @export
 #'
 
 points.pheno_curve <- function(data, year = NULL, weekday = 3, ...) {

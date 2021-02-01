@@ -39,15 +39,15 @@ Further documentation is also available through the help function in R or from t
 
 ### Development and the beta version
 
-The development version, rbms v.1.2.0, address an issue that was affecting some datasets and resulted in not computing flight curves and indices, although enough visits, sites and occurrence were recorded.
+The development version, rbms v.1.1.0, address an issue that was affecting some datasets and resulted in not computing flight curves and indices, although enough visits, sites and occurrence were recorded.
 This version can be installed from the specific issue branch
 
 ```R
 devtools::install_github("RetoSchmucki/rbms", ref = "dev_issue_no8")
 ```
 
-The rbms v.1.2.0 (dev) work like the previous one but should have solved the issue noted previously, resulting in potentially more flight curve and indices being computed.
-Version 1.2.0 implements a basic plot method for "pheno_curve" object that is produced by the `flight_curve()` function, use:
+The rbms v.1.1.0 (dev) work like the previous one but should have solved the issue noted previously, resulting in potentially more flight curve and indices being computed.
+Version 1.1.0 implements a basic plot method for "pheno_curve" object that is produced by the `flight_curve()` function, use:
 
  ```R
  # usage or plot method

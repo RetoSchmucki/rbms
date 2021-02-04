@@ -102,7 +102,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://Rdatatable.gitlab.io/data.table">data.table</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://retoschmucki.github.io/rbms/">rbms</a></span><span class="op">)</span></code></pre></div>
-<pre><code>##  Welcome to rbms, version 1.0.2 
+<pre><code>##  Welcome to rbms, version 1.1.0 
 ##  This package has been tested, but is still in active development and feedbacks are welcome
 ##  https://github.com/RetoSchmucki/rbms/issues</code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -113,10 +113,10 @@
 <span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">m_visit</span>, <span class="va">ts_season</span><span class="op">)</span>
 <span class="va">ts_season_count</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_count_site.html">ts_monit_count_site</a></span><span class="op">(</span><span class="va">ts_season_visit</span>, <span class="va">m_count</span>, sp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-02-04 12:43:49 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-02-04 12:43:51 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-02-04 12:43:52 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-02-04 12:43:53 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-02-04 13:30:54 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-02-04 13:30:56 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-02-04 13:30:57 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-02-04 13:30:58 -&gt; trial 1"</code></pre>
 <div id="impute-predicted-counts-for-missing-monitoring-dates" class="section level5">
 <h5 class="hasAnchor">
 <a href="#impute-predicted-counts-for-missing-monitoring-dates" class="anchor"></a><strong>4.</strong> Impute predicted counts for missing monitoring dates</h5>
@@ -164,10 +164,10 @@
 <p>The collated index computed by the <code><a href="../reference/collated_index.html">collated_index()</a></code> function can be interpreted as the mean total butterfly count expected on a BMS transect in a given year.</p>
 <pre><code>## $col_index
 ##    BOOTi M_YEAR NSITE NSITE_OBS COL_INDEX
-## 1:     0   2000   124       108  19.23040
-## 2:     0   2001   108       100  31.12038
-## 3:     0   2002   114       107  31.13623
-## 4:     0   2003   122       113  61.25559
+## 1:     0   2000   124       107  18.24001
+## 2:     0   2001   108       100  30.14931
+## 3:     0   2002   114       107  30.85993
+## 4:     0   2003   122       112  58.94461
 ## 
 ## $site_id
 ##   [1] "1"   "14"  "157" "158" "159" "160" "161" "162" "163" "164" "165" "166"

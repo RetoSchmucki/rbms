@@ -68,7 +68,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/RetoSchmucki/rbms/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -87,7 +94,7 @@
             
             <h4 class="date">28 November 2019</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/RetoSchmucki/rbms/blob/master/vignettes/Get_Started_2.Rmd"><code>vignettes/Get_Started_2.Rmd</code></a></small>
       <div class="hidden name"><code>Get_Started_2.Rmd</code></div>
 
     </div>
@@ -113,10 +120,10 @@
 <span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">m_visit</span>, <span class="va">ts_season</span><span class="op">)</span>
 <span class="va">ts_season_count</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_count_site.html">ts_monit_count_site</a></span><span class="op">(</span><span class="va">ts_season_visit</span>, <span class="va">m_count</span>, sp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-02-04 13:30:54 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-02-04 13:30:56 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-02-04 13:30:57 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-02-04 13:30:58 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-02-04 14:38:07 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-02-04 14:38:09 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-02-04 14:38:10 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-02-04 14:38:12 -&gt; trial 1"</code></pre>
 <div id="impute-predicted-counts-for-missing-monitoring-dates" class="section level5">
 <h5 class="hasAnchor">
 <a href="#impute-predicted-counts-for-missing-monitoring-dates" class="anchor"></a><strong>4.</strong> Impute predicted counts for missing monitoring dates</h5>

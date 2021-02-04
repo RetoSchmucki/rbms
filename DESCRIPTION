@@ -22,7 +22,7 @@ Description: Implementation of the Generalize Abundance Index using the Spline m
 Depends: R (>= 3.4.0)
 License: MIT + file LICENSE
 URL: https://retoschmucki.github.io/rbms/
-BugReports: https://retoschmucki.github.io/rbms/issues
+BugReports: https://github.com/RetoSchmucki/rbms/issues
 LazyData: true
 Imports:
 	mgcv,

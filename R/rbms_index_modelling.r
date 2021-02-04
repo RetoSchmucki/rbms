@@ -35,9 +35,15 @@
 #'
 
 fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial = 4,
-                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = "mean"){
+                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = 'mean'){
 
         check_package('data.table')
+
+          if(TimeUnit == 'd'){
+            tp_col <- "trimDAYNO"
+          } else {
+            tp_col <- "trimWEEKNO"
+          }
 
         tr <- 1
         gam_obj_site <- c()
@@ -68,37 +74,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
             print(paste("Fitting the flight curve spline for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
                         sp_data_all[, uniqueN(SITE_ID)], "sites, using", gamMethod, ":", Sys.time(), "-> trial", tr))
 
-            if(MultiVisit == "max") {
-                if(TimeUnit == 'd'){
-                  tp_col <- "trimDAYNO"
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
-                } else {
-                  tp_col <- "trimWEEKNO"
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
-                }
-            } else {
-                if (TimeUnit == "d") {
-                  tp_col <- "trimDAYNO"
-                  sp_data_all[ , meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)), by = .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)]
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, meanCOUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, meanCOUNT), ][dup, ]
-                  sp_data_all <- sp_data_all[ , COUNT := meanCOUNT][ , meanCOUNT := NULL]
-                } else {
-                  tp_col <- "trimWEEKNO"
-                  sp_data_all[, meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)), by = .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)]
-                  dup <- !duplicated(sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, meanCOUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-                  sp_data_all <- sp_data_all[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, meanCOUNT), ][dup, ]
-                  sp_data_all <- sp_data_all[, COUNT := meanCOUNT][, meanCOUNT := NULL]
-                }
-            }
-
-           # if(isTRUE(ConLikelihood)){
-           # mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")"))
-           # } else {
             mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")", ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)", "")))
-           # }
 
               if(isTRUE(SpeedGam)){
                 gam_obj_site <- try(mgcv::bam(mod_form, data=sp_data_all, family=GamFamily), silent = TRUE)
@@ -162,14 +138,17 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @export get_nm
 #'
 
-get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, SpeedGam, OptiGam, TimeUnit, MultiVisit){
+get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, 
+                  SpeedGam, OptiGam, TimeUnit, MultiVisit){
 
   dataset_y <- ts_season_count[as.integer(M_YEAR) == y, ]
-  visit_occ_site <- merge(dataset_y[!is.na(COUNT) & ANCHOR == 0L, .N, by=SITE_ID],
-                          dataset_y[!is.na(COUNT) & ANCHOR == 0L & COUNT > 0, .N, by=SITE_ID],
-                          by="SITE_ID", all=TRUE)
-  dataset_y <- data.table::copy(dataset_y[SITE_ID %in%
-                                visit_occ_site[N.x >= MinVisit & N.y >= MinOccur, SITE_ID],])
+  visit_occ_site <- unique(dataset_y[!is.na(COUNT) & ANCHOR == 0L, visitN := .N, by = SITE_ID][
+                                  !is.na(COUNT) & ANCHOR == 0L & COUNT > 0, occurN := .N, by=SITE_ID][
+                                  !is.na(COUNT) & ANCHOR == 0L, ][order(SITE_ID), .(SITE_ID, occurN, visitN)])
+
+  dataset_y <- data.table::copy(dataset_y[SITE_ID %in% 
+                                  visit_occ_site[visitN >= MinVisit & occurN >= MinOccur, SITE_ID], ][,
+                                  visitN := NULL][, occurN := NULL])
 
   if(TimeUnit == 'd'){
     tp_col <- "trimDAYNO"
@@ -181,7 +160,8 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 
     f_curve  <- unique(ts_season_count[as.integer(M_YEAR) == y, ][ , SITE_ID := NULL][, COUNT := NULL])[, NM := NA]
     f_curve_mod <- list(f_curve=f_curve[order(get(tp_col)),], f_model=list(NA), f_data=data.table(NA))
-    print(paste("You have not enough sites with observations for estimating the flight curve for species", as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
+    print(paste("You have not enough sites with observations for estimating the flight curve for species", 
+                as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
   } else {
     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
                           SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit) #ConLikelihood = ConLikelihood,
@@ -241,19 +221,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
         if(length(year_series) == 0) stop(paste0(" No count data found for year ", SelectYear))
 
-        if(TimeUnit == 'd'){
-            tp_col <- "trimDAYNO"
-            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
-            ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
-            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        } else {
-            tp_col <- "trimWEEKNO"
-            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
-            ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
-            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        }
+        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
 
         result_fc <- lapply(year_series, get_nm, ts_season_count=ts_season_count, MinVisit=MinVisit, MinOccur=MinOccur, MinNbrSite=MinNbrSite,
                                                   NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, SpeedGam = SpeedGam,
@@ -274,7 +242,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         if(isTRUE(KeepModelData) & isTRUE(KeepModel)){
           result_fc <- list(pheno = result_fcurve, model = result_fmodel, data = result_fdata)
         }
-
+    class(result_fc) <- "pheno_curve"
     return(result_fc)
 }
 
@@ -368,6 +336,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @param ts_season_count data.table Time-series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
 #' @param ts_flight_curve data.table Flight curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param sp integer or string Species ID or name.
 #' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
 #' @param SelectYear integer Select a specific year to compute the flight curve, default=NULL.
@@ -381,7 +350,8 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @export impute_count
 #'
 
-impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
+impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', MultiVisit = 'mean', 
+                         sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
 
         check_package('data.table')
 
@@ -399,17 +369,26 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit, sp = NULL, 
 
         if(TimeUnit == 'd'){
             tp_col <- "trimDAYNO"
-            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
-            ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
-            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
         } else {
             tp_col <- "trimWEEKNO"
-            dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-            ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
-            ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
-            ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
         }
+        
+        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
+        # if(TimeUnit == 'd'){
+        #     tp_col <- "trimDAYNO"
+        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
+        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
+        #     ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
+        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, 
+        #                                             WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, 
+        #                                             M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
+        # } else {
+        #     tp_col <- "trimWEEKNO"
+        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
+        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
+        #     ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
+        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
+        # }
 
         keycol <- c("SPECIES", "M_YEAR", tp_col)
         data.table::setkeyv(ts_season_count, keycol)
@@ -662,4 +641,93 @@ boot_sample <- function(data, boot_n = 1000){
 
   boot_ind <- list(site_id = site_id, boot_ind = boot_ind)
   return(boot_ind)
+}
+
+
+#' day_week_summary
+#' Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed.
+#' @param ts_season_count data.table Time-series of butterfly counts for species x over year y over all sites.
+#' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
+#' @return data.table Time-series of butterfly counts for species x over year y over all sites, but summarized with the chosen function.
+#' @keywords flight_curve
+#' @seealso \link{fligth_curve}
+#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @import data.table
+#' @export day_week_summary
+#'
+
+day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
+
+  if(MultiVisit == "mean"){
+            if(TimeUnit == 'd'){
+              tp_col <- "trimDAYNO"
+              ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
+              ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
+                                                      WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
+                                                      COMPLT_SEASON, ANCHOR, COUNT)]
+
+              ts_season_count[ , meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)),
+                                                    by = .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)][
+                                                        is.nan(meanCOUNT), meanCOUNT := NA]
+
+              ts_season_count_summary <- unique(ts_season_count[, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
+                                                              WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
+                                                              COMPLT_SEASON, ANCHOR, meanCOUNT)])[, COUNT := meanCOUNT][,
+                                                              meanCOUNT := NULL]
+            } else {
+                tp_col <- "trimWEEKNO"
+                ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
+                ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
+                                                        WEEK_SINCE, trimWEEKNO, M_SEASON, 
+                                                        COMPLT_SEASON, ANCHOR, COUNT)]
+
+                ts_season_count[ , meanCOUNT := ceiling(mean(COUNT, na.rm = TRUE)),
+                                                      by = .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)][
+                                                        is.nan(meanCOUNT), meanCOUNT := NA]
+
+                ts_season_count_summary <- unique(ts_season_count[, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
+                                                              WEEK_SINCE, trimWEEKNO, M_SEASON, 
+                                                              COMPLT_SEASON, ANCHOR, meanCOUNT)])[, COUNT := meanCOUNT][,
+                                                              meanCOUNT := NULL]
+
+                ts_season_count_summary <- ts_season_count_summary[!duplicated(ts_season_count_summary[, .(SPECIES, SITE_ID, WEEK_SINCE)]), ]
+            }
+  } else {
+            if(TimeUnit == 'd'){
+              tp_col <- "trimDAYNO"
+              ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
+              ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
+                                                      WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
+                                                      COMPLT_SEASON, ANCHOR, COUNT)]
+
+              ts_season_count[ , maxCOUNT := suppressWarnings(max(COUNT, na.rm = TRUE)),
+                                                    by = .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)][
+                                                        maxCOUNT == -Inf, maxCOUNT := NA]
+
+              ts_season_count_summary <- unique(ts_season_count[, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
+                                                              WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
+                                                              COMPLT_SEASON, ANCHOR, maxCOUNT)])[, COUNT := maxCOUNT][,
+                                                              maxCOUNT := NULL]
+            } else {
+                tp_col <- "trimWEEKNO"
+                ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
+                ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
+                                                        WEEK_SINCE, trimWEEKNO, M_SEASON, 
+                                                        COMPLT_SEASON, ANCHOR, COUNT)]
+
+                ts_season_count[ , maxCOUNT := suppressWarnings(max(COUNT, na.rm = TRUE)),
+                                                      by = .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)][
+                                                        maxCOUNT == -Inf, maxCOUNT := NA]
+
+                ts_season_count_summary <- unique(ts_season_count[, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
+                                                              WEEK_SINCE, trimWEEKNO, M_SEASON, 
+                                                              COMPLT_SEASON, ANCHOR, maxCOUNT)])[, COUNT := maxCOUNT][,
+                                                              maxCOUNT := NULL]
+                
+                ts_season_count_summary <- ts_season_count_summary[!duplicated(ts_season_count_summary[, .(SPECIES, SITE_ID, WEEK_SINCE)]), ]
+            }
+  }
+
+return(ts_season_count_summary)
 }

@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>License • rbms</title>
+<title>day_week_summary
+Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed. — day_week_summary • rbms</title>
 
 
 <!-- jquery -->
@@ -18,8 +19,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
-<link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script>
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
@@ -33,13 +34,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script>
+<link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="License" />
+<meta property="og:title" content="day_week_summary
+Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed. — day_week_summary" />
+<meta property="og:description" content="day_week_summary
+Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed." />
 
 
 
@@ -68,7 +72,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-title-body">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -80,7 +84,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">rbms</a>
+        <a class="navbar-link" href="../index.html">rbms</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
@@ -88,13 +92,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">
+  <a href="../index.html">
     <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -104,10 +108,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="articles/Get_Started_1.html">1. Get started with rbms - phenology</a>
+      <a href="../articles/Get_Started_1.html">1. Get started with rbms - phenology</a>
     </li>
     <li>
-      <a href="articles/Get_Started_2.html">2. Get started with rbms - collate index</a>
+      <a href="../articles/Get_Started_2.html">2. Get started with rbms - collate index</a>
     </li>
   </ul>
 </li>
@@ -125,25 +129,55 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>License</h1>
+    <h1>day_week_summary
+Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed.</h1>
+    
+    <div class="hidden name"><code>day_week_summary.Rd</code></div>
     </div>
 
-<pre>YEAR: 2020
-COPYRIGHT HOLDER: Reto Schmucki
-</pre>
+    <div class="ref-description">
+    <p>day_week_summary
+Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed.</p>
+    </div>
+
+    <pre class="usage"><span class='fu'>day_week_summary</span><span class='op'>(</span><span class='va'>ts_season_count</span>, <span class='va'>MultiVisit</span>, <span class='va'>TimeUnit</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>ts_season_count</th>
+      <td><p>data.table Time-series of butterfly counts for species x over year y over all sites.</p></td>
+    </tr>
+    <tr>
+      <th>MultiVisit</th>
+      <td><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></td>
+    </tr>
+    <tr>
+      <th>TimeUnit</th>
+      <td><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>data.table Time-series of butterfly counts for species x over year y over all sites, but summarized with the chosen function.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>fligth_curve</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Reto Schmucki - <a href='mailto:reto.schmucki@mail.mcgill.ca'>reto.schmucki@mail.mcgill.ca</a></p>
 
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
-
 
 
       <footer>

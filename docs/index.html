@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -90,7 +90,19 @@
 <div id="suggested-citation-for-the-rbms-package" class="section level4">
 <h4 class="hasAnchor">
 <a href="#suggested-citation-for-the-rbms-package" class="anchor"></a>Suggested citation for the rbms package</h4>
-<p>Schmucki R., Harrower C.A., Dennis E.B. (2019) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.0.0. <a href="https://github.com/RetoSchmucki/rbms" class="uri">https://github.com/RetoSchmucki/rbms</a></p>
+<p>Schmucki R., Harrower C.A., Dennis E.B. (2020) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.0.2. <a href="https://github.com/RetoSchmucki/rbms" class="uri">https://github.com/RetoSchmucki/rbms</a></p>
+</div>
+<div id="the-rbms-package-implements-methods-from" class="section level4">
+<h4 class="hasAnchor">
+<a href="#the-rbms-package-implements-methods-from" class="anchor"></a>The rbms package implements methods from:</h4>
+<ul>
+<li>Dennis, E.B., Freeman, S.N., Brereton, T., Roy, D.B., 2013. Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal pattern. Methods Ecol Evol 4, 637–645. <a href="https://doi.org/10.1111/2041-210X.12053" class="uri">https://doi.org/10.1111/2041-210X.12053</a>
+</li>
+<li>Dennis, E.B., Morgan, B.J.T., Freeman, S.N., Brereton, T.M., Roy, D.B., 2016. A generalized abundance index for seasonal invertebrates. Biom 72, 1305–1314. <a href="https://doi.org/10.1111/biom.12506" class="uri">https://doi.org/10.1111/biom.12506</a>
+</li>
+<li>Schmucki, R., Pe’er, G., Roy, D.B., Stefanescu, C., Van Swaay, C.A.M., Oliver, T.H., Kuussaari, M., Van Strien, A.J., Ries, L., Settele, J., Musche, M., Carnicer, J., Schweiger, O., Brereton, T.M., Harpke, A., Heliölä, J., Kühn, E., Julliard, R., 2016. A regionally informed abundance index for supporting integrative analyses across butterfly monitoring schemes. J Appl Ecol 53, 501–510. <a href="https://doi.org/10.1111/1365-2664.12561" class="uri">https://doi.org/10.1111/1365-2664.12561</a>
+</li>
+</ul>
 </div>
 <div id="installation" class="section level4">
 <h4 class="hasAnchor">
@@ -99,9 +111,9 @@
 <blockquote>
 <p>Note that <code>rbms</code> is build with R &gt; 3.6.0, so you might need to update your R system before installation. To install devtools on Windows system, you will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> - note Rtools40 for R 4.x.x New to <code>R</code> or want to refresh your R coding skills, try the excellent tutorials available at <a href="https://ourcodingclub.github.io/">ourcodingclub</a> <span class="emoji" data-emoji="thumbsup">👍</span></p>
 </blockquote>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="get-started" class="section level4">
 <h4 class="hasAnchor">
@@ -109,16 +121,40 @@
 <p>Consult the <a href="https://retoschmucki.github.io/rbms/articles/Get_Started_1.html">tutorial vignettes / Articles</a> to learn about <code>rbms</code> data format and the workflow how to compute flight curves, abundance indices, and collated index with a bootstrap confidence interval</p>
 <p>Further documentation is also available through the help function in R or from the <a href="https://retoschmucki.github.io/rbms/reference/index.html">rbms online references</a></p>
 </div>
+<div id="development-and-the-beta-version" class="section level3">
+<h3 class="hasAnchor">
+<a href="#development-and-the-beta-version" class="anchor"></a>Development and the beta version</h3>
+<p>The development version, rbms v.1.1.0, address an issue that was affecting some datasets and resulted in not computing flight curves and indices, although enough visits, sites and occurrence were recorded. This version can be installed from the specific issue branch</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span>, ref <span class="op">=</span> <span class="st">"dev_issue_no8"</span><span class="op">)</span></code></pre></div>
+<p>The rbms v.1.1.0 (dev) work like the previous one but should have solved the issue noted previously, resulting in potentially more flight curve and indices being computed. Version 1.1.0 implements a basic plot method for “pheno_curve” object that is produced by the <code><a href="reference/flight_curve.html">flight_curve()</a></code> function, use:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># usage or plot method</span>
+<span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, <span class="va">...</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span>
+
+<span class="co"># for a single year</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2017</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2017</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></code></pre></div>
 <div id="reporting-issues" class="section level4">
 <h4 class="hasAnchor">
 <a href="#reporting-issues" class="anchor"></a>Reporting Issues</h4>
 <p>For reporting issues related to this package or workflow, please visit the issue and before opening a new, see if your problem is not already in the list reported <a href="https://github.com/RetoSchmucki/rbms/issues">issues here</a></p>
 </div>
 </div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Report a bug at <br><a href="https://retoschmucki.github.io/rbms/issues">https://​retoschmucki.github.io/​rbms/​issues</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li>

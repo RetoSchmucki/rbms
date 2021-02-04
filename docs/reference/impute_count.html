@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -140,7 +140,8 @@
     <pre class="usage"><span class='fu'>impute_count</span><span class='op'>(</span>
   <span class='va'>ts_season_count</span>,
   <span class='va'>ts_flight_curve</span>,
-  <span class='va'>TimeUnit</span>,
+  TimeUnit <span class='op'>=</span> <span class='st'>"d"</span>,
+  MultiVisit <span class='op'>=</span> <span class='st'>"mean"</span>,
   sp <span class='op'>=</span> <span class='cn'>NULL</span>,
   YearLimit <span class='op'>=</span> <span class='cn'>NULL</span>,
   SelectYear <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -161,6 +162,10 @@
     <tr>
       <th>TimeUnit</th>
       <td><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></td>
+    </tr>
+    <tr>
+      <th>MultiVisit</th>
+      <td><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></td>
     </tr>
     <tr>
       <th>sp</th>

@@ -131,11 +131,8 @@
 <div id="development-and-the-beta-version" class="section level3">
 <h3 class="hasAnchor">
 <a href="#development-and-the-beta-version" class="anchor"></a>Development and the beta version</h3>
-<p>The development version, rbms v.1.1.0, address an issue that was affecting some datasets and resulted in not computing flight curves and indices, although enough visits, sites and occurrence were recorded. This version can be installed from the specific issue branch</p>
+<p>Version v.1.1.0 works is likely be better perform with species having sparse data, enabling more flight curve and indices to be computed. This version also implements a basic plot method for “pheno_curve”, using the object produced by the <code><a href="reference/flight_curve.html">flight_curve()</a></code> function as argument.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span>, ref <span class="op">=</span> <span class="st">"dev_issue_no8"</span><span class="op">)</span></code></pre></div>
-<p>The rbms v.1.1.0 (dev) work like the previous one but should have solved the issue noted previously, resulting in potentially more flight curve and indices being computed. Version 1.1.0 implements a basic plot method for “pheno_curve” object that is produced by the <code><a href="reference/flight_curve.html">flight_curve()</a></code> function, use:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># usage or plot method</span>
 <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, <span class="va">...</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">)</span>

@@ -39,7 +39,7 @@ Further documentation is also available through the help function in R or from t
 
 ### Development
 
-Version v.1.1.0 works is likely be better perform with species having sparse data, enabling more flight curve and indices to be computed. This version also implements a basic plot method for "pheno_curve", using the object produced by the `flight_curve()` function as argument.
+Version v.1.1.0 is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for "pheno_curve", using the object produced by the `flight_curve()` function as an argument.
 
  ```R
  # usage or plot method

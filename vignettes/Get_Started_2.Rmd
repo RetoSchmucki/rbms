@@ -108,10 +108,11 @@ if (class(lm_mod)[1] != "try-error"){
 ##### **6.** Bootstrap confidence interval
 
 The confidence interval around the collated indices can be computed from a bootstrap sample, where *n* site indices are randomly resampled (with replacement) *k* time to produce a distribution of the annual collated indices. From this distribution, we can derive the confidence intervals around the collated indices.
-We first define *k* bootstrap sample using the function boot_sample(). Here we set *k* to 200 samples, but for a reliable confidence interval, *k* should be at least 1000.
+We first define *k* bootstrap sample using the function boot_sample(). Here we set *k* to 200 samples, but for a reliable confidence interval, *k* should be at least 1000. For reproducibility, we use set.seed() to generate a repeatable random sample
 
 
 ```{r, boot}
+set.seed(218795)
 bootsample <- rbms::boot_sample(sindex, boot_n = 200)
 ```
 

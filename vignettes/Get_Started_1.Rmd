@@ -24,7 +24,7 @@ Visit data represent the visit date at which each site was visited, and butterfl
 
 
 1) **SITE_ID** (can be numbers of characters and treated as a non-numeric factor)
-2) **DATE** (by default, the format is “%Y-%m-%d” (e.g., 2019-11-28]). If a different the format needs to be specified, use the argument DateFormat)
+2) **DATE** (by default, the format is “%Y-%m-%d” (e.g., 2019-11-28]). If a different format needs to be specified, use the argument DateFormat)
 
 ```{r data_visit, echo = FALSE}
 m_visit

@@ -43,13 +43,48 @@ Version v.1.1.0 works is likely be better perform with species having sparse dat
 
  ```R
  # usage or plot method
- ts_flight_curve <- flight_curve(ts_season_count, ...)
- plot(ts_flight_curve)
- points(ts_flight_curve, col = 'magenta', pch = 19)
+library(rbms)
+data(m_visit)
+data(m_count)
+
+ts_date <- rbms::ts_dwmy_table(InitYear = 2000, LastYear = 2003, WeekDay1 = 'monday')
+
+ts_season <- rbms::ts_monit_season(ts_date,
+                        StartMonth = 4,
+                        EndMonth = 9, 
+                        StartDay = 1,
+                        EndDay = NULL,
+                        CompltSeason = TRUE,
+                        Anchor = TRUE,
+                        AnchorLength = 2,
+                        AnchorLag = 2,
+                        TimeUnit = 'w')
+
+ts_season_visit <- rbms::ts_monit_site(m_visit, ts_season)
+
+ts_season_count <- rbms::ts_monit_count_site(ts_season_visit, m_count, sp = 2)
+
+ts_flight_curve <- rbms::flight_curve(ts_season_count, 
+                        NbrSample = 300,
+                        MinVisit = 5,
+                        MinOccur = 3,
+                        MinNbrSite = 5,
+                        MaxTrial = 4,
+                        GamFamily = 'nb',
+                        SpeedGam = FALSE,
+                        CompltSeason = TRUE,
+                        SelectYear = NULL,
+                        TimeUnit = 'w')
+## Flight curves are in the "pheno" data.table located within the ts_flight_curve result that is a list
+str(ts_flight_curve$pheno)
+
+## Basic plot method to plot flight curve
+plot(ts_flight_curve)
+points(ts_flight_curve, col = 'magenta', pch = 19)
 
  # for a single year
- plot(ts_flight_curve, year = 2017)
- points(ts_flight_curve, year = 2017, col = 'magenta', pch = 19)
+ plot(ts_flight_curve, year = 2002)
+ points(ts_flight_curve, year = 2002, col = 'magenta', pch = 19)
  ```
 #### Reporting Issues
 

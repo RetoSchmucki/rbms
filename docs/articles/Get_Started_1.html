@@ -158,7 +158,7 @@
 <h5 class="hasAnchor">
 <a href="#organise-the-data-to-cover-the-time-period-and-monitoring-season-of-the-bms" class="anchor"></a><strong>2.</strong> organise the data to cover the time period and monitoring season of the BMS</h5>
 <p>With the visit and count data, we need to merge them into a new data.table object that covers the entire time-series of interest. This time-series is structured with the start and end date of the monitoring season and define on a weekly or a daily base (resolution of the flight curve). In a first step, we initialise the time-series with day-week-month-year information.</p>
-<p><strong>2.1.</strong> First we initialise a time-series with day-week-month-year information.</p>
+<p><strong>2.1.</strong> First, we initialise a time-series with day-week-month-year information.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ts_date</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_dwmy_table.html">ts_dwmy_table</a></span><span class="op">(</span>InitYear <span class="op">=</span> <span class="fl">2000</span>, LastYear <span class="op">=</span> <span class="fl">2003</span>, WeekDay1 <span class="op">=</span> <span class="st">'monday'</span><span class="op">)</span></code></pre></div>
 <p><strong>2.2.</strong> Ddd the monitoring season to the time-series</p>
@@ -180,15 +180,15 @@
 <div id="compute-the-yearly-flight-curve-for-the-data" class="section level5">
 <h5 class="hasAnchor">
 <a href="#compute-the-yearly-flight-curve-for-the-data" class="anchor"></a><strong>3.</strong> Compute the yearly flight curve for the data</h5>
-<p>With the object constructed above, we can compute the flight curve for each year that has sufficient data. The <code>flight_curve</code> function assumes that the annual phenology shares the same shape across sites.</p>
+<p>With the object constructed above, we can compute the flight curve for each year with sufficient data. The <code>flight_curve</code> function assumes that the annual phenology shares the same shape across sites.</p>
 <p>The objective of this function is to extract this shape that we call the flight curve. Here, we want to impose some minimal threshold to control the quality of the data used to inform this model. This is done by setting the Minimum number of visits MinNbrVisit, the minimum number of occurrences MinOccur and the number of sites MinNbrSite to use to fit the model.</p>
-<p>These values can influence the model and its sensitivity will depend on the species and the data set, but as a minimum requirement, MinOccur should be set &gt;= 2, the MinNbrVisit &gt; MinOccur and MinNbrSite &gt;= 5. These thresholds affect the data that inform your model and the resulting flight curve. When higher values are chosen, fewer sites will be available and if insufficient, the thresholds need to be revised.</p>
+<p>These values can influence the model, and its sensitivity will depend on the species and the data set. Still, as a minimum requirement, MinOccur should be set &gt;= 2, the MinNbrVisit &gt; MinOccur and MinNbrSite &gt;= 5. These thresholds affect the data that inform your model and the resulting flight curve. When higher values are chosen, fewer sites will be available and if insufficient, the thresholds need to be revised.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"> <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-03-05 11:40:23 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-03-05 11:40:25 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-03-05 11:40:26 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-03-05 11:40:28 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-03-05 12:02:42 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-03-05 12:02:44 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-03-05 12:02:45 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-03-05 12:02:46 -&gt; trial 1"</code></pre>
 <blockquote>
 <p>NOTE: for the <code>flight_curve</code> function, you will also have to define some parameters for the distribution for the GAM model as well as the maximum number of times to try to fit the model and the number of samples to use. The later will take a random sample from the data set if it contains more site than the number specified.</p>
 </blockquote>

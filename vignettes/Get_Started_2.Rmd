@@ -6,7 +6,7 @@ date: 28 November 2019
 ---
 ---------
 
-From the flight curve and the observed counts, we can derive expected values for weeks or days where a site has not been monitored. Together, observed and imputed counts are used to compute abundance indices for across sites. Site indices are then used to calculate annual collated indices.
+From the flight curve and the observed counts, we can derive expected values for weeks or days where a site has not been monitored. Together, observed and imputed counts are used to compute abundance indices across sites. Site indices are then used to calculate annual collated indices.
 
 > see 1. Get started with `rbms` to compute the flight curve object used below (Step 1, 2 and 3)
 
@@ -24,7 +24,7 @@ ts_flight_curve <- rbms::flight_curve(ts_season_count, NbrSample = 300, MinVisit
 
 ##### **4.** Impute predicted counts for missing monitoring dates
 
-The `impute_count()` function uses the count data generated from the `ts_season_count()` function and the outcome of the `flight_curve()` function to calculate the flight curves (ts_flight_curve$pheno). the function looks for the phenology available (using the nearest year) to estimate and inpute missing values; the extent of the search can be limited by setting the YearLimit parameter, which by default is not restricted. Like in other rbms functions, the imputation can be made on a weekly or daily basis ('w' or 'd').
+The `impute_count()` function uses the count data generated from the `ts_season_count()` function and the outcome of the `flight_curve()` function to calculate the flight curves (ts_flight_curve$pheno). the function looks for the phenology available (using the nearest year) to estimate and input missing values; the search extent can be limited by setting the YearLimit parameter, which by default is not restricted. Like other rbms functions, the imputation can be made on a weekly or daily basis ('w' or 'd').
 
 ```{r, impute}
 ## extract phenology data from the ts_fligh_curve list
@@ -33,8 +33,7 @@ pheno <- ts_flight_curve$pheno
 impt_counts <- rbms::impute_count(ts_season_count=ts_season_count, ts_flight_curve=pheno, YearLimit= NULL, TimeUnit='w')
 ```
 
-The `impute_count()` function produces a data.table that contains the original COUNT values, a series of IMPUTED_COUNT over monitoring season, TOTAL_COUNT per site and year, TOTAL_NM which is the proportion of the flight curve covered by the visits, and the SINDEX which is the site index and corresponds to the sum of both observed and imputed counts over the sampling season.
-If the flight curve is missing of a specific year, the `impute_count()` function uses the nearest phenology found. If none is available within the limit of years set by the YearLimit parameter, the function will return no SINDEX for that specific year.
+The `impute_count()` function produces a data.table that contains the original COUNT values, a series of IMPUTED_COUNT over monitoring season, TOTAL_COUNT per site and year, TOTAL_NM (e.g. the proportion of the flight curve covered by the visits) and SINDEX. The SINDEX is the site index and corresponds to the sum of both observed and imputed counts over the sampling season. If the flight curve of a specific year is missing, the `impute_count()` function uses the nearest phenology found. If none is available within the limit of years set by the YearLimit parameter, the function will return no SINDEX for that specific year.
 
 
 ```{r, impute_year}
@@ -46,13 +45,13 @@ impt_counts_0year <- rbms::impute_count(ts_season_count=ts_season_count, ts_flig
 
 ##### **5.** Site and collated indices
 
-From the imputed count, site index can be calculated for each site or with a filter that will only keep the sites that have been monitored at least a certain proportion of the flight curve. In this example, we set the threshold to 10%, using the MinFC parameter.
+From the imputed count, the site index can be calculated for each site or with a filter that will only keep sites that have been monitored at least a certain proportion of the flight curve. In this example, we set the threshold to 10%, using the MinFC parameter.
 
 ```{r, sindex, message=FALSE, warning=FALSE}
 sindex <- rbms::site_index(butterfly_count = impt_counts, MinFC = 0.10)
 ```
 
-With the site indices, annual collated indices can be estimated by fitting a Generalised Linear Model (GLM), where sites and years are modelled as factors. Here we also use the proportion of the flight curve sampled by the observation as a weight for the GLM. Finally, we also remove all sites where the species was not observed, setting the parameter rm_zero = TRUE, this facilitates the model fit.
+With the site indices, annual collated indices can be estimated by fitting a Generalised Linear Model (GLM), where sites and years are modelled as factors. Here we also use the proportion of the flight curve sampled by the observation as a weight for the GLM. Finally, we remove all sites where the species was not observed, setting the parameter rm_zero = TRUE will facilitates model fit.
 
 ```{r, collated_index}
 co_index <- collated_index(data = sindex, s_sp = 2, sindex_value = "SINDEX", glm_weights = TRUE, rm_zero = TRUE)
@@ -76,12 +75,12 @@ data.table::setnames(co_index_logInd, "V1", "logInd"); setkey(co_index_logInd, M
 co_index_b <- merge(co_index_b, co_index_logInd, all.x = TRUE)
 ```
 
-The log scaled indices can then be plotted with the following code, here we represent the data so the time-series average is centred to two (i.e. `log10(100)`).
+The log scaled indices can then be plotted with the following code; here we represent the data with time-series average being centred to two (i.e. `log10(100)`).
 
 ```{r, ind_fig, fig.cap='Collated index.', tidy=FALSE}
 col_pal <- c("cyan4", "orange", "orangered2")
 
-## compute the metric used for the graph of the Collated Log-Index centered around 2 (observed, bootstap sampel, credible confidence interval, linear trend)
+## compute the metric used for the graph of the Collated Log-Index centred around 2 (observed, bootstrap sample, credible confidence interval, linear trend)
 b1 <- data.table(M_YEAR = co_index_b$M_YEAR, LCI = 2 + co_index_b$logInd - co_index_b$mean_logInd)
 b2 <- data.table(M_YEAR = co_index_b[BOOTi == 0, M_YEAR], LCI= 2 + co_index_b[BOOTi == 0, logInd] - co_index_b[BOOTi == 0, mean_logInd])
 
@@ -133,7 +132,7 @@ for(i in c(0,seq_len(dim(bootsample$boot_ind)[1]))){
 
 }
 
-## collate and append all the result in a data.table format
+## collate and append all the result in a data.table object
 co_index <- rbindlist(lapply(co_index, FUN = "[[","col_index"))
 ```
 

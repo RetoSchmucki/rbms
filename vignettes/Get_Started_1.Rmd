@@ -45,7 +45,7 @@ m_count
 
 With the visit and count data, we need to merge them into a new data.table object that covers the entire time-series of interest. This time-series is structured with the start and end date of the monitoring season and define on a weekly or a daily base (resolution of the flight curve). In a first step, we initialise the time-series with day-week-month-year information.
 
-**2.1.** First we initialise a time-series with day-week-month-year information.
+**2.1.** First, we initialise a time-series with day-week-month-year information.
 
 ```{r init_timeseries}
 ts_date <- rbms::ts_dwmy_table(InitYear = 2000, LastYear = 2003, WeekDay1 = 'monday')
@@ -84,11 +84,11 @@ ts_season_count
 
 ##### **3.** Compute the yearly flight curve for the data
 
-With the object constructed above, we can compute the flight curve for each year that has sufficient data. The `flight_curve` function assumes that the annual phenology shares the same shape across sites.
+With the object constructed above, we can compute the flight curve for each year with sufficient data. The `flight_curve` function assumes that the annual phenology shares the same shape across sites.
 
 The objective of this function is to extract this shape that we call the flight curve. Here, we want to impose some minimal threshold to control the quality of the data used to inform this model. This is done by setting the Minimum number of visits MinNbrVisit, the minimum number of occurrences MinOccur and the number of sites MinNbrSite to use to fit the model.
 
-These values can influence the model and its sensitivity will depend on the species and the data set, but as a minimum requirement,  MinOccur should be set >= 2, the MinNbrVisit > MinOccur and MinNbrSite >= 5. These thresholds affect the data that inform your model and the resulting flight curve.  When higher values are chosen, fewer sites will be available and if insufficient, the thresholds need to be revised.
+These values can influence the model, and its sensitivity will depend on the species and the data set. Still, as a minimum requirement,  MinOccur should be set >= 2, the MinNbrVisit > MinOccur and MinNbrSite >= 5. These thresholds affect the data that inform your model and the resulting flight curve.  When higher values are chosen, fewer sites will be available and if insufficient, the thresholds need to be revised.
 
 
 ```{r flight_curve}

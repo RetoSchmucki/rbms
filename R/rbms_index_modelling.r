@@ -390,6 +390,9 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
         #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
         # }
 
+        ts_season_count$M_YEAR <- as.integer(as.character(ts_season_count$M_YEAR))
+        ts_flight_curve$M_YEAR <- as.integer(as.character(ts_flight_curve$M_YEAR))
+
         keycol <- c("SPECIES", "M_YEAR", tp_col)
         data.table::setkeyv(ts_season_count, keycol)
         data.table::setkeyv(ts_flight_curve, keycol)

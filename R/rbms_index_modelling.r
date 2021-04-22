@@ -7,10 +7,8 @@
 ##      VARIABLE NAME: UPPER_CASE
 ##
 ##      Date:   02.01.2018
-##      Update:   13.04.2020
+##      Update:   22.04.2021
 ##
-##      index_modelling: functions for abundance index model
-##      removed this arguments #' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 ##==========================================
 
 
@@ -40,17 +38,6 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
                     mod_form = NULL, tp_col = NULL, ...){
 
         check_package('data.table')
-        
-        # if(is.null(tp_col)){
-        #   if(TimeUnit == 'd'){
-        #     tp_col <- "trimDAYNO"
-        #   } else {
-        #     tp_col <- "trimWEEKNO"
-        #   }
-        # }else{
-        #   tp_col <- tp_col
-        # }
-
         tr <- 1
         gam_obj_site <- c()
 
@@ -101,7 +88,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
                     "; Model did not converge after", tr, "trials"))
             sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
         } else {
-            colnames <- c(tp_col, "SITE_ID")
+            colnames <- names(sp_data_all)
             pred_data <- sp_data_all[, ..colnames]
             sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = pred_data, type = "response")]
             sp_data_all[M_SEASON == 0L, FITTED := 0]
@@ -244,7 +231,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         if(length(year_series) == 0) stop(paste0(" No count data found for year ", SelectYear))
 
         if(!is.null(tp_col)){
-          if(!tp_col %in% col_name){
+          if(!all(tp_col %in% col_name)){
           if(TimeUnit == 'd'){
             ts_season_count_tp_col <- unique(ts_season_count[ , c(c("SPECIES", "SITE_ID", "DAY_SINCE"), tp_col), with = FALSE])
             setkey(ts_season_count_tp_col, SPECIES, SITE_ID, DAY_SINCE)
@@ -258,7 +245,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
 
         if(!is.null(tp_col)){
-          if(!tp_col %in% col_name){
+          if(!all(tp_col %in% col_name)){
             ifelse(TimeUnit == 'd', setkey(ts_season_count, SPECIES, SITE_ID, DAY_SINCE), setkey(ts_season_count, SPECIES, SITE_ID, WEEK_SINCE))
             ts_season_count <- merge(ts_season_count, ts_season_count_tp_col, all.x = TRUE)
           }
@@ -416,21 +403,6 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
         }
         
         ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
-        # if(TimeUnit == 'd'){
-        #     tp_col <- "trimDAYNO"
-        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
-        #     ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
-        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, 
-        #                                             WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, 
-        #                                             M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        # } else {
-        #     tp_col <- "trimWEEKNO"
-        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
-        #     ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
-        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        # }
 
         ts_season_count$M_YEAR <- as.integer(as.character(ts_season_count$M_YEAR))
         ts_flight_curve$M_YEAR <- as.integer(as.character(ts_flight_curve$M_YEAR))
@@ -706,7 +678,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
 
   if(MultiVisit == "mean"){
             if(TimeUnit == 'd'){
-              # tp_col <- "trimDAYNO"
               ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
               ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
                                                       WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
@@ -721,7 +692,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
                                                               COMPLT_SEASON, ANCHOR, meanCOUNT)])[, COUNT := meanCOUNT][,
                                                               meanCOUNT := NULL]
             } else {
-                # tp_col <- "trimWEEKNO"
                 ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
                 ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
                                                         WEEK_SINCE, trimWEEKNO, M_SEASON, 
@@ -740,7 +710,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
             }
   } else {
             if(TimeUnit == 'd'){
-              # tp_col <- "trimDAYNO"
               ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
               ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
                                                       WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
@@ -755,7 +724,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
                                                               COMPLT_SEASON, ANCHOR, maxCOUNT)])[, COUNT := maxCOUNT][,
                                                               maxCOUNT := NULL]
             } else {
-                # tp_col <- "trimWEEKNO"
                 ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
                 ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
                                                         WEEK_SINCE, trimWEEKNO, M_SEASON, 

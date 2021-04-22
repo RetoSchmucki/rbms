@@ -23,6 +23,7 @@
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param mod_form string with formula to be passed to the gam model, default null.
+#' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.
@@ -127,6 +128,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param TimeUnit character Time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param mod_form string with formula to be passed to the gam model, default null.
+#' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalised to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
@@ -191,6 +193,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param mod_form string with formula to be passed to the gam model, default null.
+#' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.

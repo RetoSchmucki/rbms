@@ -21,6 +21,8 @@ flight_curve(
   KeepModelData = TRUE,
   TimeUnit = "d",
   MultiVisit = "mean",
+  mod_form = NULL,
+  tp_col = NULL,
   ...
 )
 }
@@ -54,6 +56,10 @@ flight_curve(
 \item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 
 \item{MultiVisit}{string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
+
+\item{mod_form}{string with formula to be passed to the gam model, default null.}
+
+\item{tp_col}{string or vector of string with additional variable used in the gam model, default null.}
 
 \item{...}{Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }

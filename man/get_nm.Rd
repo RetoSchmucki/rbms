@@ -17,7 +17,10 @@ get_nm(
   SpeedGam,
   OptiGam,
   TimeUnit,
-  MultiVisit
+  MultiVisit,
+  mod_form,
+  tp_col,
+  ...
 )
 }
 \arguments{
@@ -44,6 +47,12 @@ get_nm(
 \item{TimeUnit}{character Time-step for which the spline should be computed, 'd' day or 'w' week.}
 
 \item{MultiVisit}{string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
+
+\item{mod_form}{string with formula to be passed to the gam model, default null.}
+
+\item{tp_col}{string or vector of string with additional variable used in the gam model, default null.}
+
+\item{...}{Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }
 \value{
 A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalised to sum to one over a full season,

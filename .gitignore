@@ -1,10 +1,12 @@
 .Rproj.user
 .Rhistory
-.RData
-.csv
-.tif
+*.RData
+*.csv
+*.tif
 /data-raw/*.tif
 /data-raw/*.csv
 /ins/raster_data/*.tif
 /develop/
 *.nc
+*.grd
+*.gri

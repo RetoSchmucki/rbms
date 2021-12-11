@@ -7,10 +7,8 @@
 ##      VARIABLE NAME: UPPER_CASE
 ##
 ##      Date:   02.01.2018
-##      Update:   13.04.2020
+##      Update:   22.04.2021
 ##
-##      index_modelling: functions for abundance index model
-##      removed this arguments #' @param ConLikelihood Logical to use the concentrated likelihood approach without site parameters (default = TRUE).
 ##==========================================
 
 
@@ -24,6 +22,8 @@
 #' @param OptiGam logical Set if the \link[mgcv]{bam} method should be used, default instead of the default \link[mgcv]{gam} method.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
+#' @param mod_form string with formula to be passed to the gam model, default null.
+#' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.
@@ -35,16 +35,10 @@
 #'
 
 fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial = 4,
-                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = 'mean'){
+                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = 'mean',
+                    mod_form = NULL, tp_col = NULL, ...){
 
         check_package('data.table')
-
-          if(TimeUnit == 'd'){
-            tp_col <- "trimDAYNO"
-          } else {
-            tp_col <- "trimWEEKNO"
-          }
-
         tr <- 1
         gam_obj_site <- c()
 
@@ -74,12 +68,16 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
             print(paste("Fitting the flight curve spline for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
                         sp_data_all[, uniqueN(SITE_ID)], "sites, using", gamMethod, ":", Sys.time(), "-> trial", tr))
 
+            if(is.null(mod_form)){
             mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")", ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)", "")))
+            } else {
+              mod_form <- as.formula(mod_form)
+            }
 
               if(isTRUE(SpeedGam)){
-                gam_obj_site <- try(mgcv::bam(mod_form, data=sp_data_all, family=GamFamily), silent = TRUE)
+                gam_obj_site <- try(mgcv::bam(mod_form, data=sp_data_all, family=GamFamily, ...), silent = TRUE)
               } else {
-                gam_obj_site <- try(mgcv::gam(mod_form, data=sp_data_all, family=GamFamily), silent = TRUE)
+                gam_obj_site <- try(mgcv::gam(mod_form, data=sp_data_all, family=GamFamily, ...), silent = TRUE)
               }
 
           tr <- tr + 1
@@ -91,7 +89,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
                     "; Model did not converge after", tr, "trials"))
             sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
         } else {
-            colnames <- c(tp_col, "SITE_ID")
+            colnames <- names(sp_data_all)
             pred_data <- sp_data_all[, ..colnames]
             sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = pred_data, type = "response")]
             sp_data_all[M_SEASON == 0L, FITTED := 0]
@@ -129,6 +127,9 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param OptiGam logical Set the use the \link[mgcv]{bam} method when data are larger than 200 and gam for smaller datasets
 #' @param TimeUnit character Time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).
+#' @param mod_form string with formula to be passed to the gam model, default null.
+#' @param tp_col string or vector of string with additional variable used in the gam model, default null.
+#' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalised to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
 #' @keywords gam, spline
@@ -139,7 +140,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #'
 
 get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, 
-                  SpeedGam, OptiGam, TimeUnit, MultiVisit){
+                  SpeedGam, OptiGam, TimeUnit, MultiVisit, mod_form, tp_col, ...){
 
   dataset_y <- ts_season_count[as.integer(M_YEAR) == y, ]
   visit_occ_site <- unique(dataset_y[!is.na(COUNT) & ANCHOR == 0L, visitN := .N, by = SITE_ID][
@@ -149,11 +150,14 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
   dataset_y <- data.table::copy(dataset_y[SITE_ID %in% 
                                   visit_occ_site[visitN >= MinVisit & occurN >= MinOccur, SITE_ID], ][,
                                   visitN := NULL][, occurN := NULL])
-
-  if(TimeUnit == 'd'){
-    tp_col <- "trimDAYNO"
-  } else {
-    tp_col <- "trimWEEKNO"
+  if(is.null(tp_col)){
+    if(TimeUnit == 'd'){
+      tp_col <- "trimDAYNO"
+    } else {
+      tp_col <- "trimWEEKNO"
+    }
+  }else{
+    tp_col <- tp_col
   }
 
   if(dataset_y[, uniqueN(SITE_ID)] < MinNbrSite){
@@ -164,7 +168,8 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
                 as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
   } else {
     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
-                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit)
+                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit,
+                          mod_form = mod_form, tp_col = tp_col, ...)
   }
   return(f_curve_mod)
 }
@@ -187,6 +192,8 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param KeepModelData Logical to keep the data used for the GAM.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
+#' @param mod_form string with formula to be passed to the gam model, default null.
+#' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
@@ -201,13 +208,18 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
                          GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
-                         OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, 
-                         TimeUnit = 'd', MultiVisit = "mean", ...) {
+                         OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, TimeUnit = 'd', 
+                         MultiVisit = "mean", mod_form = NULL, tp_col = NULL, ...) {
 
         check_package('data.table')
 
         names(ts_season_count) <- toupper(names(ts_season_count))
-        check_names(ts_season_count, c("COMPLT_SEASON", "M_YEAR", "SITE_ID", "SPECIES", "DATE", "WEEK", "WEEK_DAY", "DAY_SINCE", "WEEK_SINCE", "M_SEASON", "COUNT", "ANCHOR"))
+        if(!is.null(tp_col)){ 
+          tp_col <- toupper(tp_col)
+        }
+
+        col_name <- c("COMPLT_SEASON", "M_YEAR", "SITE_ID", "SPECIES", "DATE", "WEEK", "WEEK_DAY", "DAY_SINCE", "WEEK_SINCE", "M_SEASON", "COUNT", "ANCHOR")
+        check_names(ts_season_count, ifelse(is.null(tp_col), col_name, c(col_name, tp_col)))
 
         if(isTRUE(CompltSeason)){
             ts_season_count <- ts_season_count[COMPLT_SEASON == 1, ]
@@ -221,11 +233,31 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
         if(length(year_series) == 0) stop(paste0(" No count data found for year ", SelectYear))
 
+        if(!is.null(tp_col)){
+          if(!all(tp_col %in% col_name)){
+          if(TimeUnit == 'd'){
+            ts_season_count_tp_col <- unique(ts_season_count[ , c(c("SPECIES", "SITE_ID", "DAY_SINCE"), tp_col), with = FALSE])
+            setkey(ts_season_count_tp_col, SPECIES, SITE_ID, DAY_SINCE)
+          }else{
+            ts_season_count_tp_col <- unique(ts_season_count[ , c(c("SPECIES", "SITE_ID", "WEEK_SINCE"), tp_col), with = FALSE])
+            setkey(ts_season_count_tp_col, SPECIES, SITE_ID, WEEK_SINCE)
+          }
+          }
+        }
+
         ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
 
-        result_fc <- lapply(year_series, get_nm, ts_season_count=ts_season_count, MinVisit=MinVisit, MinOccur=MinOccur, MinNbrSite=MinNbrSite,
+        if(!is.null(tp_col)){
+          if(!all(tp_col %in% col_name)){
+            ifelse(TimeUnit == 'd', setkey(ts_season_count, SPECIES, SITE_ID, DAY_SINCE), setkey(ts_season_count, SPECIES, SITE_ID, WEEK_SINCE))
+            ts_season_count <- merge(ts_season_count, ts_season_count_tp_col, all.x = TRUE)
+          }
+        }
+
+        result_fc <- lapply(year_series, get_nm, ts_season_count = ts_season_count, MinVisit = MinVisit, MinOccur = MinOccur, MinNbrSite = MinNbrSite,
                                                   NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, SpeedGam = SpeedGam,
-                                                  OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit) 
+                                                  OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit, mod_form = mod_form,
+                                                  tp_col = tp_col, ...) 
 
         result_fcurve <- data.table::rbindlist(lapply(result_fc, function(x) x$f_curve), fill = TRUE)
         result_fdata <- data.table::rbindlist(lapply(result_fc, function(x) x$f_data), fill = TRUE)
@@ -374,21 +406,6 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
         }
         
         ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)
-        # if(TimeUnit == 'd'){
-        #     tp_col <- "trimDAYNO"
-        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, DAY_SINCE)])
-        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, DAY_SINCE, -COUNT), ][dup, ]
-        #     ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
-        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, 
-        #                                             WEEK, WEEK_SINCE, DAY_SINCE, trimDAYNO, 
-        #                                             M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        # } else {
-        #     tp_col <- "trimWEEKNO"
-        #     dup <- !duplicated(ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)])
-        #     ts_season_count <- ts_season_count[order(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE, -COUNT), ][dup, ]
-        #     ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
-        #     ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, WEEK_SINCE, trimWEEKNO, M_SEASON, COMPLT_SEASON, ANCHOR, COUNT)]
-        # }
 
         ts_season_count$M_YEAR <- as.integer(as.character(ts_season_count$M_YEAR))
         ts_flight_curve$M_YEAR <- as.integer(as.character(ts_flight_curve$M_YEAR))
@@ -664,7 +681,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
 
   if(MultiVisit == "mean"){
             if(TimeUnit == 'd'){
-              tp_col <- "trimDAYNO"
               ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
               ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
                                                       WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
@@ -679,7 +695,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
                                                               COMPLT_SEASON, ANCHOR, meanCOUNT)])[, COUNT := meanCOUNT][,
                                                               meanCOUNT := NULL]
             } else {
-                tp_col <- "trimWEEKNO"
                 ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
                 ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
                                                         WEEK_SINCE, trimWEEKNO, M_SEASON, 
@@ -698,7 +713,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
             }
   } else {
             if(TimeUnit == 'd'){
-              tp_col <- "trimDAYNO"
               ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]
               ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
                                                       WEEK_SINCE, DAY_SINCE, trimDAYNO, M_SEASON, 
@@ -713,7 +727,6 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit){
                                                               COMPLT_SEASON, ANCHOR, maxCOUNT)])[, COUNT := maxCOUNT][,
                                                               maxCOUNT := NULL]
             } else {
-                tp_col <- "trimWEEKNO"
                 ts_season_count[, trimWEEKNO := WEEK_SINCE - min(WEEK_SINCE) + 1, by = M_YEAR]
                 ts_season_count <- ts_season_count[ , .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, WEEK, 
                                                         WEEK_SINCE, trimWEEKNO, M_SEASON, 

@@ -1,6 +1,8 @@
 # rbms
 
-[![Build Status](https://travis-ci.org/RetoSchmucki/rbms.png?branch=master)](https://travis-ci.org/RetoSchmucki/rbms)
+<!-- badges: start -->
+[![Build Status](https://app.travis-ci.com/RetoSchmucki/rbms.svg?branch=master))](https://app.travis-ci.com/RetoSchmucki/rbms)
+<!-- badges: end -->
 
 <img style="float: right;" src="rbmshexOR200.png" hspace="20">
 

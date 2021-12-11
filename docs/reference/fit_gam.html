@@ -156,7 +156,10 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
   OptiGam <span class='op'>=</span> <span class='cn'>TRUE</span>,
   ConLikelihood <span class='op'>=</span> <span class='cn'>TRUE</span>,
   TimeUnit <span class='op'>=</span> <span class='st'>"d"</span>,
-  MultiVisit <span class='op'>=</span> <span class='st'>"mean"</span>
+  MultiVisit <span class='op'>=</span> <span class='st'>"mean"</span>,
+  mod_form <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tp_col <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -193,6 +196,14 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
     <tr>
       <th>MultiVisit</th>
       <td><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></td>
+    </tr>
+    <tr>
+      <th>mod_form</th>
+      <td><p>string with formula to be passed to the gam model, default null.</p></td>
+    </tr>
+    <tr>
+      <th>tp_col</th>
+      <td><p>string or vector of string with additional variable used in the gam model, default null.</p></td>
     </tr>
     <tr>
       <th>...</th>

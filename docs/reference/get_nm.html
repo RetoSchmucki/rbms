@@ -159,7 +159,10 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
   <span class='va'>SpeedGam</span>,
   <span class='va'>OptiGam</span>,
   <span class='va'>TimeUnit</span>,
-  <span class='va'>MultiVisit</span>
+  <span class='va'>MultiVisit</span>,
+  <span class='va'>mod_form</span>,
+  <span class='va'>tp_col</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -212,6 +215,18 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
     <tr>
       <th>MultiVisit</th>
       <td><p>string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></td>
+    </tr>
+    <tr>
+      <th>mod_form</th>
+      <td><p>string with formula to be passed to the gam model, default null.</p></td>
+    </tr>
+    <tr>
+      <th>tp_col</th>
+      <td><p>string or vector of string with additional variable used in the gam model, default null.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional parameters passed to gam or bam function from the <a href='https://rdrr.io/pkg/mgcv/man/gam.html'>gam</a> package.</p></td>
     </tr>
     </table>
 

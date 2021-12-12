@@ -1,5 +1,5 @@
 Package: rbms
-Title: Compute flight curves and abundance index from annual time-series of Butterfly Monitoring Scheme (BMS) counts, using the spline approach (GAM) for the Generalize Abundance Index.
+Title: Computing generalised abundance indices for butterfly monitoring count data.
 Version: 1.1.1
 Date: 12-12-2021
 Authors@R:

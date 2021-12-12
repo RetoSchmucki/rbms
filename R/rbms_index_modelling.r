@@ -366,7 +366,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 
 #' impute_count
 #' @param ts_season_count data.table Time-series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.
-#' @param ts_flight_curve data.table Flight curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.
+#' @param ts_flight_curve pheno_curve class object or data.table with light curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param sp integer or string Species ID or name.
@@ -403,6 +403,10 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
             tp_col <- "trimDAYNO"
         } else {
             tp_col <- "trimWEEKNO"
+        }
+
+        if(class(ts_flight_curve) == "pheno_curve"){
+          ts_flight_curve <- ts_flight_curve$pheno
         }
         
         ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit)

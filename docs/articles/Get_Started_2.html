@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -125,10 +125,10 @@
 <span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">m_visit</span>, <span class="va">ts_season</span><span class="op">)</span>
 <span class="va">ts_season_count</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_count_site.html">ts_monit_count_site</a></span><span class="op">(</span><span class="va">ts_season_visit</span>, <span class="va">m_count</span>, sp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-12-11 17:29:54 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-12-11 17:29:56 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-12-11 17:29:57 -&gt; trial 1"
-## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-12-11 17:29:59 -&gt; trial 1"</code></pre>
+<pre><code>## [1] "Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2021-12-12 14:49:43 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2021-12-12 14:49:45 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2002 with 88 sites, using gam() : 2021-12-12 14:49:47 -&gt; trial 1"
+## [1] "Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2021-12-12 14:49:48 -&gt; trial 1"</code></pre>
 <div id="impute-predicted-counts-for-missing-monitoring-dates" class="section level5">
 <h5 class="hasAnchor">
 <a href="#impute-predicted-counts-for-missing-monitoring-dates" class="anchor"></a><strong>4.</strong> Impute predicted counts for missing monitoring dates</h5>
@@ -136,6 +136,8 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## extract phenology data from the ts_fligh_curve list</span>
 <span class="va">pheno</span> <span class="op">&lt;-</span> <span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span>
+<span class="co">## note: extraction of the pheno part is not necessary any more, as this is now done internally if not yet extract. Nevertheless the process still work and remains backward compatible.</span>
+<span class="co">## ts_flight_curve = ts_flight_curve would also work</span>
 
 <span class="va">impt_counts</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/impute_count.html">impute_count</a></span><span class="op">(</span>ts_season_count<span class="op">=</span><span class="va">ts_season_count</span>, ts_flight_curve<span class="op">=</span><span class="va">pheno</span>, YearLimit<span class="op">=</span> <span class="cn">NULL</span>, TimeUnit<span class="op">=</span><span class="st">'w'</span><span class="op">)</span></code></pre></div>
 <p>The <code><a href="../reference/impute_count.html">impute_count()</a></code> function produces a data.table that contains the original COUNT values, a series of IMPUTED_COUNT over monitoring season, TOTAL_COUNT per site and year, TOTAL_NM (e.g. the proportion of the flight curve covered by the visits) and SINDEX. The SINDEX is the site index and corresponds to the sum of both observed and imputed counts over the sampling season. If the flight curve of a specific year is missing, the <code><a href="../reference/impute_count.html">impute_count()</a></code> function uses the nearest phenology found. If none is available within the limit of years set by the YearLimit parameter, the function will return no SINDEX for that specific year.</p>

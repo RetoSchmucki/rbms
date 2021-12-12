@@ -1,0 +1,11 @@
+citHeader("To cite rbms in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "rbms: Compute flight curves and abundance index from annual time-series of Butterfly Monitoring Scheme (BMS) counts",
+  author   = "Reto Schmucki",
+  journal  = "R package version 1.1.1",
+  year     = "2021",
+  url      = "https://github.com/RetoSchmucki/rbms",
+  textVersion = paste("Schmucki R. (2021) rbms: Compute flight curves and abundance index from annual time-series of Butterfly Monitoring Scheme (BMS) counts")
+)

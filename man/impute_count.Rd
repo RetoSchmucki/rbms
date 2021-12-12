@@ -18,7 +18,7 @@ impute_count(
 \arguments{
 \item{ts_season_count}{data.table Time-series of counts for a specific species across all sites as returned by \link{ts_monit_count_site}.}
 
-\item{ts_flight_curve}{data.table Flight curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.}
+\item{ts_flight_curve}{pheno_curve class object or data.table with light curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.}
 
 \item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 

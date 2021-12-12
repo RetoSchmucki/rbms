@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compute abundance index Butterfly Monitoring Schemes and flight curves, using the Generalize Abundance Index, using the spline approach • rbms</title>
+<title>Compute flight curves and abundance index from annual time-series of Butterfly Monitoring Scheme (BMS) counts, using the spline approach (GAM) for the Generalize Abundance Index. • rbms</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Compute abundance index Butterfly Monitoring Schemes and flight curves, using the Generalize Abundance Index, using the spline approach">
+<script src="pkgdown.js"></script><meta property="og:title" content="Compute flight curves and abundance index from annual time-series of Butterfly Monitoring Scheme (BMS) counts, using the spline approach (GAM) for the Generalize Abundance Index.">
 <meta property="og:description" content="Implementation of the Generalize Abundance Index using the Spline method presented in Dennis et al. 2016. rbms package has been totally rewritten to increase its functionality and flexibility to the end-user.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -90,6 +90,7 @@
 <div id="rbms" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#rbms" class="anchor"></a>rbms</h1></div>
+<!-- badges: start -->
 
 <p><img style="float: right;" src="rbmshexOR200.png" hspace="20"></p>
 <p>With <code>rbms</code>, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time-series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time-series of counts. As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and work in line with other tools available and developed by the community (e.g. <a href="https://cran.r-project.org/web/packages/rtrim/">rtrim</a>, <a href="https://github.com/BiologicalRecordsCentre/BRCindicators">BRCindicators</a>). With the development of the ‘rbms’ R package, we also provide a tutorial to facilitate its usage and understanding.</p>
@@ -215,7 +216,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/RetoSchmucki/rbms"><img src="https://travis-ci.org/RetoSchmucki/rbms.png?branch=master" alt="Build Status"></a></li>
+<li><a href="https://app.travis-ci.com/RetoSchmucki/rbms"><img src="https://app.travis-ci.com/RetoSchmucki/rbms.svg?branch=master" alt="Build Status"></a></li>
 </ul>
 </div>
 </div>

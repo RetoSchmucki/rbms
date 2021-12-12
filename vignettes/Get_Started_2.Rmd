@@ -29,6 +29,8 @@ The `impute_count()` function uses the count data generated from the `ts_season_
 ```{r, impute}
 ## extract phenology data from the ts_fligh_curve list
 pheno <- ts_flight_curve$pheno
+## note: extraction of the pheno part is not necessary any more, as this is now done internally if not yet extract. Nevertheless the process still work and remains backward compatible.
+## ts_flight_curve = ts_flight_curve would also work
 
 impt_counts <- rbms::impute_count(ts_season_count=ts_season_count, ts_flight_curve=pheno, YearLimit= NULL, TimeUnit='w')
 ```

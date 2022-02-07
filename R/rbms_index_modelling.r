@@ -405,7 +405,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
             tp_col <- "trimWEEKNO"
         }
 
-        if(class(ts_flight_curve) == "pheno_curve"){
+        if(inherits(ts_flight_curve, "pheno_curve")){
           ts_flight_curve <- ts_flight_curve$pheno
         }
         

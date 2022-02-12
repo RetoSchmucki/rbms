@@ -103,8 +103,15 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
         }
 
         sid_1 <- sp_data_all[, SITE_ID][1]
-        f_curve <- sp_data_all[SITE_ID == sid_1, ][ , c("COUNT", "SITE_ID","FITTED", "SITE_SUM") := NULL]
+        f_curve <- data.table::copy(sp_data_all)
+        
+        ifelse(is.null(tp_col),
+          f_curve <- f_curve[SITE_ID == sid_1, , c("COUNT", "SITE_ID","FITTED", "SITE_SUM") := NULL],
+          f_curve <- f_curve[, c("SITE_SUM") := NULL])  
+        # keep fitted values for testing against observed counts
+
         data.table::setkey(f_curve)
+
         sp_data_all[ , c("FITTED", "SITE_SUM", "NM") := NULL]
 
         f_curve_mod <- list(f_curve = f_curve, f_model = gam_obj_site, f_data = sp_data_all)
@@ -239,7 +246,9 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
             ts_season_count_tp_col <- unique(ts_season_count[ , c(c("SPECIES", "SITE_ID", "DAY_SINCE"), tp_col), with = FALSE])
             setkey(ts_season_count_tp_col, SPECIES, SITE_ID, DAY_SINCE)
           }else{
-            ts_season_count_tp_col <- unique(ts_season_count[ , c(c("SPECIES", "SITE_ID", "WEEK_SINCE"), tp_col), with = FALSE])
+            ## compute mean weekly value for tp_col (temporal variable column) if TimeUnit is week
+            ts_season_count_m <- ts_season_count[, lapply(.SD, mean, na.rm = TRUE), by = .(SPECIES, SITE_ID, WEEK_SINCE), .SDcols = tp_col]
+            ts_season_count_tp_col <- unique(ts_season_count_m[ , c(c("SPECIES", "SITE_ID", "WEEK_SINCE"), tp_col), with = FALSE])
             setkey(ts_season_count_tp_col, SPECIES, SITE_ID, WEEK_SINCE)
           }
           }
@@ -425,7 +434,8 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
 
         if(length(YearCheck) > 0){
           a <- lapply(YearCheck, check_pheno, sp_count_flight=sp_count_flight, ts_flight_curve=ts_flight_curve, YearLimit=YearLimit, TimeUnit = TimeUnit)
-          sp_count_flight <- rbind(data.table::rbindlist(a), sp_count_flight[!M_YEAR %in% data.table::rbindlist(a)[!is.na(NM), .N, by= M_YEAR][N>0, M_YEAR], ])
+          a_rb <- data.table::rbindlist(a, use.names = TRUE, fill = TRUE)
+          sp_count_flight <- rbind(a_rb, sp_count_flight[!M_YEAR %in% a_rb[!is.na(NM), .N, by= M_YEAR][N>0, M_YEAR], ], use.names = TRUE, fill=TRUE)
         }
 
         total_count <- sp_count_flight[M_SEASON != 0 , sum(COUNT, na.rm = TRUE), by = .(M_YEAR, SITE_ID)][, TOTAL_COUNT := V1][, V1 := NULL]

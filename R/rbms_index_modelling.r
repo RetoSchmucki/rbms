@@ -675,7 +675,7 @@ boot_sample <- function(data, boot_n = 1000){
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @return data.table Time-series of butterfly counts for species x over year y over all sites, but summarized with the chosen function.
 #' @keywords flight_curve
-#' @seealso \link{fligth_curve}
+#' @seealso \link{flight_curve}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
 #' @export day_week_summary

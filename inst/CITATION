@@ -7,5 +7,5 @@ citEntry(
   journal  = "R package version 1.1.1",
   year     = "2021",
   url      = "https://github.com/RetoSchmucki/rbms",
-  textVersion = paste("Schmucki R., Harrower C.A., Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.0. https://github.com/RetoSchmucki/rbms")
+  textVersion = paste("Schmucki R., Harrower C.A., Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.1. https://github.com/RetoSchmucki/rbms")
 )

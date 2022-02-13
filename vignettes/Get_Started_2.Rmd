@@ -24,7 +24,7 @@ ts_flight_curve <- rbms::flight_curve(ts_season_count, NbrSample = 300, MinVisit
 
 ##### **4.** Impute predicted counts for missing monitoring dates
 
-The `impute_count()` function uses the count data generated from the `ts_season_count()` function and the outcome of the `flight_curve()` function to calculate the flight curves (ts_flight_curve$pheno). the function looks for the phenology available (using the nearest year) to estimate and input missing values; the search extent can be limited by setting the YearLimit parameter, which by default is not restricted. Like other rbms functions, the imputation can be made on a weekly or daily basis ('w' or 'd').
+The `impute_count()` function uses the count data generated from the `ts_season_count()` function and the flight curves (ts_flight_curve$pheno) obtained from the `flight_curve()` function. The `impute_count()` function looks for the phenology available (using the nearest year) to estimate and input missing values; the extend of the search for nearest phenology can be limited by setting the YearLimit parameter. By default, this is not restricted and will look over all years available. Like other rbms functions, the imputation can be made on a weekly or daily basis ('w' or 'd').
 
 ```{r, impute}
 ## extract phenology data from the ts_fligh_curve list
@@ -35,7 +35,7 @@ pheno <- ts_flight_curve$pheno
 impt_counts <- rbms::impute_count(ts_season_count=ts_season_count, ts_flight_curve=pheno, YearLimit= NULL, TimeUnit='w')
 ```
 
-The `impute_count()` function produces a data.table that contains the original COUNT values, a series of IMPUTED_COUNT over monitoring season, TOTAL_COUNT per site and year, TOTAL_NM (e.g. the proportion of the flight curve covered by the visits) and SINDEX. The SINDEX is the site index and corresponds to the sum of both observed and imputed counts over the sampling season. If the flight curve of a specific year is missing, the `impute_count()` function uses the nearest phenology found. If none is available within the limit of years set by the YearLimit parameter, the function will return no SINDEX for that specific year.
+The `impute_count()` function produces a data.table that contains the original COUNT values, a series of IMPUTED_COUNT over monitoring season, TOTAL_COUNT per site and year, TOTAL_NM (e.g. the proportion of the flight curve covered by the visits) and SINDEX. The SINDEX is the site index that corresponds to the sum of both observed and imputed counts over the sampling season. If the flight curve of a specific year is missing, the `impute_count()` function uses the nearest phenology found. If none is available within the limit of years set by the YearLimit parameter, the function will return no SINDEX for that specific year.
 
 
 ```{r, impute_year}

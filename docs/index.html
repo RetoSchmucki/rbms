@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compute flight curves and abundance index from annual time-series of Butterfly Monitoring Scheme (BMS) counts, using the spline approach (GAM) for the Generalize Abundance Index. • rbms</title>
+<title>Computing generalised abundance indices for butterfly monitoring count data. • rbms</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Compute flight curves and abundance index from annual time-series of Butterfly Monitoring Scheme (BMS) counts, using the spline approach (GAM) for the Generalize Abundance Index.">
+<script src="pkgdown.js"></script><meta property="og:title" content="Computing generalised abundance indices for butterfly monitoring count data.">
 <meta property="og:description" content="Implementation of the Generalize Abundance Index using the Spline method presented in Dennis et al. 2016. rbms package has been totally rewritten to increase its functionality and flexibility to the end-user.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,18 +39,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -70,7 +66,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/RetoSchmucki/rbms/">
+  <a href="https://github.com/RetoSchmucki/rbms/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -87,57 +83,57 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rbms" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rbms" class="anchor"></a>rbms</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="rbms">rbms<a class="anchor" aria-label="anchor" href="#rbms"></a>
+</h1></div>
 <!-- badges: start -->
 
 <p><img style="float: right;" src="rbmshexOR200.png" hspace="20"></p>
-<p>With <code>rbms</code>, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time-series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time-series of counts. As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and work in line with other tools available and developed by the community (e.g. <a href="https://cran.r-project.org/web/packages/rtrim/">rtrim</a>, <a href="https://github.com/BiologicalRecordsCentre/BRCindicators">BRCindicators</a>). With the development of the ‘rbms’ R package, we also provide a tutorial to facilitate its usage and understanding.</p>
+<p>With <code>rbms</code>, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time-series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time-series of counts. As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and work in line with other tools available and developed by the community (e.g. <a href="https://cran.r-project.org/web/packages/rtrim/" class="external-link">rtrim</a>, <a href="https://github.com/BiologicalRecordsCentre/BRCindicators" class="external-link">BRCindicators</a>). With the development of the ‘rbms’ R package, we also provide a tutorial to facilitate its usage and understanding.</p>
 <p>Although <code>rbms</code> implements methods that were developed independently and for which the source should be cited, users should also cite the <code>rbms</code> package and its version to ensure appropriate referencing and improve the reproducibility of the work.</p>
-<div id="suggested-citation-for-the-rbms-package" class="section level4">
-<h4 class="hasAnchor">
-<a href="#suggested-citation-for-the-rbms-package" class="anchor"></a>Suggested citation for the rbms package</h4>
-<p>Schmucki R., Harrower C.A., Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.0. <a href="https://github.com/RetoSchmucki/rbms" class="uri">https://github.com/RetoSchmucki/rbms</a></p>
+<div class="section level4">
+<h4 id="suggested-citation-for-the-rbms-package">Suggested citation for the rbms package<a class="anchor" aria-label="anchor" href="#suggested-citation-for-the-rbms-package"></a>
+</h4>
+<p>Schmucki R., Harrower C.A., Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.1. <a href="https://github.com/RetoSchmucki/rbms" class="external-link uri">https://github.com/RetoSchmucki/rbms</a></p>
 </div>
-<div id="the-rbms-package-implements-methods-from" class="section level4">
-<h4 class="hasAnchor">
-<a href="#the-rbms-package-implements-methods-from" class="anchor"></a>The rbms package implements methods from:</h4>
+<div class="section level4">
+<h4 id="the-rbms-package-implements-methods-from">The rbms package implements methods from:<a class="anchor" aria-label="anchor" href="#the-rbms-package-implements-methods-from"></a>
+</h4>
 <ul>
-<li>Dennis, E.B., Freeman, S.N., Brereton, T., Roy, D.B., 2013. Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal pattern. Methods Ecol Evol 4, 637–645. <a href="https://doi.org/10.1111/2041-210X.12053" class="uri">https://doi.org/10.1111/2041-210X.12053</a>
+<li>Dennis, E.B., Freeman, S.N., Brereton, T., Roy, D.B., 2013. Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal pattern. Methods Ecol Evol 4, 637–645. <a href="https://doi.org/10.1111/2041-210X.12053" class="external-link uri">https://doi.org/10.1111/2041-210X.12053</a>
 </li>
-<li>Dennis, E.B., Morgan, B.J.T., Freeman, S.N., Brereton, T.M., Roy, D.B., 2016. A generalized abundance index for seasonal invertebrates. Biom 72, 1305–1314. <a href="https://doi.org/10.1111/biom.12506" class="uri">https://doi.org/10.1111/biom.12506</a>
+<li>Dennis, E.B., Morgan, B.J.T., Freeman, S.N., Brereton, T.M., Roy, D.B., 2016. A generalized abundance index for seasonal invertebrates. Biom 72, 1305–1314. <a href="https://doi.org/10.1111/biom.12506" class="external-link uri">https://doi.org/10.1111/biom.12506</a>
 </li>
-<li>Schmucki, R., Pe’er, G., Roy, D.B., Stefanescu, C., Van Swaay, C.A.M., Oliver, T.H., Kuussaari, M., Van Strien, A.J., Ries, L., Settele, J., Musche, M., Carnicer, J., Schweiger, O., Brereton, T.M., Harpke, A., Heliölä, J., Kühn, E., Julliard, R., 2016. A regionally informed abundance index for supporting integrative analyses across butterfly monitoring schemes. J Appl Ecol 53, 501–510. <a href="https://doi.org/10.1111/1365-2664.12561" class="uri">https://doi.org/10.1111/1365-2664.12561</a>
+<li>Schmucki, R., Pe’er, G., Roy, D.B., Stefanescu, C., Van Swaay, C.A.M., Oliver, T.H., Kuussaari, M., Van Strien, A.J., Ries, L., Settele, J., Musche, M., Carnicer, J., Schweiger, O., Brereton, T.M., Harpke, A., Heliölä, J., Kühn, E., Julliard, R., 2016. A regionally informed abundance index for supporting integrative analyses across butterfly monitoring schemes. J Appl Ecol 53, 501–510. <a href="https://doi.org/10.1111/1365-2664.12561" class="external-link uri">https://doi.org/10.1111/1365-2664.12561</a>
 </li>
 </ul>
 </div>
-<div id="installation" class="section level4">
-<h4 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h4>
-<p>Once the <a href="https://cran.r-project.org/">R programming system</a> is successfully installed, you can install the <code>rbms package</code> from GitHub. For this you will need to install the package <code>devtools</code> or <code>remotes</code>, both available on CRAN. Once installed, use the function <code><a href="https://devtools.r-lib.org/reference/remote-reexports.html">devtools::install_github()</a></code> to install the <code>rbms</code> package on your system.</p>
+<div class="section level4">
+<h4 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h4>
+<p>Once the <a href="https://cran.r-project.org/" class="external-link">R programming system</a> is successfully installed, you can install the <code>rbms package</code> from GitHub. For this you will need to install the package <code>devtools</code> or <code>remotes</code>, both available on CRAN. Once installed, use the function <code><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">devtools::install_github()</a></code> to install the <code>rbms</code> package on your system.</p>
 <blockquote>
-<p>Note that <code>rbms</code> is build with R &gt; 3.6.0, so you might need to update your R system before installation. To install devtools on Windows system, you will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> - note Rtools40 for R 4.x.x New to <code>R</code> or want to refresh your R coding skills, try the excellent tutorials available at <a href="https://ourcodingclub.github.io/">ourcodingclub</a> <span class="emoji" data-emoji="thumbsup">👍</span></p>
+<p>Note that <code>rbms</code> is build with R &gt; 3.6.0, so you might need to update your R system before installation. To install devtools on Windows system, you will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools</a> - note Rtools40 for R 4.x.x New to <code>R</code> or want to refresh your R coding skills, try the excellent tutorials available at <a href="https://ourcodingclub.github.io/" class="external-link">ourcodingclub</a> <span class="emoji" data-emoji="thumbsup">👍</span></p>
 </blockquote>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="get-started" class="section level4">
-<h4 class="hasAnchor">
-<a href="#get-started" class="anchor"></a>Get Started</h4>
-<p>Consult the <a href="https://retoschmucki.github.io/rbms/articles/Get_Started_1.html">tutorial vignettes / Articles</a> to learn about <code>rbms</code> data format and the workflow how to compute flight curves, abundance indices, and collated index with a bootstrap confidence interval</p>
-<p>Further documentation is also available through the help function in R or from the <a href="https://retoschmucki.github.io/rbms/reference/index.html">rbms online references</a></p>
+<div class="section level4">
+<h4 id="get-started">Get Started<a class="anchor" aria-label="anchor" href="#get-started"></a>
+</h4>
+<p>Consult the <a href="https://retoschmucki.github.io/rbms/articles/Get_Started_1.html" class="external-link">tutorial vignettes / Articles</a> to learn about <code>rbms</code> data format and the workflow how to compute flight curves, abundance indices, and collated index with a bootstrap confidence interval</p>
+<p>Further documentation is also available through the help function in R or from the <a href="https://retoschmucki.github.io/rbms/reference/index.html" class="external-link">rbms online references</a></p>
 </div>
-<div id="development" class="section level3">
-<h3 class="hasAnchor">
-<a href="#development" class="anchor"></a>Development</h3>
+<div class="section level3">
+<h3 id="development">Development<a class="anchor" aria-label="anchor" href="#development"></a>
+</h3>
 <p>Version v.1.1.0 is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for “pheno_curve”, using the object produced by the <code><a href="reference/flight_curve.html">flight_curve()</a></code> function as an argument.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># usage or plot method</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://retoschmucki.github.io/rbms/">rbms</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">m_visit</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">m_count</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://retoschmucki.github.io/rbms/" class="external-link">rbms</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_visit</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_count</span><span class="op">)</span>
 
 <span class="va">ts_date</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_dwmy_table.html">ts_dwmy_table</a></span><span class="op">(</span>InitYear <span class="op">=</span> <span class="fl">2000</span>, LastYear <span class="op">=</span> <span class="fl">2003</span>, WeekDay1 <span class="op">=</span> <span class="st">'monday'</span><span class="op">)</span>
 
@@ -168,19 +164,19 @@
                        SelectYear <span class="op">=</span> <span class="cn">NULL</span>,
                        TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span>
 <span class="co">## Flight curves are in the "pheno" data.table located within the ts_flight_curve result that is a list</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span><span class="op">)</span>
 
 <span class="co">## Basic plot method to plot flight curve</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span>
 
 <span class="co"># for a single year</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></code></pre></div>
-<div id="reporting-issues" class="section level4">
-<h4 class="hasAnchor">
-<a href="#reporting-issues" class="anchor"></a>Reporting Issues</h4>
-<p>For reporting issues related to this package or workflow, please visit the issue and before opening a new, see if your problem is not already in the list reported <a href="https://github.com/RetoSchmucki/rbms/issues">issues here</a></p>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></code></pre></div>
+<div class="section level4">
+<h4 id="reporting-issues">Reporting Issues<a class="anchor" aria-label="anchor" href="#reporting-issues"></a>
+</h4>
+<p>For reporting issues related to this package or workflow, please visit the issue and before opening a new, see if your problem is not already in the list reported <a href="https://github.com/RetoSchmucki/rbms/issues" class="external-link">issues here</a></p>
 </div>
 </div>
 </div>
@@ -188,47 +184,58 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/RetoSchmucki/rbms/">https://​github.com/​RetoSchmucki/​rbms/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/RetoSchmucki/rbms/issues">https://​github.com/​RetoSchmucki/​rbms/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Reto Schmucki <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-3064-7553" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Colin A. Harrower <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-5070-5293" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="https://github.com/RetoSchmucki/rbms/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/RetoSchmucki/rbms/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://app.travis-ci.com/RetoSchmucki/rbms"><img src="https://app.travis-ci.com/RetoSchmucki/rbms.svg?branch=master" alt="Build Status"></a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing rbms</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Reto Schmucki <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-3064-7553" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Colin A. Harrower <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-5070-5293" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://app.travis-ci.com/RetoSchmucki/rbms" class="external-link"><img src="https://app.travis-ci.com/RetoSchmucki/rbms.svg?branch=master" alt="Build Status"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Reto Schmucki, Colin A. Harrower.</p>
+  <p></p>
+<p>Developed by Reto Schmucki, Colin A. Harrower.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -236,6 +243,8 @@
 
   
 
+
+  
 
   </body>
 </html>

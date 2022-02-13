@@ -22,7 +22,7 @@ day_week_summary
 Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed.
 }
 \seealso{
-\link{fligth_curve}
+\link{flight_curve}
 }
 \author{
 Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}

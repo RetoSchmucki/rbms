@@ -12,7 +12,7 @@ Although `rbms` implements methods that were developed independently and for whi
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A.,  Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.1. https://github.com/RetoSchmucki/rbms
+Schmucki R., Harrower C.A.,  Dennis E.B. (2022) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.2. https://github.com/RetoSchmucki/rbms
 
 #### The rbms package implements methods from:
 
@@ -41,7 +41,7 @@ Further documentation is also available through the help function in R or from t
 
 ### Development
 
-Version v.1.1.0 is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for "pheno_curve", using the object produced by the `flight_curve()` function as an argument.
+Since version v.1.1.0, rbms is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for "pheno_curve", using the object produced by the `flight_curve()` function as an argument.
 
  ```R
  # usage or plot method

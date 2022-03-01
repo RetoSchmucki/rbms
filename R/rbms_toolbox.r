@@ -13,7 +13,7 @@
 ##==========================================
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage(" Welcome to rbms, version 1.1.0 \n This package has been tested, but is still in active development and feedbacks are welcome\n https://github.com/RetoSchmucki/rbms/issues")
+  packageStartupMessage(" Welcome to rbms, version 1.1.2 \n This package has been tested, but is still in active development and feedbacks are welcome\n https://github.com/RetoSchmucki/rbms/issues")
 }
 
 

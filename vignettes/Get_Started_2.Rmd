@@ -186,3 +186,4 @@ if (class(lm_mod)[1] != "try-error"){
     points(b2$M_YEAR, as.numeric(predict(lm_mod, newdata = b2, type = "response")),
     type = 'l', col='maroon4', lwd = 1.5, lty = 1)
   }
+```

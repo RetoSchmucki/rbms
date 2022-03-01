@@ -5,7 +5,14 @@
 \title{check_pheno
 Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in \link{impute_count}.}
 \usage{
-check_pheno(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, TimeUnit)
+check_pheno(
+  sp_count_flight,
+  ts_flight_curve,
+  YearCheck,
+  YearLimit,
+  TimeUnit,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{sp_count_flight}{data.table Object with the flight curve, relative abundance (NM), for a specific year.}
@@ -17,6 +24,8 @@ check_pheno(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, TimeUnit)
 \item{YearLimit}{integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.}
 
 \item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
+
+\item{verbose}{a logical indicating if some “progress report” should be given.}
 }
 \value{
 A data.table with time-series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where

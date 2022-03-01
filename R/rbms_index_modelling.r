@@ -24,6 +24,7 @@
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param mod_form string with formula to be passed to the gam model, default null.
 #' @param tp_col string or vector of string with additional variable used in the gam model, default null.
+#' @param verbose a logical indicating if some “progress report” should be given. 
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.
@@ -36,7 +37,7 @@
 
 fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial = 4,
                     SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = 'mean',
-                    mod_form = NULL, tp_col = NULL, ...){
+                    mod_form = NULL, tp_col = NULL, verbose = TRUE, ...){
 
         check_package('data.table')
         tr <- 1
@@ -65,8 +66,10 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
                 gamMethod <- 'SpeedGAM [bam()]'
             }
 
-            print(paste("Fitting the flight curve spline for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
-                        sp_data_all[, uniqueN(SITE_ID)], "sites, using", gamMethod, ":", Sys.time(), "-> trial", tr))
+            if(verbose){
+              message(paste("Fitting the flight curve spline for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1], "with",
+                            sp_data_all[, uniqueN(SITE_ID)], "sites, using", gamMethod, ":", Sys.time(), "-> trial", tr))
+            }
 
             if(is.null(mod_form)){
             mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")", ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)", "")))
@@ -85,8 +88,10 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
         }
 
         if (class(gam_obj_site)[1] == "try-error") {
-            print(paste("Error in fitting the GAM for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1],
-                    "; Model did not converge after", tr, "trials"))
+            if(verbose) {
+              message(paste("Error in fitting the GAM for species", as.character(sp_data_all$SPECIES[1]), "and year", sp_data_all$M_YEAR[1],
+                            "; Model did not converge after", tr, "trials"))
+            }
             sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
         } else {
             colnames <- names(sp_data_all)
@@ -136,6 +141,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param MultiVisit string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param mod_form string with formula to be passed to the gam model, default null.
 #' @param tp_col string or vector of string with additional variable used in the gam model, default null.
+#' @param verbose a logical indicating if some “progress report” should be given. 
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve \code{f_curve} with expected relative abundance, normalised to sum to one over a full season,
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
@@ -147,7 +153,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #'
 
 get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, 
-                  SpeedGam, OptiGam, TimeUnit, MultiVisit, mod_form, tp_col, ...){
+                  SpeedGam, OptiGam, TimeUnit, MultiVisit, mod_form, tp_col, verbose = TRUE, ...){
 
   dataset_y <- ts_season_count[as.integer(M_YEAR) == y, ]
   visit_occ_site <- unique(dataset_y[!is.na(COUNT) & ANCHOR == 0L, visitN := .N, by = SITE_ID][
@@ -171,12 +177,14 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 
     f_curve  <- unique(ts_season_count[as.integer(M_YEAR) == y, ][ , SITE_ID := NULL][, COUNT := NULL])[, NM := NA]
     f_curve_mod <- list(f_curve=f_curve[order(get(tp_col)),], f_model=list(NA), f_data=data.table(NA))
-    print(paste("You have not enough sites with observations for estimating the flight curve for species", 
-                as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
+    if(verbose){
+      message(paste("You have not enough sites with observations for estimating the flight curve for species", 
+                    as.character(ts_season_count$SPECIES[1]), "in", unique(ts_season_count[as.integer(M_YEAR) == y, M_YEAR])))
+    }
   } else {
     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
                           SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit,
-                          mod_form = mod_form, tp_col = tp_col, ...)
+                          mod_form = mod_form, tp_col = tp_col, verbose = verbose,...)
   }
   return(f_curve_mod)
 }
@@ -201,6 +209,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
 #' @param mod_form string with formula to be passed to the gam model, default null.
 #' @param tp_col string or vector of string with additional variable used in the gam model, default null.
+#' @param verbose a logical indicating if some “progress report” should be given. 
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
@@ -216,7 +225,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
                          GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
                          OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, TimeUnit = 'd', 
-                         MultiVisit = "mean", mod_form = NULL, tp_col = NULL, ...) {
+                         MultiVisit = "mean", mod_form = NULL, tp_col = NULL, verbose = TRUE, ...) {
 
         check_package('data.table')
 
@@ -266,7 +275,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         result_fc <- lapply(year_series, get_nm, ts_season_count = ts_season_count, MinVisit = MinVisit, MinOccur = MinOccur, MinNbrSite = MinNbrSite,
                                                   NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, SpeedGam = SpeedGam,
                                                   OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit, mod_form = mod_form,
-                                                  tp_col = tp_col, ...) 
+                                                  tp_col = tp_col, verbose = verbose, ...) 
 
         result_fcurve <- data.table::rbindlist(lapply(result_fc, function(x) x$f_curve), fill = TRUE)
         result_fdata <- data.table::rbindlist(lapply(result_fc, function(x) x$f_data), fill = TRUE)
@@ -315,6 +324,7 @@ get_nny <- function(x, y) {
 #' @param YearCheck integer or vector Year to check for nearest flight curve, set internally in \link{impute_count}.
 #' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
+#' @param verbose a logical indicating if some “progress report” should be given. 
 #' @return A data.table with time-series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
 #'         phenology is available.
 #' @keywords flight curve
@@ -324,7 +334,7 @@ get_nny <- function(x, y) {
 #' @export check_pheno
 #'
 
-check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, TimeUnit){
+check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, TimeUnit, verbose = TRUE){
 
        sp_count_flight_y <- sp_count_flight[M_YEAR == YearCheck, ]
 
@@ -356,7 +366,9 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
           sp_count_flight_y[, NM := NMnew][, NMnew := NULL]
         } else {
           if(abs(count_y - fc_year) > YearLimit){
-            print(paste("No reliable flight curve available within a ",YearLimit," year horizon of", sp_count_flight_y[1, M_YEAR, ]))
+            if(verbose){
+              message(paste("No reliable flight curve available within a ",YearLimit," year horizon of", sp_count_flight_y[1, M_YEAR, ]))
+            }
           } else {
             warning(paste("We used the flight curve of", alt_flight[1, M_YEAR], "to compute abundance indices for year", sp_count_flight_y[1, M_YEAR, ]))
             data.table::setnames(alt_flight, 'NM', 'NMnew')
@@ -382,6 +394,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
 #' @param SelectYear integer Select a specific year to compute the flight curve, default=NULL.
 #' @param CompltSeason logical Restrict computation of flight curve for years where the complete season was sampled, default=TRUE.
+#' @param verbose a logical indicating if some “progress report” should be given. 
 #' @return A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
 #' @details Site indices can be extracted from the data.table returned by this function. The site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 #' @keywords site index, flight curve
@@ -392,7 +405,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #'
 
 impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', MultiVisit = 'mean', 
-                         sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
+                         sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE, verbose = TRUE){
 
         check_package('data.table')
 
@@ -433,7 +446,8 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
         YearCheck <- as.integer(as.character(unique(sp_count_flight[ is.na(NM), M_YEAR])))
 
         if(length(YearCheck) > 0){
-          a <- lapply(YearCheck, check_pheno, sp_count_flight=sp_count_flight, ts_flight_curve=ts_flight_curve, YearLimit=YearLimit, TimeUnit = TimeUnit)
+          a <- lapply(YearCheck, check_pheno, sp_count_flight=sp_count_flight, ts_flight_curve=ts_flight_curve, YearLimit=YearLimit, TimeUnit = TimeUnit,
+                      verbose = verbose)
           a_rb <- data.table::rbindlist(a, use.names = TRUE, fill = TRUE)
           sp_count_flight <- rbind(a_rb, sp_count_flight[!M_YEAR %in% a_rb[!is.na(NM), .N, by= M_YEAR][N>0, M_YEAR], ], use.names = TRUE, fill=TRUE)
         }

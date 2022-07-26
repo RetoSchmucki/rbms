@@ -544,7 +544,8 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 #' @export collated_index
 #'
 
-collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE){
+collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, 
+    boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE){
 
   data <- setDT(data)
   data = data[SPECIES == s_sp, ]
@@ -567,22 +568,26 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
 
   if(bootID == 0){
     if(is.null(boot_ind)){
-    a <- data.table(uID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))), SITE_ID = as.character(unique(data[, SITE_ID])))
+    a <- data.table(uID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))),
+     SITE_ID = as.character(unique(data[, SITE_ID])))
     }else{
-    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID+1, ]))), SITE_ID = as.character(boot_ind$site_id[seq_along(boot_ind$boot_ind[bootID+1, ])]))
+    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID+1, ]))),
+     SITE_ID = as.character(boot_ind$site_id[seq_along(boot_ind$boot_ind[bootID+1, ])]))
     }
   } else {
-    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID, ]))), SITE_ID = as.character(boot_ind$site_id[boot_ind$boot_ind[bootID, ]]))
+    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID, ]))),
+     SITE_ID = as.character(boot_ind$site_id[boot_ind$boot_ind[bootID, ]]))
   }
 
-  s_y <- data.table(expand.grid(a$uID, y[order(y)]))
-  names(s_y) <- c("uID", "M_YEAR")
+  s_y <- data.table(expand.grid(uID = a$uID, M_YEAR = y[order(y)]))
+  # names(s_y) <- c("uID", "M_YEAR")
   s_y[ , uID:=as.character(uID)]
   s_y[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
   data[ , SITE_ID:=as.character(SITE_ID)]
   data[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
 
-  setkey(a, uID); setkey(s_y, uID)
+  setkey(a, uID); 
+  setkey(s_y, uID)
   s_y <- merge(s_y, a, all.x=TRUE)
 
   setkey(s_y, SITE_ID, M_YEAR); setkey(data, SITE_ID, M_YEAR)
@@ -595,8 +600,9 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
 
   sum_data <- data.table( BOOTi = bootID,
                           M_YEAR = y[order(y)],
-                          NSITE = data_boot[, uniqueN(SITE_ID), by = M_YEAR][order(M_YEAR), V1],
-                          NSITE_OBS = data_boot[, sum(SINDEX>0), by = M_YEAR][order(M_YEAR), V1])
+                          NSITE = data_boot[, uniqueN(uID), by = M_YEAR][order(M_YEAR), V1],
+                          NSITE_B = data_boot[, uniqueN(SITE_ID), by = M_YEAR][order(M_YEAR), V1],
+                          NSITE_OBS = data_boot[, sum(get(sindex_value)>0), by = M_YEAR][order(M_YEAR), V1])
 
   setkey(sum_data, M_YEAR)
 
@@ -607,8 +613,8 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
       data_boot <- data_boot[!uID %in% zero_site, ]
     }
 
-    pred_data_boot <- expand.grid(unique(data_boot$uID), unique(data_boot$M_YEAR))
-    names(pred_data_boot) <- c("uID", "M_YEAR")
+    pred_data_boot <- data.table(expand.grid(uID = unique(data_boot$uID), M_YEAR = unique(data_boot$M_YEAR)))
+    #names(pred_data_boot) <- c("uID", "M_YEAR")
 
     if (data_boot[, uniqueN(M_YEAR)] == 1 & data_boot[, uniqueN(SITE_ID)] == 1) warning(paste0(sindex_value, " available for only one site and one year: no collated index computed for ", s_sp, " - ", unique(data_boot$M_YEAR)), call. = FALSE)
     
@@ -625,12 +631,15 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
       data_boot[ , weights := TOTAL_NM]
     }
 
-    col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights), silent = TRUE)
-      if (class(col_index)[1] == "try-error") {
-        col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights, method = "qr"), silent = TRUE)
-        if (class(col_index)[1] == "try-error") {
-          col_index <- try(glm(mod_form, data = data_boot, family = poisson(), weights = data_boot$weights), silent = TRUE)
-            if (class(col_index)[1] == "try-error") {
+    col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
+                      weights = data_boot$weights), silent = TRUE)
+      if (inherits(col_index, "try-error")) {
+        col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
+                      weights = data_boot$weights, method = "qr"), silent = TRUE)
+        if (inherits(col_index, "try-error")) {
+          col_index <- try(glm(mod_form, data = data_boot, family = poisson(), 
+                      weights = data_boot$weights), silent = TRUE)
+            if (inherits(col_index, "try-error")) {
               res <- sum_data[, COL_INDEX := NA]
               return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
             }
@@ -647,7 +656,8 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, boo
     res <- sum_data[, COL_INDEX := 0]
   }
 
-  return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
+  return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_B, NSITE_OBS, COL_INDEX)],
+                site_id = a$SITE_ID ))
 }
 
 

@@ -29,7 +29,7 @@
 ts_dwmy_table = function(InitYear=1970, LastYear=format(Sys.Date(), "%Y"), WeekDay1='monday') {
 
         check_package('data.table')
-        date_seq <- ts_date_seq(InitYear,LastYear)
+        date_seq <- ts_date_seq(InitYear, LastYear)
 
         if(WeekDay1=='monday'){
             w <- c(7,1:6)
@@ -234,7 +234,7 @@ ts_monit_site = function(ts_season, m_visit, DateFormat="%Y-%m-%d", expand_sy = 
             names(ts_season) <- toupper(names(ts_season))
             names(m_visit) <- toupper(names(m_visit))
 
-            if(!"M_SEASON" %in% names(ts_season)){ warning("We changed the order of the input argument, with ts_seaon being now first, before the m_visit.") 
+            if(!"M_SEASON" %in% names(ts_season)){ warning("We have changed the order of the input arguments, with ts_seaon now in first place, before m_visit.") 
             if("M_SEASON" %in% names(m_visit)){
                 ts_season.1 <- ts_season
                 ts_season <- m_visit

@@ -463,7 +463,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
 
 #' site_index
 #' Extract abundance indices per site and year based on flight curve imputation.
-#' @param butterfly_count data.table Observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count2().
+#' @param butterfly_count data.table Observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count().
 #' @param MinFC numeric Value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.
 #' @return data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
 #' @keywords butterfly count

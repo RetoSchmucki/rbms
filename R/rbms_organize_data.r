@@ -183,8 +183,8 @@ ts_monit_season = function(d_series, StartMonth=4, EndMonth=9, StartDay=1, EndDa
 
 #' df_visit_season
 #' Link each recorded visit to a corresponding monitoring season, this function is used in \link{ts_monit_site}
-#' @param m_visit data.table or data.frame with Date and Site ID for each monitoring visit.
 #' @param ts_season data.table returned by \link{ts_monit_season} with the detail time-series of the monitoring season.
+#' @param m_visit data.table or data.frame with Date and Site ID for each monitoring visit.
 #' @param DateFormat format used for the date in the visit data, default="\%Y-\%m-\%d".
 #' @return A data.table where each visit is attributed a monitoring year, the \code{M_YEAR} as this can differ the date (see detail)
 #' @details The value of \code{M_YEAR} should be used as Monitoring year as this can differ form the \code{YEAR} if the
@@ -195,7 +195,7 @@ ts_monit_season = function(d_series, StartMonth=4, EndMonth=9, StartDay=1, EndDa
 #' @export df_visit_season
 #'
 
-df_visit_season <- function(m_visit, ts_season, DateFormat="%Y-%m-%d"){
+df_visit_season <- function(ts_season, m_visit, DateFormat="%Y-%m-%d"){
 
             check_package('data.table')
             m_visit <- data.table::data.table(m_visit)
@@ -217,9 +217,10 @@ df_visit_season <- function(m_visit, ts_season, DateFormat="%Y-%m-%d"){
 
 #' ts_monit_site
 #' Augment the time series in m_season with all sites and visits with "zeros", leaving all non visited day with and <NA>
-#' @param m_visit data.table or data.frame with Date and Site ID for each monitoring visit.
 #' @param ts_season data.table returned by \link{ts_monit_season} with the detail time-series of the monitoring season.
+#' @param m_visit data.table or data.frame with Date and Site ID for each monitoring visit.
 #' @param DateFormat format used for the date in the visit data, default="\%Y-\%m-\%d".
+#' @param expand_sy logical for all site-year combination to be kept, if FALSE, only sampled site-year combination are kept.
 #' @return A data.table with a complete time-series where absences have been implemented and that is ready to receive counts
 #' @seealso \link{df_visit_season}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
@@ -227,35 +228,49 @@ df_visit_season <- function(m_visit, ts_season, DateFormat="%Y-%m-%d"){
 #' @export ts_monit_site
 #'
 
-ts_monit_site = function(m_visit, ts_season, DateFormat="%Y-%m-%d") {
+ts_monit_site = function(ts_season, m_visit, DateFormat="%Y-%m-%d", expand_sy = "FALSE") {
 
             check_package('data.table')
             names(ts_season) <- toupper(names(ts_season))
-            check_names(ts_season,c("DATE", "M_YEAR", "M_SEASON"))
-
             names(m_visit) <- toupper(names(m_visit))
+
+            if(!"M_SEASON" %in% names(ts_season)){ warning("We changed the order of the input argument, with ts_seaon being now first, before the m_visit.") 
+            if("M_SEASON" %in% names(m_visit)){
+                ts_season.1 <- ts_season
+                ts_season <- m_visit
+                m_visit <- ts_season.1
+            }}
+            check_names(ts_season,c("DATE", "M_YEAR", "M_SEASON"))
             check_names(m_visit, c("DATE", "SITE_ID"))
 
-            m_visit <- df_visit_season(m_visit, ts_season, DateFormat = DateFormat)
+            m_visit <- df_visit_season(ts_season, m_visit, DateFormat = DateFormat)
 
             data.table::setkey(ts_season, DATE)
             data.table::setkey(m_visit, DATE)
 
-            r_year <- ts_season[, range(data.table::year(DATE))]
+            yr.range <- ts_season[, range(data.table::year(DATE))]
+
+            #only keep visit within the season
             m_visit <- m_visit[DATE %in% ts_season[M_SEASON > 0L, DATE], ]
 
-            monit_syl <- m_visit[data.table::year(DATE) >= min(r_year) &
-                        data.table::year(DATE) <= max(r_year),
-                        .(SITE_ID = .SD[, unique(SITE_ID)]), by = M_YEAR]
+            #syl for site-year list
+            if(isTRUE(expand_sy)){
+            all_syl <- data.table(expand.grid(DATE = ts_season$DATE, SITE_ID = m_visit[order(SITE_ID), unique(SITE_ID)]))
+            ts_season_site <- merge(all_syl, ts_season, by = "DATE", all.x = TRUE)
 
+            }else{
+            monit_syl <- m_visit[data.table::year(DATE) >= min(yr.range) &
+                        data.table::year(DATE) <= max(yr.range),
+                        .(SITE_ID = .SD[, unique(SITE_ID)]), by = M_YEAR]
+            
             data.table::setkey(monit_syl, M_YEAR, SITE_ID)
             data.table::setkey(ts_season, M_YEAR)
 
             ts_season_site <- merge(ts_season, monit_syl, by.x = "M_YEAR", by.y = "M_YEAR", allow.cartesian = TRUE)
+            }
 
             data.table::setkey(ts_season_site, DATE, SITE_ID)
             data.table::setkey(m_visit, DATE, SITE_ID)
-
             ts_season_site <- ts_season_site[m_visit, COUNT := 0L] [M_SEASON == 0L & ANCHOR == 0L, COUNT := NA]
 
         return(ts_season_site)
@@ -298,7 +313,8 @@ ts_monit_count_site = function(m_season_visit, m_count, sp=1, DateFormat="%Y-%m-
             data.table::setkey(m_sp_count, DATE, SITE_ID)
             data.table::setkey(m_season_visit_copy, DATE, SITE_ID)
             spcount_site_series <- m_season_visit_copy[m_sp_count, COUNT := m_sp_count[, as.integer(COUNT)]]
-            spcount_site_series[, SPECIES := sp]
+            spcount_site_series[, SPECIES := sp][M_SEASON == 0L & ANCHOR == 0L, COUNT := NA]
+
         }
 
         return(spcount_site_series)

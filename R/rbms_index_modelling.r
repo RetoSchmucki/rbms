@@ -22,7 +22,7 @@
 #' @param OptiGam logical Set if the \link[mgcv]{bam} method should be used, default instead of the default \link[mgcv]{gam} method.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
-#' @param wd Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
+#' @param weekday Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
 #' @param mod_form string with formula to be passed to the gam model, default null.
 #' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
@@ -37,7 +37,7 @@
 
 fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial = 4,
                     SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = 'mean',
-                    wd = 3, mod_form = NULL, tp_col = NULL, ...){
+                    weekday = 3, mod_form = NULL, tp_col = NULL, ...){
 
         check_package('data.table')
         tr <- 1
@@ -135,7 +135,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #' @param OptiGam logical Set the use the \link[mgcv]{bam} method when data are larger than 200 and gam for smaller datasets
 #' @param TimeUnit character Time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).
-#' @param wd Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
+#' @param weekday Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
 #' @param mod_form string with formula to be passed to the gam model, default null.
 #' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
@@ -149,7 +149,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #'
 
 get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample, GamFamily, MaxTrial, 
-                  SpeedGam, OptiGam, TimeUnit, MultiVisit, wd, mod_form, tp_col, ...){
+                  SpeedGam, OptiGam, TimeUnit, MultiVisit, weekday, mod_form, tp_col, ...){
 
   dataset_y <- ts_season_count[as.integer(M_YEAR) == y, ]
   visit_occ_site <- unique(dataset_y[!is.na(COUNT) & ANCHOR == 0L, visitN := .N, by = SITE_ID][
@@ -178,7 +178,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
   
   } else {
     f_curve_mod <- fit_gam(dataset_y, NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial,
-                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit, wd = wd,
+                          SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit, weekday = weekday,
                           mod_form = mod_form, tp_col = tp_col, ...)
   }
   return(f_curve_mod)
@@ -202,7 +202,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param KeepModelData Logical to keep the data used for the GAM.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
-#' @param wd Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
+#' @param weekday Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
 #' @param mod_form string with formula to be passed to the gam model, default null.
 #' @param tp_col string or vector of string with additional variable used in the gam model, default null.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
@@ -220,7 +220,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
                          GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
                          OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, TimeUnit = 'd', 
-                         MultiVisit = "mean", wd = 3, mod_form = NULL, tp_col = NULL, ...) {
+                         MultiVisit = "mean", weekday = 3, mod_form = NULL, tp_col = NULL, ...) {
 
         check_package('data.table')
 
@@ -258,7 +258,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
           }
         }
 
-        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit, wd = wd)
+        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit, weekday = weekday)
 
         if(!is.null(tp_col)){
           if(!all(tp_col %in% col_name)){
@@ -269,7 +269,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 
         result_fc <- lapply(year_series, get_nm, ts_season_count = ts_season_count, MinVisit = MinVisit, MinOccur = MinOccur, MinNbrSite = MinNbrSite,
                                                   NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, SpeedGam = SpeedGam,
-                                                  OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit, wd = wd, mod_form = mod_form,
+                                                  OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit, weekday = weekday, mod_form = mod_form,
                                                   tp_col = tp_col, ...) 
 
         result_fcurve <- data.table::rbindlist(lapply(result_fc, function(x) x$f_curve), fill = TRUE)
@@ -382,7 +382,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @param ts_flight_curve pheno_curve class object or data.table with light curves and relative abundances (NM) for a specific species as returned by \link{flight_curve}.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
-#' @param wd Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
+#' @param weekday Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
 #' @param sp integer or string Species ID or name.
 #' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
 #' @param SelectYear integer Select a specific year to compute the flight curve, default=NULL.
@@ -396,7 +396,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @export impute_count
 #'
 
-impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', MultiVisit = 'mean', wd = 3,
+impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', MultiVisit = 'mean', weekday = 3,
                          sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE){
 
         check_package('data.table')
@@ -423,7 +423,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
           ts_flight_curve <- ts_flight_curve$pheno
         }
         
-        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit, wd = wd)
+        ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit, weekday = weekday)
 
         ts_season_count$M_YEAR <- as.integer(as.character(ts_season_count$M_YEAR))
         ts_flight_curve$M_YEAR <- as.integer(as.character(ts_flight_curve$M_YEAR))
@@ -698,7 +698,7 @@ boot_sample <- function(data, boot_n = 1000){
 #' @param ts_season_count data.table Time-series of butterfly counts for species x over year y over all sites.
 #' @param TimeUnit character The time-step for which the spline should be computed, 'd' day or 'w' week. For TimeUnit week, 'w', we refer to week_day 3 to match a mid-week calendar date.
 #' @param MultiVisit string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).
-#' @param wd Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
+#' @param weekday Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
 #' @return data.table Time-series of butterfly counts for species x over year y over all sites, but summarized with the chosen function.
 #' @keywords flight_curve
 #' @seealso \link{flight_curve}
@@ -707,7 +707,7 @@ boot_sample <- function(data, boot_n = 1000){
 #' @export day_week_summary
 #'
 
-day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit, wd){
+day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit, weekday){
 
   if(MultiVisit == "mean"){
             if(TimeUnit == 'd'){
@@ -734,7 +734,7 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit, wd){
                                                       by = .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)][
                                                         is.nan(meanCOUNT), meanCOUNT := NA]
 
-              ts_season_count_summary <- unique(ts_season_count[WEEK_DAY == wd, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
+              ts_season_count_summary <- unique(ts_season_count[WEEK_DAY == weekday, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
                                                                             WEEK_DAY, WEEK_SINCE, trimWEEKNO, 
                                                                             M_SEASON, COMPLT_SEASON, ANCHOR, meanCOUNT)])[, 
                                                                             COUNT := meanCOUNT][, meanCOUNT := NULL]
@@ -767,7 +767,7 @@ day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit, wd){
                                                       by = .(SPECIES, SITE_ID, M_YEAR, WEEK_SINCE)][
                                                         maxCOUNT == -Inf, maxCOUNT := NA]
 
-                ts_season_count_summary <- ts_season_count[WEEK_DAY == wd, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
+                ts_season_count_summary <- ts_season_count[WEEK_DAY == weekday, .(SPECIES, SITE_ID, YEAR, M_YEAR, MONTH, DAY, WEEK, 
                                                                             WEEK_DAY, WEEK_SINCE, trimWEEKNO, 
                                                                             M_SEASON, COMPLT_SEASON, ANCHOR, maxCOUNT)][, 
                                                                             COUNT := maxCOUNT][, maxCOUNT := NULL]

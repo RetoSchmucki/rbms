@@ -6,13 +6,13 @@
 
 <img style="float: right;" src="rbmshexOR200.png" hspace="20">
 
-With `rbms`, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time-series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time-series of counts.  As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and work in line with other tools available and developed by the community (e.g. [rtrim](https://cran.r-project.org/web/packages/rtrim/), [BRCindicators](https://github.com/BiologicalRecordsCentre/BRCindicators)). With the development of the 'rbms' R package, we also provide a tutorial to facilitate its usage and understanding.
+With `rbms`, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time-series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time-series of counts.  As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and work in line with other tools available and developed by the community (e.g., [rtrim](https://cran.r-project.org/web/packages/rtrim/), [BRCindicators](https://github.com/BiologicalRecordsCentre/BRCindicators)). With the development of the 'rbms' R package, we also provide a tutorial to facilitate its usage and understanding.
 
-Although `rbms` implements methods that were developed independently and for which the source should be cited, users should also cite the `rbms` package and its version to ensure appropriate referencing and improve the reproducibility of the work.
+Although `rbms` implements methods that were developed independently and for which the source should be acknowledged, users should also cite the `rbms` package and its version to ensure good referencing and improve the reproducibility of the work.
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A.,  Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.1. https://github.com/RetoSchmucki/rbms
+Schmucki R., Harrower C.A.,  Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.2. https://github.com/RetoSchmucki/rbms
 
 #### The rbms package implements methods from:
 
@@ -84,9 +84,23 @@ str(ts_flight_curve$pheno)
 plot(ts_flight_curve)
 points(ts_flight_curve, col = 'magenta', pch = 19)
 
- # for a single year
- plot(ts_flight_curve, year = 2002)
- points(ts_flight_curve, year = 2002, col = 'magenta', pch = 19)
+ # for a single or multiple years
+plot(ts_flight_curve, year = c(2001, 2002))
+points(ts_flight_curve, year = 2001, col = 'magenta', pch = 19)
+
+# for multiple year curves overlapping on a base year, use argument BaseYear
+plot(ts_flight_curve, year = 2000, SiteID = 1, col = 'dodgerblue4')
+points(ts_flight_curve, year = 2002, SiteID = 1, BaseYear = 2000, type = 'l', col = 'cyan4')
+points(ts_flight_curve, year = 2001, SiteID = 1, BaseYear = 2000, type = 'l', col = 'orange')
+legend("topright", legend = c("2000", "2001", "2002"), 
+    col = c("dodgerblue4", "cyan4", "orange"), lty = 1,
+    box.lty=0)
+# multiple year curves on a time-series with different portion per year, use xlim
+plot(ts_flight_curve, year = c(2000), xlim = as.Date(c("2000-01-01", "2002-12-30"), format = "%Y-%m-%d"), SiteID = 1, col = 'dodgerblue4') 
+points(ts_flight_curve, year = 2001, SiteID = 1, type = 'l', col = 'cyan4') 
+points(ts_flight_curve, year = 2002, SiteID = 1, type = 'l', col = 'orange') 
+legend("topright", legend = c("2000", "2001", "2002"), col = c("dodgerblue4", "cyan4", "orange"), lty = 1, box.lty=0)
+
  ```
 #### Reporting Issues
 

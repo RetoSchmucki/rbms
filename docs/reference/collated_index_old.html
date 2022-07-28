@@ -26,7 +26,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,21 +74,28 @@ compute a collated index from the site indices, using a Generalized Linear Model
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">collated_index_old</span><span class="op">(</span><span class="va">site_indices</span>, GlmWeight <span class="op">=</span> <span class="cn">NULL</span>, GlmFamily <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">collated_index_old</span><span class="op">(</span><span class="va">site_indices</span>, GlmWeight <span class="op">=</span> <span class="cn">NULL</span>, GlmFamily <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">poisson</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>site_indices</dt>
 <dd><p>data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.</p></dd>
+
+
 <dt>GlmWeight</dt>
 <dd><p>vector of weight used in the GLM.</p></dd>
+
+
 <dt>GlmFamily</dt>
 <dd><p>family used for the GLM model.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a list of three objects, a vector of site, a glm model object, and a vector of collated indices per year.</p>
+    
+
+<p>a list of three objects, a vector of site, a glm model object, and a vector of collated indices per year.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -111,7 +118,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

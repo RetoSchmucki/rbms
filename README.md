@@ -62,7 +62,7 @@ ts_season <- rbms::ts_monit_season(ts_date,
                         AnchorLag = 2,
                         TimeUnit = 'w')
 
-ts_season_visit <- rbms::ts_monit_site(m_visit, ts_season)
+ts_season_visit <- rbms::ts_monit_site(ts_season, m_visit)
 
 ts_season_count <- rbms::ts_monit_count_site(ts_season_visit, m_count, sp = 2)
 
@@ -101,7 +101,9 @@ legend("topright", legend = c("2000", "2001", "2002"),
 plot(ts_flight_curve, year = c(2000), xlim = as.Date(c("2000-01-01", "2002-12-30"), format = "%Y-%m-%d"), SiteID = 1, col = 'dodgerblue4') 
 points(ts_flight_curve, year = 2001, SiteID = 1, type = 'l', col = 'cyan4') 
 points(ts_flight_curve, year = 2002, SiteID = 1, type = 'l', col = 'orange') 
-legend("topright", legend = c("2000", "2001", "2002"), col = c("dodgerblue4", "cyan4", "orange"), lty = 1, box.lty=0)
+legend("topright", legend = c("2000", "2001", "2002"), 
+    col = c("dodgerblue4", "cyan4", "orange"), lty = 1, 
+    box.lty=0)
 
  ```
 #### Reporting Issues

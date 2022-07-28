@@ -26,7 +26,7 @@ Generate a time-series of dates with day, week, month and year (dwmy) from one i
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ Generate a time-series of dates with day, week, month and year (dwmy) from one i
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,25 +74,32 @@ Generate a time-series of dates with day, week, month and year (dwmy) from one i
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ts_dwmy_table</span><span class="op">(</span>
-  InitYear <span class="op">=</span> <span class="fl">1970</span>,
-  LastYear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y"</span><span class="op">)</span>,
-  WeekDay1 <span class="op">=</span> <span class="st">"monday"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ts_dwmy_table</span><span class="op">(</span></span>
+<span>  InitYear <span class="op">=</span> <span class="fl">1970</span>,</span>
+<span>  LastYear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"%Y"</span><span class="op">)</span>,</span>
+<span>  WeekDay1 <span class="op">=</span> <span class="st">"monday"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>InitYear</dt>
 <dd><p>start year of the time-series, 4 numbers format (e.g 1987)</p></dd>
+
+
 <dt>LastYear</dt>
 <dd><p>end year of the time-series, if not provided, current year is used instead</p></dd>
+
+
 <dt>WeekDay1</dt>
 <dd><p>to start the week on Monday, use 'monday', otherwise the week start on Sunday</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a data.table object with the date, the day since the first date, the week since the first week, the year, the month,
+    
+
+<p>a data.table object with the date, the day since the first date, the week since the first week, the year, the month,
          the day in the month, the ISO week number and the day in the week.</p>
     </div>
     <div id="see-also">
@@ -116,7 +123,7 @@ Generate a time-series of dates with day, week, month and year (dwmy) from one i
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

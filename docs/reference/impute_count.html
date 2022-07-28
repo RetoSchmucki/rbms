@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -69,43 +69,67 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">impute_count</span><span class="op">(</span>
-  <span class="va">ts_season_count</span>,
-  <span class="va">ts_flight_curve</span>,
-  TimeUnit <span class="op">=</span> <span class="st">"d"</span>,
-  MultiVisit <span class="op">=</span> <span class="st">"mean"</span>,
-  sp <span class="op">=</span> <span class="cn">NULL</span>,
-  YearLimit <span class="op">=</span> <span class="cn">NULL</span>,
-  SelectYear <span class="op">=</span> <span class="cn">NULL</span>,
-  CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">impute_count</span><span class="op">(</span></span>
+<span>  <span class="va">ts_season_count</span>,</span>
+<span>  <span class="va">ts_flight_curve</span>,</span>
+<span>  TimeUnit <span class="op">=</span> <span class="st">"d"</span>,</span>
+<span>  MultiVisit <span class="op">=</span> <span class="st">"mean"</span>,</span>
+<span>  weekday <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  sp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  YearLimit <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  SelectYear <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ts_season_count</dt>
 <dd><p>data.table Time-series of counts for a specific species across all sites as returned by <a href="ts_monit_count_site.html">ts_monit_count_site</a>.</p></dd>
+
+
 <dt>ts_flight_curve</dt>
 <dd><p>pheno_curve class object or data.table with light curves and relative abundances (NM) for a specific species as returned by <a href="flight_curve.html">flight_curve</a>.</p></dd>
+
+
 <dt>TimeUnit</dt>
 <dd><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></dd>
+
+
 <dt>MultiVisit</dt>
 <dd><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></dd>
+
+
+<dt>weekday</dt>
+<dd><p>Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.</p></dd>
+
+
 <dt>sp</dt>
 <dd><p>integer or string Species ID or name.</p></dd>
+
+
 <dt>YearLimit</dt>
 <dd><p>integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.</p></dd>
+
+
 <dt>SelectYear</dt>
 <dd><p>integer Select a specific year to compute the flight curve, default=NULL.</p></dd>
+
+
 <dt>CompltSeason</dt>
 <dd><p>logical Restrict computation of flight curve for years where the complete season was sampled, default=TRUE.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a logical indicating if some “progress report” should be given.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.</p>
+    
+
+<p>A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -132,7 +156,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

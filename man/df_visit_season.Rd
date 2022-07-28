@@ -5,12 +5,12 @@
 \title{df_visit_season
 Link each recorded visit to a corresponding monitoring season, this function is used in \link{ts_monit_site}}
 \usage{
-df_visit_season(m_visit, ts_season, DateFormat = "\%Y-\%m-\%d")
+df_visit_season(ts_season, m_visit, DateFormat = "\%Y-\%m-\%d")
 }
 \arguments{
-\item{m_visit}{data.table or data.frame with Date and Site ID for each monitoring visit.}
-
 \item{ts_season}{data.table returned by \link{ts_monit_season} with the detail time-series of the monitoring season.}
+
+\item{m_visit}{data.table or data.frame with Date and Site ID for each monitoring visit.}
 
 \item{DateFormat}{format used for the date in the visit data, default="\%Y-\%m-\%d".}
 }

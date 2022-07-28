@@ -69,6 +69,7 @@ initiate_project <- function(project_name, project_home = NULL){
 #' @param message2 Inform the user what happen if the package is not installed.
 #' @return If package is not found, the user is offered the option to install the missing package.
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @importFrom utils install.packages
 #' @export check_package
 #'
 

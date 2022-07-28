@@ -26,7 +26,7 @@ Check for the flight curve of a specific year. If the specific year is missing, 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ Check for the flight curve of a specific year. If the specific year is missing, 
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,34 +74,47 @@ Check for the flight curve of a specific year. If the specific year is missing, 
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">check_pheno</span><span class="op">(</span>
-  <span class="va">sp_count_flight</span>,
-  <span class="va">ts_flight_curve</span>,
-  <span class="va">YearCheck</span>,
-  <span class="va">YearLimit</span>,
-  <span class="va">TimeUnit</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_pheno</span><span class="op">(</span></span>
+<span>  <span class="va">sp_count_flight</span>,</span>
+<span>  <span class="va">ts_flight_curve</span>,</span>
+<span>  <span class="va">YearCheck</span>,</span>
+<span>  <span class="va">YearLimit</span>,</span>
+<span>  <span class="va">TimeUnit</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>sp_count_flight</dt>
 <dd><p>data.table Object with the flight curve, relative abundance (NM), for a specific year.</p></dd>
+
+
 <dt>ts_flight_curve</dt>
 <dd><p>data.table Object with the all flight curves and relative abundance (NM) for the years available for the search as returned by <a href="flight_curve.html">flight_curve</a>.</p></dd>
+
+
 <dt>YearCheck</dt>
 <dd><p>integer or vector Year to check for nearest flight curve, set internally in <a href="impute_count.html">impute_count</a>.</p></dd>
+
+
 <dt>YearLimit</dt>
 <dd><p>integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.</p></dd>
+
+
 <dt>TimeUnit</dt>
 <dd><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a logical indicating if some “progress report” should be given.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data.table with time-series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
+    
+
+<p>A data.table with time-series of the expected relative abundance of butterfly count per day (NM) for the year or the nearest year where
         phenology is available.</p>
     </div>
     <div id="see-also">
@@ -125,7 +138,7 @@ Check for the flight curve of a specific year. If the specific year is missing, 
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

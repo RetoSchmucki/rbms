@@ -5,14 +5,18 @@
 \title{points.pheno_curve
 Generic method to add points on a plot of the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)}
 \usage{
-\method{points}{pheno_curve}(data, year = NULL, weekday = 3, ...)
+\method{points}{pheno_curve}(data_x, year = NULL, weekday = 3, SiteID = NULL, BaseYear = NULL, ...)
 }
 \arguments{
-\item{data}{pheno_curve object which is the outcome of the light_curve() function}
+\item{data_x}{pheno_curve object which is the outcome of the light_curve() function}
 
-\item{year}{integer for the year to be displayed (e.g. 2015), default is NULL.}
+\item{year}{integer or vector for the year(s) to be displayed (e.g. 2015 or c(2000, 2001)), default is NULL.}
 
 \item{weekday}{weekday to be used for date in weekly count, where 1 refers to Monday, default is 3 (Wednesday)}
+
+\item{SiteID}{integer or string to ID the site to display, default the first site is displayed.}
+
+\item{BaseYear}{integer to identify the base year to plot the points, default is the actual year, but can be use to plot additional year on existing plot}
 
 \item{...}{additional parameters for base plot.}
 }

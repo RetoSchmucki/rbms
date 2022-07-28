@@ -9,6 +9,7 @@ impute_count(
   ts_flight_curve,
   TimeUnit = "d",
   MultiVisit = "mean",
+  weekday = 3,
   sp = NULL,
   YearLimit = NULL,
   SelectYear = NULL,
@@ -24,6 +25,8 @@ impute_count(
 \item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 
 \item{MultiVisit}{string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
+
+\item{weekday}{Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.}
 
 \item{sp}{integer or string Species ID or name.}
 

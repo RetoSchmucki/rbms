@@ -26,7 +26,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,73 +74,117 @@ Compute the annual flight curve from butterfly count data collated across sites.
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">flight_curve</span><span class="op">(</span>
-  <span class="va">ts_season_count</span>,
-  NbrSample <span class="op">=</span> <span class="fl">100</span>,
-  MinVisit <span class="op">=</span> <span class="fl">3</span>,
-  MinOccur <span class="op">=</span> <span class="fl">2</span>,
-  MinNbrSite <span class="op">=</span> <span class="fl">1</span>,
-  MaxTrial <span class="op">=</span> <span class="fl">3</span>,
-  GamFamily <span class="op">=</span> <span class="st">"poisson"</span>,
-  CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,
-  SelectYear <span class="op">=</span> <span class="cn">NULL</span>,
-  SpeedGam <span class="op">=</span> <span class="cn">TRUE</span>,
-  OptiGam <span class="op">=</span> <span class="cn">TRUE</span>,
-  KeepModel <span class="op">=</span> <span class="cn">TRUE</span>,
-  KeepModelData <span class="op">=</span> <span class="cn">TRUE</span>,
-  TimeUnit <span class="op">=</span> <span class="st">"d"</span>,
-  MultiVisit <span class="op">=</span> <span class="st">"mean"</span>,
-  mod_form <span class="op">=</span> <span class="cn">NULL</span>,
-  tp_col <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flight_curve</span><span class="op">(</span></span>
+<span>  <span class="va">ts_season_count</span>,</span>
+<span>  NbrSample <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  MinVisit <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  MinOccur <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  MinNbrSite <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  MaxTrial <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  GamFamily <span class="op">=</span> <span class="st">"poisson"</span>,</span>
+<span>  CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  SelectYear <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  SpeedGam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  OptiGam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  KeepModel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  KeepModelData <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  TimeUnit <span class="op">=</span> <span class="st">"d"</span>,</span>
+<span>  MultiVisit <span class="op">=</span> <span class="st">"mean"</span>,</span>
+<span>  weekday <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  mod_form <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tp_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ts_season_count</dt>
 <dd><p>data.table Time-series of counts and season information returned by <a href="ts_monit_count_site.html">ts_monit_count_site</a></p></dd>
+
+
 <dt>NbrSample</dt>
 <dd><p>integer The maximum number of sites to use for computing the flight curve, default=100.</p></dd>
+
+
 <dt>MinVisit</dt>
 <dd><p>integer The minimum number of visits required for a site to be included, default=3.</p></dd>
+
+
 <dt>MinOccur</dt>
 <dd><p>integer The minimum number of positive records (e.g. &gt;= 1) required in one year for a site to be included, default=2.</p></dd>
+
+
 <dt>MinNbrSite</dt>
 <dd><p>integer The minimum number of sites required to compute a flight curve, default=1.</p></dd>
+
+
 <dt>MaxTrial</dt>
 <dd><p>integer The maximum number of trials for model convergence, default=3.</p></dd>
+
+
 <dt>GamFamily</dt>
 <dd><p>string The distribution of the error term used in the GAM, default='poisson', but can be the negative-binomial 'nb' or 'quasipoisson'.</p></dd>
+
+
 <dt>CompltSeason</dt>
 <dd><p>Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.</p></dd>
+
+
 <dt>SelectYear</dt>
 <dd><p>integer Select a specific year to compute the flight curve, default=NULL.</p></dd>
+
+
 <dt>SpeedGam</dt>
 <dd><p>Logical Set if the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method should be used, default instead of the default <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> method.</p></dd>
+
+
 <dt>OptiGam</dt>
 <dd><p>Logical Set the use of the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method when data are larger than 200 and gam for smaller datasets</p></dd>
+
+
 <dt>KeepModel</dt>
 <dd><p>Logical to keep model output in a list object named <code>flight_curve_model</code>.</p></dd>
+
+
 <dt>KeepModelData</dt>
 <dd><p>Logical to keep the data used for the GAM.</p></dd>
+
+
 <dt>TimeUnit</dt>
 <dd><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></dd>
+
+
 <dt>MultiVisit</dt>
 <dd><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></dd>
+
+
+<dt>weekday</dt>
+<dd><p>Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.</p></dd>
+
+
 <dt>mod_form</dt>
 <dd><p>string with formula to be passed to the gam model, default null.</p></dd>
+
+
 <dt>tp_col</dt>
 <dd><p>string or vector of string with additional variable used in the gam model, default null.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a logical indicating if some “progress report” should be given.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters passed to gam or bam function from the <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> package.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list with three objects, i) **pheno**: a vector with annual flight curves <code>f_pheno</code> with expected relative abundance, normalize to sum to one over a full season,
+    
+
+<p>A list with three objects, i) **pheno**: a vector with annual flight curves <code>f_pheno</code> with expected relative abundance, normalize to sum to one over a full season,
         ii) **model**: a list of the resulting gam models <code>f_model</code> fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.</p>
     </div>
     <div id="see-also">
@@ -166,7 +210,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

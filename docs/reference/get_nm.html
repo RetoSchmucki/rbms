@@ -26,7 +26,7 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,64 +74,102 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_nm</span><span class="op">(</span>
-  <span class="va">y</span>,
-  <span class="va">ts_season_count</span>,
-  <span class="va">MinVisit</span>,
-  <span class="va">MinOccur</span>,
-  <span class="va">MinNbrSite</span>,
-  <span class="va">NbrSample</span>,
-  <span class="va">GamFamily</span>,
-  <span class="va">MaxTrial</span>,
-  <span class="va">SpeedGam</span>,
-  <span class="va">OptiGam</span>,
-  <span class="va">TimeUnit</span>,
-  <span class="va">MultiVisit</span>,
-  <span class="va">mod_form</span>,
-  <span class="va">tp_col</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_nm</span><span class="op">(</span></span>
+<span>  <span class="va">y</span>,</span>
+<span>  <span class="va">ts_season_count</span>,</span>
+<span>  <span class="va">MinVisit</span>,</span>
+<span>  <span class="va">MinOccur</span>,</span>
+<span>  <span class="va">MinNbrSite</span>,</span>
+<span>  <span class="va">NbrSample</span>,</span>
+<span>  <span class="va">GamFamily</span>,</span>
+<span>  <span class="va">MaxTrial</span>,</span>
+<span>  <span class="va">SpeedGam</span>,</span>
+<span>  <span class="va">OptiGam</span>,</span>
+<span>  <span class="va">TimeUnit</span>,</span>
+<span>  <span class="va">MultiVisit</span>,</span>
+<span>  <span class="va">weekday</span>,</span>
+<span>  <span class="va">mod_form</span>,</span>
+<span>  <span class="va">tp_col</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>y</dt>
 <dd><p>integer Vector of years for which to compute the flight curve.</p></dd>
+
+
 <dt>ts_season_count</dt>
 <dd><p>data.table Time-series of count and season information returned by <a href="ts_monit_count_site.html">ts_monit_count_site</a></p></dd>
+
+
 <dt>MinVisit</dt>
 <dd><p>integer The minimum number of visits required for a site to be included in the computation, default=3.</p></dd>
+
+
 <dt>MinOccur</dt>
 <dd><p>integer The minimum number of positive records (e.g. &gt;= 1) observed over the year in a site default=2.</p></dd>
+
+
 <dt>MinNbrSite</dt>
 <dd><p>integer The minimum number of sites required to compute the flight curve, default=1.</p></dd>
+
+
 <dt>NbrSample</dt>
 <dd><p>integer Value inherited from <a href="flight_curve.html">flight_curve</a>, when set to 'NULL' (default), all site are considered in the GAM model</p></dd>
+
+
 <dt>GamFamily</dt>
 <dd><p>string Value inherited from <a href="flight_curve.html">flight_curve</a>, default='poisson', but can be 'nb' or 'quasipoisson'.</p></dd>
+
+
 <dt>MaxTrial</dt>
 <dd><p>integer Value inherited from <a href="flight_curve.html">flight_curve</a>, default=3.</p></dd>
+
+
 <dt>SpeedGam</dt>
 <dd><p>logical Set if the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method should be used, default instead of the default <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> method.</p></dd>
+
+
 <dt>OptiGam</dt>
 <dd><p>logical Set the use the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method when data are larger than 200 and gam for smaller datasets</p></dd>
+
+
 <dt>TimeUnit</dt>
 <dd><p>character Time-step for which the spline should be computed, 'd' day or 'w' week.</p></dd>
+
+
 <dt>MultiVisit</dt>
 <dd><p>string Function for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></dd>
+
+
+<dt>weekday</dt>
+<dd><p>Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.</p></dd>
+
+
 <dt>mod_form</dt>
 <dd><p>string with formula to be passed to the gam model, default null.</p></dd>
+
+
 <dt>tp_col</dt>
 <dd><p>string or vector of string with additional variable used in the gam model, default null.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a logical indicating if some “progress report” should be given.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters passed to gam or bam function from the <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> package.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve <code>f_curve</code> with expected relative abundance, normalised to sum to one over a full season,
+    
+
+<p>A list of lists, each list containing three objects, i) **f_curve**: a data.table with the flight curve <code>f_curve</code> with expected relative abundance, normalised to sum to one over a full season,
         ii) **f_model**: the resulting gam model <code>f_model</code> fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.</p>
     </div>
     <div id="see-also">
@@ -155,7 +193,7 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

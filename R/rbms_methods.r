@@ -85,6 +85,7 @@ plot.pheno_curve <- function(data_x, year = NULL, weekday = 3, SiteID = NULL, ym
 #' @param ... additional parameters for base plot.
 #' @return Returns a base plot with relative abundance (y) over time (x)
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @importFrom graphics points
 #' @export
 #'
 

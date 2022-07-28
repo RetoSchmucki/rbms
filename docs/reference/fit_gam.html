@@ -26,7 +26,7 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,53 +74,82 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fit_gam</span><span class="op">(</span>
-  <span class="va">dataset_y</span>,
-  NbrSample <span class="op">=</span> <span class="cn">NULL</span>,
-  GamFamily <span class="op">=</span> <span class="st">"poisson"</span>,
-  MaxTrial <span class="op">=</span> <span class="fl">4</span>,
-  SpeedGam <span class="op">=</span> <span class="cn">TRUE</span>,
-  OptiGam <span class="op">=</span> <span class="cn">TRUE</span>,
-  ConLikelihood <span class="op">=</span> <span class="cn">TRUE</span>,
-  TimeUnit <span class="op">=</span> <span class="st">"d"</span>,
-  MultiVisit <span class="op">=</span> <span class="st">"mean"</span>,
-  mod_form <span class="op">=</span> <span class="cn">NULL</span>,
-  tp_col <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fit_gam</span><span class="op">(</span></span>
+<span>  <span class="va">dataset_y</span>,</span>
+<span>  NbrSample <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  GamFamily <span class="op">=</span> <span class="st">"poisson"</span>,</span>
+<span>  MaxTrial <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  SpeedGam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  OptiGam <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  TimeUnit <span class="op">=</span> <span class="st">"d"</span>,</span>
+<span>  MultiVisit <span class="op">=</span> <span class="st">"mean"</span>,</span>
+<span>  weekday <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  mod_form <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tp_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dataset_y</dt>
 <dd><p>data.table Filtered butterfly counts for species x over year y over all sites.</p></dd>
+
+
 <dt>NbrSample</dt>
 <dd><p>integer Inherited from <a href="flight_curve.html">flight_curve</a>, default=100.</p></dd>
+
+
 <dt>GamFamily</dt>
 <dd><p>string Inherited from <a href="flight_curve.html">flight_curve</a>, default='poisson', but can be 'nb' or 'quasipoisson'.</p></dd>
+
+
 <dt>MaxTrial</dt>
 <dd><p>integer Inherited from <a href="flight_curve.html">flight_curve</a>, default=3.</p></dd>
+
+
 <dt>SpeedGam</dt>
 <dd><p>logical to use the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method instead of the <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> method.</p></dd>
+
+
 <dt>OptiGam</dt>
 <dd><p>logical Set if the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method should be used, default instead of the default <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> method.</p></dd>
+
+
 <dt>TimeUnit</dt>
 <dd><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></dd>
+
+
 <dt>MultiVisit</dt>
 <dd><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></dd>
+
+
+<dt>weekday</dt>
+<dd><p>Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.</p></dd>
+
+
 <dt>mod_form</dt>
 <dd><p>string with formula to be passed to the gam model, default null.</p></dd>
+
+
 <dt>tp_col</dt>
 <dd><p>string or vector of string with additional variable used in the gam model, default null.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>a logical indicating if some “progress report” should be given.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters passed to gam or bam function from the <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> package.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list with three objects, i) **f_curve**: a data.table with the flight curve <code>f_curve</code> with expected relative abundance, normalize to sum to one over a full season,
+    
+
+<p>A list with three objects, i) **f_curve**: a data.table with the flight curve <code>f_curve</code> with expected relative abundance, normalize to sum to one over a full season,
         ii) **f_model**: the resulting gam model <code>f_model</code> fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.</p>
     </div>
     <div id="see-also">
@@ -144,7 +173,7 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

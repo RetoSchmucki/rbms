@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -72,6 +72,16 @@
         <td><p>boot_sample
 Generate n bootstrap sample of the monitoring sites to be used for each iteration.</p></td>
       </tr><tr><td>
+          <p><code><a href="check_names.html">check_names()</a></code> </p>
+        </td>
+        <td><p>check_names
+Verify for the required column names in the data object.</p></td>
+      </tr><tr><td>
+          <p><code><a href="check_package.html">check_package()</a></code> </p>
+        </td>
+        <td><p>check_package
+Internal function to check if a package is installed.</p></td>
+      </tr><tr><td>
           <p><code><a href="check_pheno.html">check_pheno()</a></code> </p>
         </td>
         <td><p>check_pheno
@@ -87,15 +97,44 @@ compute a collated index from the site indices, using a Generalized Linear Model
         <td><p>collated_index_old
 compute a collated index from the site indices, using a Generalized Linear Model.</p></td>
       </tr><tr><td>
+          <p><code><a href="day_week_summary.html">day_week_summary()</a></code> </p>
+        </td>
+        <td><p>day_week_summary
+Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed.</p></td>
+      </tr><tr><td>
           <p><code><a href="df_visit_season.html">df_visit_season()</a></code> </p>
         </td>
         <td><p>df_visit_season
 Link each recorded visit to a corresponding monitoring season, this function is used in ts_monit_site</p></td>
       </tr><tr><td>
+          <p><code><a href="fit_gam.html">fit_gam()</a></code> </p>
+        </td>
+        <td><p>fit_gam
+fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site effect when multiple are available.</p></td>
+      </tr><tr><td>
+          <p><code><a href="flight_curve.html">flight_curve()</a></code> </p>
+        </td>
+        <td><p>flight_curve
+Compute the annual flight curve from butterfly count data collated across sites.</p></td>
+      </tr><tr><td>
+          <p><code><a href="get_nm.html">get_nm()</a></code> </p>
+        </td>
+        <td><p>get_nm
+Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.</p></td>
+      </tr><tr><td>
           <p><code><a href="get_nny.html">get_nny()</a></code> </p>
         </td>
         <td><p>get_nny
 find the nearest year with a computed flight curve</p></td>
+      </tr><tr><td>
+          <p><code><a href="impute_count.html">impute_count()</a></code> </p>
+        </td>
+        <td><p>impute_count</p></td>
+      </tr><tr><td>
+          <p><code><a href="initiate_project.html">initiate_project()</a></code> </p>
+        </td>
+        <td><p>initiate_project
+Build the folder structure for a generic research project</p></td>
       </tr><tr><td>
           <p><code><a href="m_count.html">m_count</a></code> </p>
         </td>
@@ -104,6 +143,16 @@ find the nearest year with a computed flight curve</p></td>
           <p><code><a href="m_visit.html">m_visit</a></code> </p>
         </td>
         <td><p>Toy data set with the date when the sites have been visited for monitoring</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot.pheno_curve.html">plot(<i>&lt;pheno_curve&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>plot.pheno_curve
+Generic method to plot the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)</p></td>
+      </tr><tr><td>
+          <p><code><a href="points.pheno_curve.html">points(<i>&lt;pheno_curve&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>points.pheno_curve
+Generic method to add points on a plot of the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)</p></td>
       </tr><tr><td>
           <p><code><a href="set_anchor.html">set_anchor()</a></code> </p>
         </td>
@@ -115,6 +164,11 @@ this function is used by ts_monit_season()</p></td>
         </td>
         <td><p>site_index
 Extract abundance indices per site and year based on flight curve imputation.</p></td>
+      </tr><tr><td>
+          <p><code><a href="ts_date_seq.html">ts_date_seq()</a></code> </p>
+        </td>
+        <td><p>ts_date_seq
+Generate a time-series with dates starting from January of the starting year to December of the ending years.</p></td>
       </tr><tr><td>
           <p><code><a href="ts_dwmy_table.html">ts_dwmy_table()</a></code> </p>
         </td>
@@ -135,60 +189,6 @@ Build a time-series of dates with specific detail about the monitoring season</p
         </td>
         <td><p>ts_monit_site
 Augment the time series in m_season with all sites and visits with "zeros", leaving all non visited day with and &lt;NA&gt;</p></td>
-      </tr><tr><td>
-          <p><code><a href="check_names.html">check_names()</a></code> </p>
-        </td>
-        <td><p>check_names
-Verify for the required column names in the data object.</p></td>
-      </tr><tr><td>
-          <p><code><a href="check_package.html">check_package()</a></code> </p>
-        </td>
-        <td><p>check_package
-Internal function to check if a package is installed.</p></td>
-      </tr><tr><td>
-          <p><code><a href="day_week_summary.html">day_week_summary()</a></code> </p>
-        </td>
-        <td><p>day_week_summary
-Summarize the count(s) per day or week using either the maximum or the average count when multiple counts (visit) are observed.</p></td>
-      </tr><tr><td>
-          <p><code><a href="initiate_project.html">initiate_project()</a></code> </p>
-        </td>
-        <td><p>initiate_project
-Build the folder structure for a generic research project</p></td>
-      </tr><tr><td>
-          <p><code><a href="plot.pheno_curve.html">plot(<i>&lt;pheno_curve&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>plot.pheno_curve
-Generic method to plot the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)</p></td>
-      </tr><tr><td>
-          <p><code><a href="points.pheno_curve.html">points(<i>&lt;pheno_curve&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>points.pheno_curve
-Generic method to add points on a plot of the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)</p></td>
-      </tr><tr><td>
-          <p><code><a href="ts_date_seq.html">ts_date_seq()</a></code> </p>
-        </td>
-        <td><p>ts_date_seq
-Generate a time-series with dates starting from January of the starting year to December of the ending years.</p></td>
-      </tr><tr><td>
-          <p><code><a href="fit_gam.html">fit_gam()</a></code> </p>
-        </td>
-        <td><p>fit_gam
-fit a Generalized Additive Model to butterfly count data along a temporal variable and accounting for site effect when multiple are available.</p></td>
-      </tr><tr><td>
-          <p><code><a href="flight_curve.html">flight_curve()</a></code> </p>
-        </td>
-        <td><p>flight_curve
-Compute the annual flight curve from butterfly count data collated across sites.</p></td>
-      </tr><tr><td>
-          <p><code><a href="get_nm.html">get_nm()</a></code> </p>
-        </td>
-        <td><p>get_nm
-Compute the normalized flight curve by fitting a spline in a Generalized Additive Model for one year 'y' to butterfly count data.</p></td>
-      </tr><tr><td>
-          <p><code><a href="impute_count.html">impute_count()</a></code> </p>
-        </td>
-        <td><p>impute_count</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -202,7 +202,7 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

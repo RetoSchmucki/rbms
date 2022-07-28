@@ -5,14 +5,21 @@
 \title{ts_monit_site
 Augment the time series in m_season with all sites and visits with "zeros", leaving all non visited day with and <NA>}
 \usage{
-ts_monit_site(m_visit, ts_season, DateFormat = "\%Y-\%m-\%d")
+ts_monit_site(
+  ts_season,
+  m_visit,
+  DateFormat = "\%Y-\%m-\%d",
+  expand_sy = "FALSE"
+)
 }
 \arguments{
-\item{m_visit}{data.table or data.frame with Date and Site ID for each monitoring visit.}
-
 \item{ts_season}{data.table returned by \link{ts_monit_season} with the detail time-series of the monitoring season.}
 
+\item{m_visit}{data.table or data.frame with Date and Site ID for each monitoring visit.}
+
 \item{DateFormat}{format used for the date in the visit data, default="\%Y-\%m-\%d".}
+
+\item{expand_sy}{logical for all site-year combination to be kept, if FALSE, only sampled site-year combination are kept.}
 }
 \value{
 A data.table with a complete time-series where absences have been implemented and that is ready to receive counts

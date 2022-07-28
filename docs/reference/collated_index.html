@@ -26,7 +26,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,37 +74,52 @@ compute a collated index from the site indices, using a Generalized Linear Model
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">collated_index</span><span class="op">(</span>
-  <span class="va">data</span>,
-  <span class="va">s_sp</span>,
-  sindex_value <span class="op">=</span> <span class="st">"SINDEX"</span>,
-  bootID <span class="op">=</span> <span class="cn">NULL</span>,
-  boot_ind <span class="op">=</span> <span class="cn">NULL</span>,
-  glm_weights <span class="op">=</span> <span class="cn">TRUE</span>,
-  rm_zero <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">collated_index</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">s_sp</span>,</span>
+<span>  sindex_value <span class="op">=</span> <span class="st">"SINDEX"</span>,</span>
+<span>  bootID <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  boot_ind <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  glm_weights <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  rm_zero <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.</p></dd>
+
+
 <dt>s_sp</dt>
 <dd><p>string Species name to be found in the data.</p></dd>
+
+
 <dt>sindex_value</dt>
 <dd><p>string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.</p></dd>
+
+
 <dt>bootID</dt>
 <dd><p>integer Identify the n^th bootstrap.</p></dd>
+
+
 <dt>boot_ind</dt>
 <dd><p>data.table Index of the bootstrap and the site ids of the specific bootstrap sample.</p></dd>
+
+
 <dt>glm_weights</dt>
 <dd><p>logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.</p></dd>
+
+
 <dt>rm_zero</dt>
 <dd><p>logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.</p>
+    
+
+<p>a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -127,7 +142,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -12,9 +12,9 @@ fit_gam(
   MaxTrial = 4,
   SpeedGam = TRUE,
   OptiGam = TRUE,
-  ConLikelihood = TRUE,
   TimeUnit = "d",
   MultiVisit = "mean",
+  weekday = 3,
   mod_form = NULL,
   tp_col = NULL,
   verbose = TRUE,
@@ -37,6 +37,8 @@ fit_gam(
 \item{TimeUnit}{character The time-step for which the spline should be computed, 'd' day or 'w' week.}
 
 \item{MultiVisit}{string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).}
+
+\item{weekday}{Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.}
 
 \item{mod_form}{string with formula to be passed to the gam model, default null.}
 

@@ -33,11 +33,12 @@
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
 #' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
 #' @import data.table
+#' @importFrom stats as.formula coef fitted glm poisson predict weights
 #' @export fit_gam
 #'
 
 fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial = 4,
-                    SpeedGam = TRUE, OptiGam = TRUE, ConLikelihood = TRUE,  TimeUnit = 'd', MultiVisit = 'mean',
+                    SpeedGam = TRUE, OptiGam = TRUE, TimeUnit = 'd', MultiVisit = 'mean',
                     weekday = 3, mod_form = NULL, tp_col = NULL, verbose = TRUE, ...){
 
 

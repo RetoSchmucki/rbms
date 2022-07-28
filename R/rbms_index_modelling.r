@@ -709,10 +709,6 @@ boot_sample <- function(data, boot_n = 1000){
 
 day_week_summary <- function(ts_season_count, MultiVisit, TimeUnit, wd){
 
-  # time_seq_data <- ts_season_count[SITE_ID == ts_season_count$SITE_ID[1], ]
-  # #data.frame(time_seq_data[M_YEAR == 2000, .(M_YEAR, YEAR, DATE, MONTH, DAY, WEEK_SINCE, WEEK_DAY)])
-  # date_wd <- unique(time_seq_data[, .(WEEK_DAY, YEAR, MONTH, WEEK, DAY, DAY_SINCE, WEEK_SINCE)])
-
   if(MultiVisit == "mean"){
             if(TimeUnit == 'd'){
               ts_season_count[, trimDAYNO := DAY_SINCE - min(DAY_SINCE) + 1, by = M_YEAR]

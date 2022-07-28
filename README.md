@@ -12,7 +12,7 @@ Although `rbms` implements methods that were developed independently and for whi
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A.,  Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.3. https://github.com/RetoSchmucki/rbms
+Schmucki R., Harrower C.A.,  Dennis E.B. (2022) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.3. https://github.com/RetoSchmucki/rbms
 
 #### The rbms package implements methods from:
 

@@ -530,7 +530,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
         col_mod <- try(speedglm::speedglm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily, weigth = GlmWeight), silent = TRUE)
       }
 
-      if(class(col_mod)[1] == "try-error"){
+      if(inherits(col_mod,"try-error")){
         if(is.null(GlmWeight)){
           col_mod <- try(glm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily), silent = TRUE)
         } else {
@@ -538,7 +538,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
         }
       }
 
-      if(class(col_mod)[1] == "try-error") stop('Unable to fit GLM to estimate a collated index')
+      if(inherits(col_mod,"try-error")) stop('Unable to fit GLM to estimate a collated index')
 
       yr_coefs = coef(summary(col_index))
       res <- yr_coefs[grepl("M_YEAR",row.names(yr_coefs)), c("Estimate","Std. Error")]

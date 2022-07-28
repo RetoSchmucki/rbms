@@ -12,7 +12,8 @@ impute_count(
   sp = NULL,
   YearLimit = NULL,
   SelectYear = NULL,
-  CompltSeason = TRUE
+  CompltSeason = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ impute_count(
 \item{SelectYear}{integer Select a specific year to compute the flight curve, default=NULL.}
 
 \item{CompltSeason}{logical Restrict computation of flight curve for years where the complete season was sampled, default=TRUE.}
+
+\item{verbose}{a logical indicating if some “progress report” should be given.}
 }
 \value{
 A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.

@@ -20,6 +20,7 @@ get_nm(
   MultiVisit,
   mod_form,
   tp_col,
+  verbose = TRUE,
   ...
 )
 }
@@ -51,6 +52,8 @@ get_nm(
 \item{mod_form}{string with formula to be passed to the gam model, default null.}
 
 \item{tp_col}{string or vector of string with additional variable used in the gam model, default null.}
+
+\item{verbose}{a logical indicating if some “progress report” should be given.}
 
 \item{...}{Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.}
 }

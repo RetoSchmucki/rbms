@@ -12,7 +12,7 @@ Although `rbms` implements methods that were developed independently and for whi
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A.,  Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.2. https://github.com/RetoSchmucki/rbms
+Schmucki R., Harrower C.A.,  Dennis E.B. (2021) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.1.3. https://github.com/RetoSchmucki/rbms
 
 #### The rbms package implements methods from:
 
@@ -41,7 +41,7 @@ Further documentation is also available through the help function in R or from t
 
 ### Development
 
-Version v.1.1.0 is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for "pheno_curve", using the object produced by the `flight_curve()` function as an argument.
+Since version v.1.1.0, rbms is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for "pheno_curve", using the object produced by the `flight_curve()` function as an argument.
 
  ```R
  # usage or plot method
@@ -77,6 +77,7 @@ ts_flight_curve <- rbms::flight_curve(ts_season_count,
                         CompltSeason = TRUE,
                         SelectYear = NULL,
                         TimeUnit = 'w')
+
 ## Flight curves are in the "pheno" data.table located within the ts_flight_curve result that is a list
 str(ts_flight_curve$pheno)
 
@@ -95,6 +96,7 @@ points(ts_flight_curve, year = 2001, SiteID = 1, BaseYear = 2000, type = 'l', co
 legend("topright", legend = c("2000", "2001", "2002"), 
     col = c("dodgerblue4", "cyan4", "orange"), lty = 1,
     box.lty=0)
+
 # multiple year curves on a time-series with different portion per year, use xlim
 plot(ts_flight_curve, year = c(2000), xlim = as.Date(c("2000-01-01", "2002-12-30"), format = "%Y-%m-%d"), SiteID = 1, col = 'dodgerblue4') 
 points(ts_flight_curve, year = 2001, SiteID = 1, type = 'l', col = 'cyan4') 

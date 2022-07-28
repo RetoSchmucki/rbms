@@ -26,7 +26,7 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2</span>
       </span>
     </div>
 
@@ -86,6 +86,7 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
   MultiVisit <span class="op">=</span> <span class="st">"mean"</span>,
   mod_form <span class="op">=</span> <span class="cn">NULL</span>,
   tp_col <span class="op">=</span> <span class="cn">NULL</span>,
+  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -112,6 +113,8 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
 <dd><p>string with formula to be passed to the gam model, default null.</p></dd>
 <dt>tp_col</dt>
 <dd><p>string or vector of string with additional variable used in the gam model, default null.</p></dd>
+<dt>verbose</dt>
+<dd><p>a logical indicating if some “progress report” should be given.</p></dd>
 <dt>...</dt>
 <dd><p>Additional parameters passed to gam or bam function from the <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> package.</p></dd>
 </dl></div>

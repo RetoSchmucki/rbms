@@ -75,7 +75,10 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
             }
 
             if(is.null(mod_form)){
-            mod_form <- as.formula(paste0("COUNT ~ s(", tp_col,", bs =\"cr\")", ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)", "")))
+              mod_form <- as.formula(paste0("COUNT ~ ", 
+                                      paste(paste0("s(", tp_col,", bs =\"cr\")"), collapse = " + "),
+                                           ifelse(sp_data_all[, uniqueN(SITE_ID)] > 1, "+ factor(SITE_ID)", ""),
+                                           collapse = " "))
             } else {
               mod_form <- as.formula(mod_form)
             }
@@ -99,14 +102,19 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
         } else {
             colnames <- names(sp_data_all)
             pred_data <- sp_data_all[, ..colnames]
+            pred_data[, SITE_ID := as.character(SITE_ID)]
+            m_SITE_ID <- coef(gam_obj_site)
+            m_SITE_ID <- gsub("factor(SITE_ID)","", 
+                    sample(names(m_SITE_ID[grep("factor(SITE_ID)", names(m_SITE_ID), fixed = TRUE)]), 1),
+                    fixed = TRUE)
+            pred_data[, SITE_ID_model := SITE_ID][, SITE_ID := m_SITE_ID]
             sp_data_all[, FITTED := mgcv::predict.gam(gam_obj_site, newdata = pred_data, type = "response")]
             sp_data_all[M_SEASON == 0L, FITTED := 0]
 
             if(sum(is.infinite(sp_data_all[, FITTED])) > 0){
                 sp_data_all[, c("FITTED", "NM") := .(NA, NA)]
             } else {
-                sp_data_all[, SITE_SUM := sum(FITTED), by = SITE_ID]
-                sp_data_all[, NM := round(FITTED / SITE_SUM, 5)]
+                sp_data_all[, NM := round(FITTED / sum(FITTED), 5), by = SITE_ID]
             }
         }
 
@@ -114,13 +122,13 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
         f_curve <- data.table::copy(sp_data_all)
         
         ifelse(is.null(tp_col),
-          f_curve <- f_curve[SITE_ID == sid_1, , c("COUNT", "SITE_ID","FITTED", "SITE_SUM") := NULL],
-          f_curve <- f_curve[, c("SITE_SUM") := NULL])  
+          f_curve <- f_curve[SITE_ID == sid_1, c("COUNT", "SITE_ID","FITTED") := NULL],
+          f_curve <- f_curve)  
         # keep fitted values for testing against observed counts
 
         data.table::setkey(f_curve)
 
-        sp_data_all[ , c("FITTED", "SITE_SUM", "NM") := NULL]
+        sp_data_all[ , c("FITTED", "NM") := NULL]
 
         f_curve_mod <- list(f_curve = f_curve, f_model = gam_obj_site, f_data = sp_data_all)
 

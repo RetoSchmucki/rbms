@@ -425,6 +425,10 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
           ts_season_count <- ts_season_count[SPECIES == sp, ]
         }
 
+        if(inherits(ts_flight_curve, "pheno_curve")){
+          ts_flight_curve <- ts_flight_curve$pheno
+        }
+
         if(!ts_season_count$SPECIES[1] %in% unique(ts_flight_curve$SPECIES)){
             stop('Species in count data must be in the flight curve data!')
         }
@@ -435,10 +439,6 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
             tp_col <- "trimWEEKNO"
         }
 
-        if(inherits(ts_flight_curve, "pheno_curve")){
-          ts_flight_curve <- ts_flight_curve$pheno
-        }
-        
         ts_season_count <- day_week_summary(ts_season_count, MultiVisit = MultiVisit, TimeUnit = TimeUnit, weekday = weekday)
 
         ts_season_count$M_YEAR <- as.integer(as.character(ts_season_count$M_YEAR))
@@ -631,8 +631,8 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
   if(nrow(sum_data[NSITE_OBS > 0,]) != 0){
 
     if(isTRUE(rm_zero)){
-      zero_site <- data_boot[ , V1:=sum(SINDEX>0), uID][V1==0, uID]
-      data_boot <- data_boot[!uID %in% zero_site, ]
+      zero_site <- data_boot[ , tmpV1:=sum(SINDEX>0), uID][tmpV1==0, uID]
+      data_boot <- data_boot[!uID %in% zero_site, -c("tmpV1")]
     }
 
     pred_data_boot <- data.table(expand.grid(uID = unique(data_boot$uID), M_YEAR = unique(data_boot$M_YEAR)))
@@ -653,11 +653,26 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
       data_boot[ , weights := TOTAL_NM]
     }
 
-    col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
+    # col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
+    #                   weights = data_boot$weights), silent = TRUE)
+    #   if (inherits(col_index, "try-error")) {
+    #     col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
+    #                   weights = data_boot$weights, method = "qr"), silent = TRUE)
+    #     if (inherits(col_index, "try-error")) {
+    #       col_index <- try(glm(mod_form, data = data_boot, family = poisson(), 
+    #                   weights = data_boot$weights), silent = TRUE)
+    #         if (inherits(col_index, "try-error")) {
+    #           res <- sum_data[, COL_INDEX := NA]
+    #           return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
+    #         }
+    #     }
+    #  }
+
+    col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = "nbinom1",
                       weights = data_boot$weights), silent = TRUE)
       if (inherits(col_index, "try-error")) {
-        col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
-                      weights = data_boot$weights, method = "qr"), silent = TRUE)
+        col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = poisson(),
+                      weights = data_boot$weights), silent = TRUE)
         if (inherits(col_index, "try-error")) {
           col_index <- try(glm(mod_form, data = data_boot, family = poisson(), 
                       weights = data_boot$weights), silent = TRUE)

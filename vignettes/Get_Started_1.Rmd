@@ -104,18 +104,19 @@ From the flight_curve() function, we can retrieve a list of 3 objects:
 
 We can now extract the pheno object, a data.frame that contains the shape of the annual flight curves, standardised to sum to 1. The flight-curves contained in the pheno object can be visualised with the following line of codes.
 
+Note for purpose of demonstration, let's imagine that we could not fit a flight curve for year 2002 and the flight curve returned "NA" for that year 2002. Our code needs to be aware of the missing year.
 
 ```{r fc, fig.cap='Flight curve.', tidy=FALSE}
 ## Extract phenology part
 pheno <- ts_flight_curve$pheno
 
 ## add the line of the first year
-yr <- unique(pheno[order(M_YEAR), as.numeric(as.character(M_YEAR))])
+yr <- unique(pheno[order(M_YEAR),][!is.na(NM), as.numeric(as.character(M_YEAR))])
 
 if("trimWEEKNO" %in% names(pheno)){
-  plot(pheno[M_YEAR == yr[1], trimWEEKNO], pheno[M_YEAR == yr[1], NM], type = 'l', ylim = c(0, max(pheno[, NM])), xlab = 'Monitoring Week', ylab = 'Relative Abundance')
+  plot(unique(pheno[M_YEAR == yr[1], .(trimWEEKNO, NM)]), type = 'l', ylim = c(0, max(pheno[!is.na(NM), ][, NM])), xlab = 'Monitoring Week', ylab = 'Relative Abundance')
 } else {
-  plot(pheno[M_YEAR == yr[1], trimDAYNO], pheno[M_YEAR == yr[1], NM], type = 'l', ylim = c(0, max(pheno[, NM])), xlab = 'Monitoring Day', ylab = 'Relative Abundance')
+  plot(unique(pheno[M_YEAR == yr[1], .(trimDAYNO, NM)]), type = 'l', ylim = c(0, max(pheno[!is.na(NM), ][, NM])), xlab = 'Monitoring Day', ylab = 'Relative Abundance')
 
 }
 ## add individual curves for additional years
@@ -123,12 +124,47 @@ if(length(yr) > 1) {
 i <- 2
   for(y in yr[-1]){
     if("trimWEEKNO" %in% names(pheno)){
-      points(pheno[M_YEAR == y , trimWEEKNO], pheno[M_YEAR == y, NM], type = 'l', col = i)
+      points(unique(pheno[M_YEAR == y , .(trimWEEKNO, NM)]), type = 'l', col = i)
     } else {
-      points(pheno[M_YEAR == y, trimDAYNO], pheno[M_YEAR == y, NM], type = 'l', col = i)
+      points(unique(pheno[M_YEAR == y, .(trimDAYNO, NM)]), type = 'l', col = i)
     }
     i <- i + 1
   }
+}
+
+## add legend
+legend('topright', legend = c(yr), col = c(seq_along(c(yr))), lty = 1, bty = 'n')
+```
+
+The code above produces a flight curve for each of the four years. Now, let's imagine that the model could not fit a flight curve for year 2002 and the flight curve returned "NA" for that year 2002. Our code needs to be aware of the missing year and skip that year.
+
+```{r fc_withNA, fig.cap='Flight curve without (2002=NA).', tidy=FALSE}
+## Extract phenology part
+pheno <- pheno[M_YEAR == 2002, NM := NA]
+
+## add the line of the first year
+yr <- unique(pheno[order(M_YEAR),][!is.na(NM), as.numeric(as.character(M_YEAR))])
+
+if(length(yr) > 0){ # need at least one year without "NA" for the flight curve
+
+if("trimWEEKNO" %in% names(pheno)){
+  plot(unique(pheno[M_YEAR == yr[1], .(trimWEEKNO, NM)]), type = 'l', ylim = c(0, max(pheno[!is.na(NM), ][, NM])), xlab = 'Monitoring Week', ylab = 'Relative Abundance')
+} else {
+  plot(unique(pheno[M_YEAR == yr[1], .(trimDAYNO, NM)]), type = 'l', ylim = c(0, max(pheno[!is.na(NM), ][, NM])), xlab = 'Monitoring Day', ylab = 'Relative Abundance')
+
+}
+## add individual curves for additional years
+if(length(yr) > 1) {
+i <- 2
+  for(y in yr[-1]){
+    if("trimWEEKNO" %in% names(pheno)){
+      points(unique(pheno[M_YEAR == y , .(trimWEEKNO, NM)]), type = 'l', col = i)
+    } else {
+      points(unique(pheno[M_YEAR == y, .(trimDAYNO, NM)]), type = 'l', col = i)
+    }
+    i <- i + 1
+  }
+}
 }
 
 ## add legend

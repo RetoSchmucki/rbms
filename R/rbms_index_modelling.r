@@ -668,20 +668,21 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
     #     }
     #  }
 
-    col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = "nbinom1",
-                      weights = data_boot$weights), silent = TRUE)
-      if (inherits(col_index, "try-error")) {
-        col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = poisson(),
-                      weights = data_boot$weights), silent = TRUE)
-        if (inherits(col_index, "try-error")) {
+# patch for glmmTMB issue
+#    col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = "nbinom1",
+#                      weights = data_boot$weights), silent = TRUE)
+#      if (inherits(col_index, "try-error")) {
+#        col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = poisson(),
+#                      weights = data_boot$weights), silent = TRUE)
+#        if (inherits(col_index, "try-error")) {
           col_index <- try(glm(mod_form, data = data_boot, family = poisson(), 
                       weights = data_boot$weights), silent = TRUE)
             if (inherits(col_index, "try-error")) {
               res <- sum_data[, COL_INDEX := NA]
               return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
             }
-        }
-     }
+#        }
+#     }
 
     pred_data_boot$fitted <- predict(col_index, newdata = pred_data_boot, type = "response")
 

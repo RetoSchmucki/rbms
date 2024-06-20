@@ -180,7 +180,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
   if(dataset_y[, uniqueN(SITE_ID)] < MinNbrSite){
 
     f_curve  <- unique(ts_season_count[as.integer(M_YEAR) == y, ][ , SITE_ID := NULL][, COUNT := NULL])[, NM := NA]
-    f_curve_mod <- list(f_curve=f_curve[order(get(tp_col)),], f_model=list(NA), f_data=data.table(NA))
+    f_curve_mod <- list(f_curve=f_curve[order(tp_col),], f_model=list(NA), f_data=data.table(NA))
 
     if(verbose){
       message(paste("You have not enough sites with observations for estimating the flight curve for species", 

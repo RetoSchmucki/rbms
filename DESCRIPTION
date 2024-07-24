@@ -1,7 +1,7 @@
 Package: rbms
 Title: Computing generalised abundance indices for butterfly monitoring count data
-Version: 1.1.3
-Date: 28-07-2022
+Version: 1.2.0
+Date: 24-07-2024
 Authors@R:
 	c(person(given = "Reto",
 					family ="Schmucki",
@@ -18,7 +18,7 @@ Authors@R:
 					email = "edennis@butterfly-conservation.org",
 					role = "ctb",
 					comment = c(ORCID = "0000-0003-2692-4415")))
-Description: Implementation of the Generalize Abundance Index using the Spline method presented in Dennis et al. 2016. rbms package has been totally rewritten to increase its functionality and flexibility for end-users.
+Description: Implementation of the Generalized Abundance Index using the Spline method presented by Dennis et al. 2016. rbms package has been rewritten to increase its functionality and flexibility for end-users.
 Depends: R (>= 3.4.0)
 License: MIT + file LICENSE
 URL: https://retoschmucki.github.io/rbms/

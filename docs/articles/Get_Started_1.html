@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>1. Get started with rbms - phenology • rbms</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.0</span>
       </span>
     </div>
 
@@ -140,6 +140,7 @@ as a non-numeric factor)</li>
 argument DateFormat)</li>
 </ol>
 <pre><code><span><span class="co">##        SITE_ID       DATE</span></span>
+<span><span class="co">##          &lt;int&gt;     &lt;char&gt;</span></span>
 <span><span class="co">##     1:       1 2000-04-07</span></span>
 <span><span class="co">##     2:       1 2000-04-19</span></span>
 <span><span class="co">##     3:       1 2000-05-12</span></span>
@@ -159,18 +160,19 @@ column can be provided, but rbms only use the following four:</p>
 <li><strong>SPECIES</strong></li>
 <li><strong>COUNT</strong></li>
 </ol>
-<pre><code><span><span class="co">##       SITE_ID       DATE SPECIES DAY MONTH YEAR COUNT</span></span>
-<span><span class="co">##    1:       1 2000-04-07       2   7     4 2000     5</span></span>
-<span><span class="co">##    2:       1 2000-04-19       2  19     4 2000     3</span></span>
-<span><span class="co">##    3:       1 2000-05-12       2  12     5 2000     1</span></span>
-<span><span class="co">##    4:       1 2000-05-12       4  12     5 2000     2</span></span>
-<span><span class="co">##    5:       1 2000-05-15       4  15     5 2000     4</span></span>
-<span><span class="co">##   ---                                                </span></span>
-<span><span class="co">## 5303:     193 2003-09-06       2   6     9 2003     1</span></span>
-<span><span class="co">## 5304:     193 2004-04-23       2  23     4 2004     2</span></span>
-<span><span class="co">## 5305:     193 2004-05-02       2   2     5 2004     1</span></span>
-<span><span class="co">## 5306:     193 2004-06-19       2  19     6 2004     2</span></span>
-<span><span class="co">## 5307:     193 2004-07-10       2  10     7 2004     1</span></span></code></pre>
+<pre><code><span><span class="co">##       SITE_ID       DATE SPECIES   DAY MONTH  YEAR COUNT</span></span>
+<span><span class="co">##         &lt;int&gt;     &lt;char&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span><span class="co">##    1:       1 2000-04-07       2     7     4  2000     5</span></span>
+<span><span class="co">##    2:       1 2000-04-19       2    19     4  2000     3</span></span>
+<span><span class="co">##    3:       1 2000-05-12       2    12     5  2000     1</span></span>
+<span><span class="co">##    4:       1 2000-05-12       4    12     5  2000     2</span></span>
+<span><span class="co">##    5:       1 2000-05-15       4    15     5  2000     4</span></span>
+<span><span class="co">##   ---                                                   </span></span>
+<span><span class="co">## 5303:     193 2003-09-06       2     6     9  2003     1</span></span>
+<span><span class="co">## 5304:     193 2004-04-23       2    23     4  2004     2</span></span>
+<span><span class="co">## 5305:     193 2004-05-02       2     2     5  2004     1</span></span>
+<span><span class="co">## 5306:     193 2004-06-19       2    19     6  2004     2</span></span>
+<span><span class="co">## 5307:     193 2004-07-10       2    10     7  2004     1</span></span></code></pre>
 </div>
 <div class="section level5">
 <h5 id="organise-the-data-to-cover-the-time-period-and-monitoring-season-of-the-bms">
@@ -212,8 +214,8 @@ inform the time-series with the site visits. For this, we use the visit
 data and link it with the time series contained in ts_season object.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">m_visit</span>, <span class="va">ts_season</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in rbms::ts_monit_site(m_visit, ts_season): We have changed the order of</span></span>
-<span><span class="co">## the input arguments, with ts_seaon now in first place, before m_visit.</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in rbms::ts_monit_site(m_visit, ts_season): We have changed the order</span></span>
+<span><span class="co">## of the input arguments, with ts_seaon now in first place, before m_visit.</span></span></code></pre>
 <p><strong>2.4.</strong> Add observed count</p>
 <p>The observed counts are then added to the time-series contained in
 the <code>data.table</code> object, using the count and selecting the
@@ -253,10 +255,10 @@ fewer sites will be available and if insufficient, the thresholds need
 to be revised.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2022-07-28 16:44:59 -&gt; trial 1</span></span></code></pre>
-<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2022-07-28 16:45:01 -&gt; trial 1</span></span></code></pre>
-<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2002 with 87 sites, using gam() : 2022-07-28 16:45:02 -&gt; trial 1</span></span></code></pre>
-<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2022-07-28 16:45:04 -&gt; trial 1</span></span></code></pre>
+<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2024-07-24 15:46:35.647667 -&gt; trial 1</span></span></code></pre>
+<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2024-07-24 15:46:37.302509 -&gt; trial 1</span></span></code></pre>
+<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2002 with 87 sites, using gam() : 2024-07-24 15:46:37.958098 -&gt; trial 1</span></span></code></pre>
+<pre><code><span><span class="co">## Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2024-07-24 15:46:38.796399 -&gt; trial 1</span></span></code></pre>
 <blockquote>
 <p>NOTE: for the <code>flight_curve</code> function, you will also have
 to define some parameters for the distribution for the GAM model as well
@@ -276,17 +278,20 @@ fitting a GAM model, with a cubic spline to the count data;</li>
 shape of the annual flight curves, standardised to sum to 1. The
 flight-curves contained in the pheno object can be visualised with the
 following line of codes.</p>
+<p>Note for purpose of demonstration, let’s imagine that we could not
+fit a flight curve for year 2002 and the flight curve returned “NA” for
+that year 2002. Our code needs to be aware of the missing year.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Extract phenology part</span></span>
 <span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span></span>
 <span></span>
 <span><span class="co">## add the line of the first year</span></span>
-<span><span class="va">yr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">M_YEAR</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">M_YEAR</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">yr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">M_YEAR</span><span class="op">)</span>,<span class="op">]</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">NM</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">M_YEAR</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span><span class="op">(</span><span class="st">"trimWEEKNO"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">trimWEEKNO</span><span class="op">]</span>, <span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">NM</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'l'</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span>, <span class="va">NM</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">'Monitoring Week'</span>, ylab <span class="op">=</span> <span class="st">'Relative Abundance'</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu">.</span><span class="op">(</span><span class="va">trimWEEKNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">NM</span><span class="op">)</span>, <span class="op">]</span><span class="op">[</span>, <span class="va">NM</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">'Monitoring Week'</span>, ylab <span class="op">=</span> <span class="st">'Relative Abundance'</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">trimDAYNO</span><span class="op">]</span>, <span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">NM</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'l'</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span>, <span class="va">NM</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">'Monitoring Day'</span>, ylab <span class="op">=</span> <span class="st">'Relative Abundance'</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu">.</span><span class="op">(</span><span class="va">trimDAYNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">NM</span><span class="op">)</span>, <span class="op">]</span><span class="op">[</span>, <span class="va">NM</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">'Monitoring Day'</span>, ylab <span class="op">=</span> <span class="st">'Relative Abundance'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">## add individual curves for additional years</span></span>
@@ -294,9 +299,9 @@ following line of codes.</p>
 <span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span>  <span class="kw">for</span><span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="va">yr</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">{</span></span>
 <span>    <span class="kw">if</span><span class="op">(</span><span class="st">"trimWEEKNO"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span> , <span class="va">trimWEEKNO</span><span class="op">]</span>, <span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span>, <span class="va">NM</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span> , <span class="fu">.</span><span class="op">(</span><span class="va">trimWEEKNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span>, <span class="va">trimDAYNO</span><span class="op">]</span>, <span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span>, <span class="va">NM</span><span class="op">]</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span>, <span class="fu">.</span><span class="op">(</span><span class="va">trimDAYNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>    <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span></span>
 <span>  <span class="op">}</span></span>
@@ -307,6 +312,46 @@ following line of codes.</p>
 <div class="figure">
 <img src="Get_Started_1_files/figure-html/fc-1.png" alt="Flight curve." width="700"><p class="caption">
 Flight curve.
+</p>
+</div>
+<p>The code above produces a flight curve for each of the four years.
+Now, let’s imagine that the model could not fit a flight curve for year
+2002 and the flight curve returned “NA” for that year 2002. Our code
+needs to be aware of the missing year and skip that year.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Extract phenology part</span></span>
+<span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="fl">2002</span>, <span class="va">NM</span> <span class="op">:=</span> <span class="cn">NA</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co">## add the line of the first year</span></span>
+<span><span class="va">yr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">M_YEAR</span><span class="op">)</span>,<span class="op">]</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">NM</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">M_YEAR</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">yr</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span> <span class="co"># need at least one year without "NA" for the flight curve</span></span>
+<span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="st">"trimWEEKNO"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu">.</span><span class="op">(</span><span class="va">trimWEEKNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">NM</span><span class="op">)</span>, <span class="op">]</span><span class="op">[</span>, <span class="va">NM</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">'Monitoring Week'</span>, ylab <span class="op">=</span> <span class="st">'Relative Abundance'</span><span class="op">)</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">yr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu">.</span><span class="op">(</span><span class="va">trimDAYNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">NM</span><span class="op">)</span>, <span class="op">]</span><span class="op">[</span>, <span class="va">NM</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">'Monitoring Day'</span>, ylab <span class="op">=</span> <span class="st">'Relative Abundance'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">## add individual curves for additional years</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">yr</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span>  <span class="kw">for</span><span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="va">yr</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="kw">if</span><span class="op">(</span><span class="st">"trimWEEKNO"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span> , <span class="fu">.</span><span class="op">(</span><span class="va">trimWEEKNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">==</span> <span class="va">y</span>, <span class="fu">.</span><span class="op">(</span><span class="va">trimDAYNO</span>, <span class="va">NM</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">i</span> <span class="op">&lt;-</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">## add legend</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">'topright'</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">yr</span><span class="op">)</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">yr</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>, bty <span class="op">=</span> <span class="st">'n'</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="Get_Started_1_files/figure-html/fc_withNA-1.png" alt="Flight curve without (2002=NA)." width="700"><p class="caption">
+Flight curve without (2002=NA).
 </p>
 </div>
 </div>
@@ -327,7 +372,7 @@ Flight curve.
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

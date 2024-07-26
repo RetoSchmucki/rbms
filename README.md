@@ -1,7 +1,7 @@
 # rbms
 
 <!-- badges: start -->
-[![Build Status](https://app.travis-ci.com/RetoSchmucki/rbms.svg?branch=master)](https://app.travis-ci.com/RetoSchmucki/rbms) [![DOI](https://zenodo.org/badge/116286325.svg)](https://zenodo.org/doi/10.5281/zenodo.12806606)
+[![R-CMD-check](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 <img style="float: right;" src="rbmshexOR200.png" hspace="20">

@@ -11,3 +11,4 @@
 *.grd
 *.gri
 test.r
+inst/doc

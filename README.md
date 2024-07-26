@@ -1,7 +1,7 @@
 # rbms
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12806607.svg)](https://doi.org/10.5281/zenodo.12806607)
 <!-- badges: end -->
 
 <img style="float: right;" src="rbmshexOR200.png" hspace="20">
@@ -12,7 +12,7 @@ Although `rbms` implements methods that were developed independently and for whi
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A., Dennis E.B. (2024) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.2.0. https://github.com/RetoSchmucki/rbms/releases/tag/v1.2.0 - https://zenodo.org/records/12806607"
+Schmucki R., Harrower C.A., Dennis E.B. (2024) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.2.0. https://github.com/RetoSchmucki/rbms"
 
 #### The rbms package implements methods from:
 

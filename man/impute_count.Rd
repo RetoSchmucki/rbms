@@ -51,7 +51,7 @@ Site indices can be extracted from the data.table returned by this function. The
 \link{flight_curve}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{curve}
 \keyword{flight}

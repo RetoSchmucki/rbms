@@ -23,7 +23,7 @@ Generate n bootstrap sample of the monitoring sites to be used for each iteratio
 \link{impute_count}, \link{collated_index}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{bootstrap}
 \keyword{collated}

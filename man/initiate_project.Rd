@@ -17,5 +17,5 @@ initiate_project
 Build the folder structure for a generic research project
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }

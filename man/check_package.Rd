@@ -26,5 +26,5 @@ check_package
 Internal function to check if a package is installed.
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }

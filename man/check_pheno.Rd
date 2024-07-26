@@ -39,7 +39,7 @@ Check for the flight curve of a specific year. If the specific year is missing, 
 \link{impute_count}, \link{flight_curve}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{curve}
 \keyword{flight}

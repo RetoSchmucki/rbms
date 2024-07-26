@@ -20,6 +20,6 @@ ts_date_seq
 Generate a time-series with dates starting from January of the starting year to December of the ending years.
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{time-series}

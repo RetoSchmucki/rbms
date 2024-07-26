@@ -7,7 +7,7 @@
 #' @param ymax maximum value for y axis
 #' @param ... additional parameters for base plot.
 #' @return Returns a base plot with relative abundance (y) over time (x)
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @export
 #'
 
@@ -84,7 +84,7 @@ plot.pheno_curve <- function(data_x, year = NULL, weekday = 3, SiteID = NULL, ym
 #' @param BaseYear integer to identify the base year to plot the points, default is the actual year, but can be use to plot additional year on existing plot
 #' @param ... additional parameters for base plot.
 #' @return Returns a base plot with relative abundance (y) over time (x)
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @importFrom graphics points
 #' @export
 #'

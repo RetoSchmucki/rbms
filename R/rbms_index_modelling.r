@@ -31,7 +31,7 @@
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provide for one year 'y'.
 #' @keywords gam
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @importFrom stats as.formula coef fitted glm poisson predict weights
 #' @export fit_gam
@@ -151,7 +151,7 @@ fit_gam <- function(dataset_y, NbrSample = NULL, GamFamily = 'poisson', MaxTrial
 #'         ii) **f_model**: the resulting gam model \code{f_model} fitted on the count data and iii) **f_data**: a data.table with the data used to fit the GAM model. This is provided for all year provided in 'y'.
 #' @keywords gam, spline
 #' @seealso \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export get_nm
 #'
@@ -223,7 +223,7 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @seealso \link{fit_gam}
 #' @seealso \link[mgcv]{gam}
 #' @seealso \link[mgcv]{bam}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export flight_curve
 #'
@@ -311,7 +311,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
 #' @return z integer The value of the nearest year with flight curve.
 #' @keywords flight curve
 #' @seealso \link{check_pheno}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export check_pheno
 #'
@@ -336,7 +336,7 @@ get_nny <- function(x, y) {
 #'         phenology is available.
 #' @keywords flight curve
 #' @seealso \link{impute_count}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export check_pheno
 #'
@@ -407,7 +407,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @details Site indices can be extracted from the data.table returned by this function. The site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
 #' @keywords site index, flight curve
 #' @seealso \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export impute_count
 #'
@@ -490,7 +490,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
 #' @return data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
 #' @keywords butterfly count
 #' @seealso \link{impute_count}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export site_index
 #'
@@ -516,7 +516,7 @@ site_index <- function(butterfly_count, MinFC = NULL){
 #' @return a list of three objects, a vector of site, a glm model object, and a vector of collated indices per year.
 #' @keywords annual index
 #' @seealso \link{impute_count}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export collated_index_old
 #'
@@ -561,7 +561,7 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 #' @return a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.
 #' @keywords annual index
 #' @seealso \link{impute_count}, \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export collated_index
 #'
@@ -706,7 +706,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #' @return A list with site id and bootstrap indices for n bootstrap sample.
 #' @keywords bootstrap collated index
 #' @seealso \link{impute_count}, \link{collated_index}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export boot_sample
 #'
@@ -735,7 +735,7 @@ boot_sample <- function(data, boot_n = 1000){
 #' @return data.table Time-series of butterfly counts for species x over year y over all sites, but summarized with the chosen function.
 #' @keywords flight_curve
 #' @seealso \link{flight_curve}
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @import data.table
 #' @export day_week_summary
 #'

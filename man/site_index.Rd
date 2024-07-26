@@ -23,7 +23,7 @@ Extract abundance indices per site and year based on flight curve imputation.
 \link{impute_count}, \link{flight_curve}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{butterfly}
 \keyword{count}

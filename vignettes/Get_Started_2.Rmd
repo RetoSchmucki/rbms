@@ -2,6 +2,8 @@
 title: 2. Get started with rbms - collate index
 subtitle: Inputting missing counts
 author: Reto Schmucki (UKCEH)
+output:
+  pdf_document: default
 date: 28 November 2019
 ---
 ---------

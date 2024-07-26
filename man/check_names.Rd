@@ -24,5 +24,5 @@ Verify for the required column names in the data object.
 This function is not case sensitive, but it does not accept different names or spelling.
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }

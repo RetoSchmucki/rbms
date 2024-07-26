@@ -25,7 +25,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
 \link{impute_count}, \link{flight_curve}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{annual}
 \keyword{index}

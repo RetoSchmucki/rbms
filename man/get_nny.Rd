@@ -23,7 +23,7 @@ find the nearest year with a computed flight curve
 \link{check_pheno}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{curve}
 \keyword{flight}

@@ -27,6 +27,6 @@ Summarize the count(s) per day or week using either the maximum or the average c
 \link{flight_curve}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{flight_curve}

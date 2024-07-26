@@ -85,7 +85,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
 \link[mgcv]{bam}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{curve}
 \keyword{flight}

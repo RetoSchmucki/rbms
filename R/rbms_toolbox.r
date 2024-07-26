@@ -21,7 +21,7 @@
 #' Build the folder structure for a generic research project
 #' @param project_name Name of the project to be used for the parent folder
 #' @param project_home Path where the project folder structure to be built, default is the current working directory
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @export initiate_project
 #'
 
@@ -68,7 +68,7 @@ initiate_project <- function(project_name, project_home = NULL){
 #' @param message1 Inform the user about the package dependency.
 #' @param message2 Inform the user what happen if the package is not installed.
 #' @return If package is not found, the user is offered the option to install the missing package.
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @importFrom utils install.packages
 #' @export check_package
 #'
@@ -99,7 +99,7 @@ check_package <- function(pkgName = NULL, message1 = 'You need to install ', mes
 #' @return Verifyies if column names listed in \code{y} are found in the data set \code{x}, if not, a message identifies the
 #' missing column name and stops.
 #' @details This function is not case sensitive, but it does not accept different names or spelling.
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @export check_names
 #'
 
@@ -123,7 +123,7 @@ check_names <- function(x, y){
 #' @param LastYear Last year of the time-series, if not provided, the current year is used.
 #' @return Returns a POSIXct vector with the format 'YYYY-MM-DD HH:MM:SS'
 #' @keywords time-series
-#' @author Reto Schmucki - \email{reto.schmucki@@mail.mcgill.ca}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
 #' @export ts_date_seq
 #'
 

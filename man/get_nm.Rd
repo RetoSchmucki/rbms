@@ -72,7 +72,7 @@ Compute the normalized flight curve by fitting a spline in a Generalized Additiv
 \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{gam,}
 \keyword{spline}

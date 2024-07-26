@@ -60,6 +60,6 @@ fit a Generalized Additive Model to butterfly count data along a temporal variab
 \link{flight_curve}, \link[mgcv]{gam}, \link[mgcv]{bam}
 }
 \author{
-Reto Schmucki - \email{reto.schmucki@mail.mcgill.ca}
+Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
 \keyword{gam}

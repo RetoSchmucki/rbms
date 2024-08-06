@@ -11,5 +11,8 @@
 *.grd
 *.gri
 test.r
-inst/doc
+<<<<<<< HEAD
 dylan_train
+=======
+inst/doc
+>>>>>>> aaef9acd866713c677bf5699831e99702140c015

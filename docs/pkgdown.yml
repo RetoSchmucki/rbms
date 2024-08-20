@@ -2,7 +2,6 @@ pandoc: '3.2'
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
-  Get_Started_1: Get_Started_1.html
-  Get_Started_2: Get_Started_2.html
-last_built: 2024-07-26T12:16Z
+  vignette: vignette.html
+last_built: 2024-08-20T14:06Z
 

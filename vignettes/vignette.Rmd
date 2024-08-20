@@ -23,13 +23,14 @@ The data used in this vignette are bundled within the package and are from genui
 First, install and load required packages.
 ```{r data}
 # Install rbms remotely
-# remotes::install_github("https://github.com/RetoSchmucki/rbms.git")
+remotes::install_github("https://github.com/RetoSchmucki/rbms.git")
+
+# Install ggplot2, which we will use for plotting
+install.packages("ggplot2")
 
 # Load rbms and ggplot2
 library(rbms)
-
-# install.packages("ggplot2") # If you need to install ggplot
-library(ggplot2) # Will be used for plotting
+library(ggplot2)
 ```
 
 Then load the bundled butterfly monitoring scheme data bundled with the rbms package.

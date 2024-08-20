@@ -2,9 +2,10 @@
 title: "Calculating phenology and collated indices with rbms"
 author: "Reto Schmucki (UKCEH) & Dylan Carbone"
 date: "23rd of July 2024"
-output:
-  pdf_document: default
-  word_document: default
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 subtitle: From counts to flight curve to collated indices
 ---
 

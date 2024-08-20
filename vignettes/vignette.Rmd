@@ -22,11 +22,12 @@ The data used in this vignette are bundled within the package and are from genui
 
 First, install and load required packages.
 ```{r data}
-# Install rbms remotely
-remotes::install_github("https://github.com/RetoSchmucki/rbms.git")
+# Install required packages
+install.packages("remotes") # To install R packages from github
+install.packages("ggplot2") # to generate plots in this tutorial
 
-# Install ggplot2, which we will use for plotting
-install.packages("ggplot2")
+# Install rbms from github
+remotes::install_github("https://github.com/RetoSchmucki/rbms.git")
 
 # Load rbms and ggplot2
 library(rbms)

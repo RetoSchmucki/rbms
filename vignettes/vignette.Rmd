@@ -27,7 +27,7 @@ install.packages("remotes") # To install R packages from github
 install.packages("ggplot2") # to generate plots in this tutorial
 
 # Install rbms from github
-remotes::install_github("https://github.com/RetoSchmucki/rbms.git")
+# remotes::install_github("https://github.com/RetoSchmucki/rbms.git")
 
 # Load rbms and ggplot2
 library(rbms)

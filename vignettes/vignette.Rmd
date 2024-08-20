@@ -9,6 +9,10 @@ vignette: >
 subtitle: From counts to flight curve to collated indices
 ---
 
+```{r, include = FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
+```
+
 The `rbms` package allows users to derive species phenology and estimate abundances of butterfly species. In this tutorial, we use R functions implemented in the `rbms` package to produce the following key outputs:
 
 1. **Compute a flight curve**: A spline fitted curve, representing the activity of the species within the monitoring season. The flight curve computation is based on a spline fitted on the counts collected across multiple sites and standardised to sum to 1 (area under the curve is one).

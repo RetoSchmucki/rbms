@@ -585,7 +585,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
   if(is.null(bootID)){
     bootID <- 0
   }else{
-    booID <- bootID
+    bootID <- bootID
   }
 
   if(bootID == 0){

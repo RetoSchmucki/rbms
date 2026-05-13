@@ -1,10 +1,12 @@
 # rbms
 
 <!-- badges: start -->
+
 [![R-CMD-check](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12806607.svg)](https://doi.org/10.5281/zenodo.12806607)
+
 <!-- badges: end -->
 
-<img style="float: right;" src="rbmshexOR200.png" hspace="20">
+`<img style="float: right;" src="rbmshexOR200.png" hspace="20">`
 
 With `rbms`, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time series of counts.  As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and working in line with other tools available and developed by the community (e.g., [rtrim](https://cran.r-project.org/web/packages/rtrim/), [BRCindicators](https://github.com/BiologicalRecordsCentre/BRCindicators)). With the development of the 'rbms' R package, we also provide a tutorial to facilitate its usage and understanding.
 
@@ -24,13 +26,13 @@ Schmucki R., Harrower C.A., Dennis E.B. (2024) rbms: Computing generalised abund
 
 Once the [R programming system](https://cran.r-project.org/) is successfully installed, you can install the `rbms package` from GitHub. For this you will need to install the package `devtools` or `remotes`, both available on CRAN. Once installed, use the function `devtools::install_github()` to install the `rbms` package on your system.
 
-> Note that `rbms` is built with R > 3.6.0, so you might need to update your R system before installation.
+> Note that `rbms` is built with R > 4.0, so you might need to update your R system before installation.
 > To install devtools on Windows system, you will also need to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) - note Rtools40 for R 4.x.x
-> New to `R` or want to refresh your R coding skills, try the excellent tutorials available at [ourcodingclub](https://ourcodingclub.github.io/) :thumbsup:
+> New to `R` or want to refresh your R coding skills, try the excellent tutorials available at [ourcodingclub](https://ourcodingclub.github.io/) 👍
 
 ```R
-if(!requireNamespace("devtools")) install.packages("devtools")
-devtools::install_github("RetoSchmucki/rbms")
+if(!requireNamespace("remotes")) install.packages("remotes")
+remotes::install_github("RetoSchmucki/rbms")
 ```
 
 #### Get Started
@@ -43,7 +45,7 @@ Further documentation is also available through the help function in R or from t
 
 Since version v.1.1.0, rbms is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for "pheno_curve", using the object produced by the `flight_curve()` function as an argument.
 
- ```R
+```R
  # usage or plot method
 library(rbms)
 data(m_visit)
@@ -105,7 +107,8 @@ legend("topright", legend = c("2000", "2001", "2002"),
     col = c("dodgerblue4", "cyan4", "orange"), lty = 1, 
     box.lty=0)
 
- ```
+```
+
 #### Reporting Issues
 
 For reporting issues related to this package or workflow, please visit the issue and before opening a new one, see if your problem is not already in the list reported [issues here](https://github.com/RetoSchmucki/rbms/issues)

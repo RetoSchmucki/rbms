@@ -10,7 +10,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
 
   gtag('config', 'UA-154857767-2');
 </script></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -24,7 +24,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ compute a collated index from the site indices, using a Generalized Linear Model
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
@@ -45,14 +45,14 @@ compute a collated index from the site indices, using a Generalized Linear Model
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/RetoSchmucki/rbms/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -81,39 +81,39 @@ compute a collated index from the site indices, using a Generalized Linear Model
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>data</dt>
+
+
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.</p></dd>
 
 
-<dt>s_sp</dt>
+<dt id="arg-s-sp">s_sp<a class="anchor" aria-label="anchor" href="#arg-s-sp"></a></dt>
 <dd><p>string Species name to be found in the data.</p></dd>
 
 
-<dt>sindex_value</dt>
+<dt id="arg-sindex-value">sindex_value<a class="anchor" aria-label="anchor" href="#arg-sindex-value"></a></dt>
 <dd><p>string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.</p></dd>
 
 
-<dt>bootID</dt>
+<dt id="arg-bootid">bootID<a class="anchor" aria-label="anchor" href="#arg-bootid"></a></dt>
 <dd><p>integer Identify the n^th bootstrap.</p></dd>
 
 
-<dt>boot_ind</dt>
+<dt id="arg-boot-ind">boot_ind<a class="anchor" aria-label="anchor" href="#arg-boot-ind"></a></dt>
 <dd><p>data.table Index of the bootstrap and the site ids of the specific bootstrap sample.</p></dd>
 
 
-<dt>glm_weights</dt>
+<dt id="arg-glm-weights">glm_weights<a class="anchor" aria-label="anchor" href="#arg-glm-weights"></a></dt>
 <dd><p>logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.</p></dd>
 
 
-<dt>rm_zero</dt>
+<dt id="arg-rm-zero">rm_zero<a class="anchor" aria-label="anchor" href="#arg-rm-zero"></a></dt>
 <dd><p>logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.</p>
+    <p>a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -136,15 +136,15 @@ compute a collated index from the site indices, using a Generalized Linear Model
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

@@ -9,7 +9,7 @@
 
   gtag('config', 'UA-154857767-2');
 </script></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1</span>
       </span>
     </div>
 
@@ -34,7 +34,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
@@ -44,14 +44,14 @@
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/RetoSchmucki/rbms/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -82,51 +82,51 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>ts_season_count</dt>
+
+
+<dl><dt id="arg-ts-season-count">ts_season_count<a class="anchor" aria-label="anchor" href="#arg-ts-season-count"></a></dt>
 <dd><p>data.table Time-series of counts for a specific species across all sites as returned by <a href="ts_monit_count_site.html">ts_monit_count_site</a>.</p></dd>
 
 
-<dt>ts_flight_curve</dt>
+<dt id="arg-ts-flight-curve">ts_flight_curve<a class="anchor" aria-label="anchor" href="#arg-ts-flight-curve"></a></dt>
 <dd><p>pheno_curve class object or data.table with light curves and relative abundances (NM) for a specific species as returned by <a href="flight_curve.html">flight_curve</a>.</p></dd>
 
 
-<dt>TimeUnit</dt>
+<dt id="arg-timeunit">TimeUnit<a class="anchor" aria-label="anchor" href="#arg-timeunit"></a></dt>
 <dd><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></dd>
 
 
-<dt>MultiVisit</dt>
+<dt id="arg-multivisit">MultiVisit<a class="anchor" aria-label="anchor" href="#arg-multivisit"></a></dt>
 <dd><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></dd>
 
 
-<dt>weekday</dt>
+<dt id="arg-weekday">weekday<a class="anchor" aria-label="anchor" href="#arg-weekday"></a></dt>
 <dd><p>Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.</p></dd>
 
 
-<dt>sp</dt>
+<dt id="arg-sp">sp<a class="anchor" aria-label="anchor" href="#arg-sp"></a></dt>
 <dd><p>integer or string Species ID or name.</p></dd>
 
 
-<dt>YearLimit</dt>
+<dt id="arg-yearlimit">YearLimit<a class="anchor" aria-label="anchor" href="#arg-yearlimit"></a></dt>
 <dd><p>integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.</p></dd>
 
 
-<dt>SelectYear</dt>
+<dt id="arg-selectyear">SelectYear<a class="anchor" aria-label="anchor" href="#arg-selectyear"></a></dt>
 <dd><p>integer Select a specific year to compute the flight curve, default=NULL.</p></dd>
 
 
-<dt>CompltSeason</dt>
+<dt id="arg-compltseason">CompltSeason<a class="anchor" aria-label="anchor" href="#arg-compltseason"></a></dt>
 <dd><p>logical Restrict computation of flight curve for years where the complete season was sampled, default=TRUE.</p></dd>
 
 
-<dt>verbose</dt>
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>a logical indicating if some “progress report” should be given.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.</p>
+    <p>A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -153,15 +153,15 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

@@ -25,7 +25,7 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1</span>
       </span>
     </div>
 
@@ -51,7 +51,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -65,7 +65,7 @@
 <li>
   <a href="https://github.com/RetoSchmucki/rbms/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -76,7 +76,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -85,7 +85,8 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><img style="float: right;" src="rbmshexOR200.png" hspace="20"></p>
+<!-- badges: end -->
+<p><code>&lt;img style="float: right;" src="rbmshexOR200.png" hspace="20"&gt;</code></p>
 <p>With <code>rbms</code>, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time series of counts. As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and working in line with other tools available and developed by the community (e.g., <a href="https://cran.r-project.org/web/packages/rtrim/" class="external-link">rtrim</a>, <a href="https://github.com/BiologicalRecordsCentre/BRCindicators" class="external-link">BRCindicators</a>). With the development of the ‘rbms’ R package, we also provide a tutorial to facilitate its usage and understanding.</p>
 <p>Although <code>rbms</code> implements methods that were developed independently and for which the source should be acknowledged, users should also cite the <code>rbms</code> package and its version to ensure good referencing and improve the reproducibility of the work.</p>
 <div class="section level4">
@@ -108,13 +109,13 @@
 <div class="section level4">
 <h4 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h4>
-<p>Once the <a href="https://cran.r-project.org/" class="external-link">R programming system</a> is successfully installed, you can install the <code>rbms package</code> from GitHub. For this you will need to install the package <code>devtools</code> or <code>remotes</code>, both available on CRAN. Once installed, use the function <code><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">devtools::install_github()</a></code> to install the <code>rbms</code> package on your system.</p>
+<p>Once the <a href="https://cran.r-project.org/" class="external-link">R programming system</a> is successfully installed, you can install the <code>rbms package</code> from GitHub. For this you will need to install the package <code>devtools</code> or <code>remotes</code>, both available on CRAN. Once installed, use the function <code><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">devtools::install_github()</a></code> to install the <code>rbms</code> package on your system.</p>
 <blockquote>
-<p>Note that <code>rbms</code> is built with R &gt; 3.6.0, so you might need to update your R system before installation. To install devtools on Windows system, you will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools</a> - note Rtools40 for R 4.x.x New to <code>R</code> or want to refresh your R coding skills, try the excellent tutorials available at <a href="https://ourcodingclub.github.io/" class="external-link">ourcodingclub</a> <span class="emoji" data-emoji="thumbsup">👍</span></p>
+<p>Note that <code>rbms</code> is built with R &gt; 4.0, so you might need to update your R system before installation. To install devtools on Windows system, you will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools</a> - note Rtools40 for R 4.x.x New to <code>R</code> or want to refresh your R coding skills, try the excellent tutorials available at <a href="https://ourcodingclub.github.io/" class="external-link">ourcodingclub</a> 👍</p>
 </blockquote>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"RetoSchmucki/rbms"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="get-started">Get Started<a class="anchor" aria-label="anchor" href="#get-started"></a>
@@ -127,7 +128,7 @@
 </h3>
 <p>Since version v.1.1.0, rbms is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for “pheno_curve”, using the object produced by the <code><a href="reference/flight_curve.html">flight_curve()</a></code> function as an argument.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># usage or plot method</span></span>
+<code class="sourceCode R"><span> <span class="co"># usage or plot method</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://retoschmucki.github.io/rbms/" class="external-link">rbms</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_visit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_count</span><span class="op">)</span></span>
@@ -135,31 +136,31 @@
 <span><span class="va">ts_date</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_dwmy_table.html">ts_dwmy_table</a></span><span class="op">(</span>InitYear <span class="op">=</span> <span class="fl">2000</span>, LastYear <span class="op">=</span> <span class="fl">2003</span>, WeekDay1 <span class="op">=</span> <span class="st">'monday'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ts_season</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_monit_season.html">ts_monit_season</a></span><span class="op">(</span><span class="va">ts_date</span>,</span>
-<span>                       StartMonth <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                       EndMonth <span class="op">=</span> <span class="fl">9</span>, </span>
-<span>                       StartDay <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                       EndDay <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                       CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                       Anchor <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                       AnchorLength <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                       AnchorLag <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                       TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span>
+<span>                        StartMonth <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>                        EndMonth <span class="op">=</span> <span class="fl">9</span>, </span>
+<span>                        StartDay <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                        EndDay <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                        CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        Anchor <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        AnchorLength <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                        AnchorLag <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                        TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">ts_season</span>, <span class="va">m_visit</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ts_season_count</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_monit_count_site.html">ts_monit_count_site</a></span><span class="op">(</span><span class="va">ts_season_visit</span>, <span class="va">m_count</span>, sp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, </span>
-<span>                       NbrSample <span class="op">=</span> <span class="fl">300</span>,</span>
-<span>                       MinVisit <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>                       MinOccur <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                       MinNbrSite <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>                       MaxTrial <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                       GamFamily <span class="op">=</span> <span class="st">'nb'</span>,</span>
-<span>                       SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                       CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                       SelectYear <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                       TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span>
+<span>                        NbrSample <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>                        MinVisit <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>                        MinOccur <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                        MinNbrSite <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>                        MaxTrial <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>                        GamFamily <span class="op">=</span> <span class="st">'nb'</span>,</span>
+<span>                        SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                        CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        SelectYear <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                        TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Flight curves are in the "pheno" data.table located within the ts_flight_curve result is a list</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span><span class="op">)</span></span>
@@ -168,7 +169,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># for a single or multiple years</span></span>
+<span> <span class="co"># for a single or multiple years</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2001</span>, <span class="fl">2002</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2001</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span>
 <span></span>
@@ -177,16 +178,16 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, BaseYear <span class="op">=</span> <span class="fl">2000</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'cyan4'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2001</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, BaseYear <span class="op">=</span> <span class="fl">2000</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2000"</span>, <span class="st">"2001"</span>, <span class="st">"2002"</span><span class="op">)</span>, </span>
-<span>   col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"cyan4"</span>, <span class="st">"orange"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>   box.lty<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
+<span>    col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"cyan4"</span>, <span class="st">"orange"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    box.lty<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># multiple year curves on a time series with different portions per year, use xlim</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2000-01-01"</span>, <span class="st">"2002-12-30"</span><span class="op">)</span>, format <span class="op">=</span> <span class="st">"%Y-%m-%d"</span><span class="op">)</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, col <span class="op">=</span> <span class="st">'dodgerblue4'</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2001</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'cyan4'</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2000"</span>, <span class="st">"2001"</span>, <span class="st">"2002"</span><span class="op">)</span>, </span>
-<span>   col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"cyan4"</span>, <span class="st">"orange"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>   box.lty<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<span>    col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"cyan4"</span>, <span class="st">"orange"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>, </span>
+<span>    box.lty<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="reporting-issues">Reporting Issues<a class="anchor" aria-label="anchor" href="#reporting-issues"></a>
 </h4>
@@ -225,8 +226,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Reto Schmucki <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-3064-7553" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Colin A. Harrower <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-5070-5293" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Reto Schmucki <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-3064-7553" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Colin A. Harrower <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-5070-5293" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -250,16 +251,16 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

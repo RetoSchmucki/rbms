@@ -10,7 +10,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
 
   gtag('config', 'UA-154857767-2');
 </script></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -24,7 +24,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
@@ -45,14 +45,14 @@ Compute the annual flight curve from butterfly count data collated across sites.
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/RetoSchmucki/rbms/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -94,91 +94,91 @@ Compute the annual flight curve from butterfly count data collated across sites.
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>ts_season_count</dt>
+
+
+<dl><dt id="arg-ts-season-count">ts_season_count<a class="anchor" aria-label="anchor" href="#arg-ts-season-count"></a></dt>
 <dd><p>data.table Time-series of counts and season information returned by <a href="ts_monit_count_site.html">ts_monit_count_site</a></p></dd>
 
 
-<dt>NbrSample</dt>
+<dt id="arg-nbrsample">NbrSample<a class="anchor" aria-label="anchor" href="#arg-nbrsample"></a></dt>
 <dd><p>integer The maximum number of sites to use for computing the flight curve, default=100.</p></dd>
 
 
-<dt>MinVisit</dt>
+<dt id="arg-minvisit">MinVisit<a class="anchor" aria-label="anchor" href="#arg-minvisit"></a></dt>
 <dd><p>integer The minimum number of visits required for a site to be included, default=3.</p></dd>
 
 
-<dt>MinOccur</dt>
+<dt id="arg-minoccur">MinOccur<a class="anchor" aria-label="anchor" href="#arg-minoccur"></a></dt>
 <dd><p>integer The minimum number of positive records (e.g. &gt;= 1) required in one year for a site to be included, default=2.</p></dd>
 
 
-<dt>MinNbrSite</dt>
+<dt id="arg-minnbrsite">MinNbrSite<a class="anchor" aria-label="anchor" href="#arg-minnbrsite"></a></dt>
 <dd><p>integer The minimum number of sites required to compute a flight curve, default=1.</p></dd>
 
 
-<dt>MaxTrial</dt>
+<dt id="arg-maxtrial">MaxTrial<a class="anchor" aria-label="anchor" href="#arg-maxtrial"></a></dt>
 <dd><p>integer The maximum number of trials for model convergence, default=3.</p></dd>
 
 
-<dt>GamFamily</dt>
+<dt id="arg-gamfamily">GamFamily<a class="anchor" aria-label="anchor" href="#arg-gamfamily"></a></dt>
 <dd><p>string The distribution of the error term used in the GAM, default='poisson', but can be the negative-binomial 'nb' or 'quasipoisson'.</p></dd>
 
 
-<dt>CompltSeason</dt>
+<dt id="arg-compltseason">CompltSeason<a class="anchor" aria-label="anchor" href="#arg-compltseason"></a></dt>
 <dd><p>Logical to restrict computation of flight curve for years where the complete season has been sampled, default=TRUE.</p></dd>
 
 
-<dt>SelectYear</dt>
+<dt id="arg-selectyear">SelectYear<a class="anchor" aria-label="anchor" href="#arg-selectyear"></a></dt>
 <dd><p>integer Select a specific year to compute the flight curve, default=NULL.</p></dd>
 
 
-<dt>SpeedGam</dt>
+<dt id="arg-speedgam">SpeedGam<a class="anchor" aria-label="anchor" href="#arg-speedgam"></a></dt>
 <dd><p>Logical Set if the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method should be used, default instead of the default <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> method.</p></dd>
 
 
-<dt>OptiGam</dt>
+<dt id="arg-optigam">OptiGam<a class="anchor" aria-label="anchor" href="#arg-optigam"></a></dt>
 <dd><p>Logical Set the use of the <a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a> method when data are larger than 200 and gam for smaller datasets</p></dd>
 
 
-<dt>KeepModel</dt>
+<dt id="arg-keepmodel">KeepModel<a class="anchor" aria-label="anchor" href="#arg-keepmodel"></a></dt>
 <dd><p>Logical to keep model output in a list object named <code>flight_curve_model</code>.</p></dd>
 
 
-<dt>KeepModelData</dt>
+<dt id="arg-keepmodeldata">KeepModelData<a class="anchor" aria-label="anchor" href="#arg-keepmodeldata"></a></dt>
 <dd><p>Logical to keep the data used for the GAM.</p></dd>
 
 
-<dt>TimeUnit</dt>
+<dt id="arg-timeunit">TimeUnit<a class="anchor" aria-label="anchor" href="#arg-timeunit"></a></dt>
 <dd><p>character The time-step for which the spline should be computed, 'd' day or 'w' week.</p></dd>
 
 
-<dt>MultiVisit</dt>
+<dt id="arg-multivisit">MultiVisit<a class="anchor" aria-label="anchor" href="#arg-multivisit"></a></dt>
 <dd><p>string Function to apply for summarising multiple counts within a time unit, 'max' or 'mean' (default).</p></dd>
 
 
-<dt>weekday</dt>
+<dt id="arg-weekday">weekday<a class="anchor" aria-label="anchor" href="#arg-weekday"></a></dt>
 <dd><p>Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.</p></dd>
 
 
-<dt>mod_form</dt>
+<dt id="arg-mod-form">mod_form<a class="anchor" aria-label="anchor" href="#arg-mod-form"></a></dt>
 <dd><p>string with formula to be passed to the gam model, default null.</p></dd>
 
 
-<dt>tp_col</dt>
+<dt id="arg-tp-col">tp_col<a class="anchor" aria-label="anchor" href="#arg-tp-col"></a></dt>
 <dd><p>string or vector of string with additional variable used in the gam model, default null.</p></dd>
 
 
-<dt>verbose</dt>
+<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>a logical indicating if some “progress report” should be given.</p></dd>
 
 
-<dt>...</dt>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional parameters passed to gam or bam function from the <a href="https://rdrr.io/pkg/mgcv/man/gam.html" class="external-link">gam</a> package.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>A list with three objects, i) **pheno**: a vector with annual flight curves <code>f_pheno</code> with expected relative abundance, normalize to sum to one over a full season,
+    <p>A list with three objects, i) **pheno**: a vector with annual flight curves <code>f_pheno</code> with expected relative abundance, normalize to sum to one over a full season,
         ii) **model**: a list of the resulting gam models <code>f_model</code> fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.</p>
     </div>
     <div id="see-also">
@@ -204,15 +204,15 @@ Compute the annual flight curve from butterfly count data collated across sites.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

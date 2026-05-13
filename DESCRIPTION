@@ -1,6 +1,6 @@
 Package: rbms
 Title: Computing generalised abundance indices for butterfly monitoring count data
-Version: 1.2.0
+Version: 1.2.1
 Date: 24-07-2024
 Authors@R:
 	c(person(given = "Reto",

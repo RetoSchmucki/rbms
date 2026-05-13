@@ -10,7 +10,7 @@ Build a time-series of dates with specific detail about the monitoring season"><
 
   gtag('config', 'UA-154857767-2');
 </script></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -24,7 +24,7 @@ Build a time-series of dates with specific detail about the monitoring season"><
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbms</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1</span>
       </span>
     </div>
 
@@ -35,7 +35,7 @@ Build a time-series of dates with specific detail about the monitoring season"><
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
@@ -45,14 +45,14 @@ Build a time-series of dates with specific detail about the monitoring season"><
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/RetoSchmucki/rbms/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -84,53 +84,52 @@ Build a time-series of dates with specific detail about the monitoring season</p
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>d_series</dt>
+
+
+<dl><dt id="arg-d-series">d_series<a class="anchor" aria-label="anchor" href="#arg-d-series"></a></dt>
 <dd><p>time series of dates returned by <a href="ts_dwmy_table.html">ts_dwmy_table</a></p></dd>
 
 
-<dt>StartMonth</dt>
+<dt id="arg-startmonth">StartMonth<a class="anchor" aria-label="anchor" href="#arg-startmonth"></a></dt>
 <dd><p>integer for the first month of the monitoring season, default=4</p></dd>
 
 
-<dt>EndMonth</dt>
+<dt id="arg-endmonth">EndMonth<a class="anchor" aria-label="anchor" href="#arg-endmonth"></a></dt>
 <dd><p>integer for the last month of the monitoring season, default=9</p></dd>
 
 
-<dt>StartDay</dt>
+<dt id="arg-startday">StartDay<a class="anchor" aria-label="anchor" href="#arg-startday"></a></dt>
 <dd><p>integer for the day of the month when the monitoring season start, default=1</p></dd>
 
 
-<dt>EndDay</dt>
+<dt id="arg-endday">EndDay<a class="anchor" aria-label="anchor" href="#arg-endday"></a></dt>
 <dd><p>integer for the day of the month when the monitoring season end, default=last day of the EndMonth</p></dd>
 
 
-<dt>CompltSeason</dt>
+<dt id="arg-compltseason">CompltSeason<a class="anchor" aria-label="anchor" href="#arg-compltseason"></a></dt>
 <dd><p>logical if only the date for a complete season should be returned, default=TRUE</p></dd>
 
 
-<dt>Anchor</dt>
+<dt id="arg-anchor">Anchor<a class="anchor" aria-label="anchor" href="#arg-anchor"></a></dt>
 <dd><p>logical if Anchor should be used at the beginning and end of the monitoring season, default=TRUE</p></dd>
 
 
-<dt>AnchorLength</dt>
+<dt id="arg-anchorlength">AnchorLength<a class="anchor" aria-label="anchor" href="#arg-anchorlength"></a></dt>
 <dd><p>integer for the number of day used as Anchor, default=7</p></dd>
 
 
-<dt>AnchorLag</dt>
+<dt id="arg-anchorlag">AnchorLag<a class="anchor" aria-label="anchor" href="#arg-anchorlag"></a></dt>
 <dd><p>integer for the number of days before and after where the Anchor should start, default=TRUE</p></dd>
 
 
-<dt>TimeUnit</dt>
+<dt id="arg-timeunit">TimeUnit<a class="anchor" aria-label="anchor" href="#arg-timeunit"></a></dt>
 <dd><p>character defining the time unit used for the Anchor, can be 'd' for day or 'w' for week</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>A data.table with the entire time-series of date (<code>DATE</code>, <code>DAY_SINCE</code>, <code>YEAR</code>, <code>MONTH</code>,</p>
-<p></p>
-<p><code>DAY</code>, <code>WEEK</code> (ISO), the <code>WEEK_DAY</code>, and details about the Monitoring Year (<code>M_YEAR</code>) which
+    <p>A data.table with the entire time-series of date (<code>DATE</code>, <code>DAY_SINCE</code>, <code>YEAR</code>, <code>MONTH</code>,
+        <code>DAY</code>, <code>WEEK</code> (ISO), the <code>WEEK_DAY</code>, and details about the Monitoring Year (<code>M_YEAR</code>) which
         is the monitoring year to which that date refers to, using the year of the starting month of the monitoring season,
         the monitoring season (<code>M_SEASON</code>), if the Monitoring season is complete (<code>COMPLT_SEASON</code>), the
         location of the anchors (<code>ANCHOR</code>) and the count for every day used as anchor (0).</p>
@@ -163,15 +162,15 @@ Build a time-series of dates with specific detail about the monitoring season</p
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

@@ -102,7 +102,8 @@ handling of years with sparse data
 
 ## See also
 
-[flight_curve_multi](flight_curve_multi.md), [fit_gam](fit_gam.md),
+[flight_curve_multi](https://retoschmucki.github.io/rbms/reference/flight_curve_multi.md),
+[fit_gam](https://retoschmucki.github.io/rbms/reference/fit_gam.md),
 [bam](https://rdrr.io/pkg/mgcv/man/bam.html)
 
 ## Author

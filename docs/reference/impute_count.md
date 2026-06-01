@@ -24,13 +24,14 @@ impute_count(
 - ts_season_count:
 
   data.table Time-series of counts for a specific species across all
-  sites as returned by [ts_monit_count_site](ts_monit_count_site.md).
+  sites as returned by
+  [ts_monit_count_site](https://retoschmucki.github.io/rbms/reference/ts_monit_count_site.md).
 
 - ts_flight_curve:
 
   pheno_curve class object or data.table with light curves and relative
   abundances (NM) for a specific species as returned by
-  [flight_curve](flight_curve.md).
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md).
 
 - TimeUnit:
 
@@ -83,7 +84,7 @@ the proportion of the flight curve covered by the visits.
 
 ## See also
 
-[flight_curve](flight_curve.md)
+[flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
 
 ## Author
 

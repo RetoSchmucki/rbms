@@ -33,16 +33,21 @@ fit_gam(
 
 - NbrSample:
 
-  integer Inherited from [flight_curve](flight_curve.md), default=100.
+  integer Inherited from
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
+  default=100.
 
 - GamFamily:
 
-  string Inherited from [flight_curve](flight_curve.md),
+  string Inherited from
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
   default='poisson', but can be 'nb' or 'quasipoisson'.
 
 - MaxTrial:
 
-  integer Inherited from [flight_curve](flight_curve.md), default=3.
+  integer Inherited from
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
+  default=3.
 
 - SpeedGam:
 
@@ -99,7 +104,7 @@ one year 'y'.
 
 ## See also
 
-[flight_curve](flight_curve.md),
+[flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
 [gam](https://rdrr.io/pkg/mgcv/man/gam.html),
 [bam](https://rdrr.io/pkg/mgcv/man/bam.html)
 

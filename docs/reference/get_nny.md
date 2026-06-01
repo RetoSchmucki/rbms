@@ -24,7 +24,7 @@ z integer The value of the nearest year with flight curve.
 
 ## See also
 
-[check_pheno](check_pheno.md)
+[check_pheno](https://retoschmucki.github.io/rbms/reference/check_pheno.md)
 
 ## Author
 

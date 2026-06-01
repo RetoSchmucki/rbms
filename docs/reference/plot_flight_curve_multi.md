@@ -28,8 +28,8 @@ plot_flight_curve_multi(
 - ts_flight_curve_multi:
 
   pheno_curve object returned by
-  [flight_curve_multi](flight_curve_multi.md) or a data.table with
-  flight curve data.
+  [flight_curve_multi](https://retoschmucki.github.io/rbms/reference/flight_curve_multi.md)
+  or a data.table with flight curve data.
 
 - SelectYear:
 
@@ -90,8 +90,8 @@ year in a different color.
 
 ## See also
 
-[flight_curve_multi](flight_curve_multi.md),
-[fit_bam_multi](fit_bam_multi.md)
+[flight_curve_multi](https://retoschmucki.github.io/rbms/reference/flight_curve_multi.md),
+[fit_bam_multi](https://retoschmucki.github.io/rbms/reference/fit_bam_multi.md)
 
 ## Author
 

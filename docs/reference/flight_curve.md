@@ -35,7 +35,7 @@ flight_curve(
 - ts_season_count:
 
   data.table Time-series of counts and season information returned by
-  [ts_monit_count_site](ts_monit_count_site.md)
+  [ts_monit_count_site](https://retoschmucki.github.io/rbms/reference/ts_monit_count_site.md)
 
 - NbrSample:
 
@@ -141,7 +141,7 @@ models `f_model` fitted on the count data for each year and iii)
 
 ## See also
 
-[fit_gam](fit_gam.md)
+[fit_gam](https://retoschmucki.github.io/rbms/reference/fit_gam.md)
 
 [gam](https://rdrr.io/pkg/mgcv/man/gam.html)
 

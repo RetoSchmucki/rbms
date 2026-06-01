@@ -18,8 +18,9 @@ ts_monit_site(
 
 - ts_season:
 
-  data.table returned by [ts_monit_season](ts_monit_season.md) with the
-  detail time-series of the monitoring season.
+  data.table returned by
+  [ts_monit_season](https://retoschmucki.github.io/rbms/reference/ts_monit_season.md)
+  with the detail time-series of the monitoring season.
 
 - m_visit:
 
@@ -42,7 +43,7 @@ implemented and that is ready to receive counts
 
 ## See also
 
-[df_visit_season](df_visit_season.md)
+[df_visit_season](https://retoschmucki.github.io/rbms/reference/df_visit_season.md)
 
 ## Author
 

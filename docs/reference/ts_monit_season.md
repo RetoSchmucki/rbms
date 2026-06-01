@@ -24,7 +24,8 @@ ts_monit_season(
 
 - d_series:
 
-  time series of dates returned by [ts_dwmy_table](ts_dwmy_table.md)
+  time series of dates returned by
+  [ts_dwmy_table](https://retoschmucki.github.io/rbms/reference/ts_dwmy_table.md)
 
 - StartMonth:
 
@@ -89,8 +90,9 @@ ANCHORs before and after the monitoring season.
 
 ## See also
 
-[ts_date_seq](ts_date_seq.md), [ts_dwmy_table](ts_dwmy_table.md),
-[set_anchor](set_anchor.md)
+[ts_date_seq](https://retoschmucki.github.io/rbms/reference/ts_date_seq.md),
+[ts_dwmy_table](https://retoschmucki.github.io/rbms/reference/ts_dwmy_table.md),
+[set_anchor](https://retoschmucki.github.io/rbms/reference/set_anchor.md)
 
 ## Author
 

@@ -25,7 +25,8 @@ A list with site id and bootstrap indices for n bootstrap sample.
 
 ## See also
 
-[impute_count](impute_count.md), [collated_index](collated_index.md)
+[impute_count](https://retoschmucki.github.io/rbms/reference/impute_count.md),
+[collated_index](https://retoschmucki.github.io/rbms/reference/collated_index.md)
 
 ## Author
 

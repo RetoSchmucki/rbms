@@ -41,7 +41,7 @@ counts for a specific species are implemented for each site.
 
 ## See also
 
-[ts_monit_site](ts_monit_site.md)
+[ts_monit_site](https://retoschmucki.github.io/rbms/reference/ts_monit_site.md)
 
 ## Author
 

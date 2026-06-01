@@ -37,7 +37,7 @@ the ISO week number and the day in the week.
 
 ## See also
 
-[ts_date_seq](ts_date_seq.md),
+[ts_date_seq](https://retoschmucki.github.io/rbms/reference/ts_date_seq.md),
 [IDateTime](https://rdrr.io/pkg/data.table/man/IDateTime.html)
 
 ## Author

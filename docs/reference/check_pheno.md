@@ -1,9 +1,9 @@
-# check_pheno Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in [impute_count](impute_count.md).
+# check_pheno Check for the flight curve of a specific year. If the specific year is missing, use the nearest year available within a 5-year period to impute missing count. Function used in [impute_count](https://retoschmucki.github.io/rbms/reference/impute_count.md).
 
 check_pheno Check for the flight curve of a specific year. If the
 specific year is missing, use the nearest year available within a 5-year
 period to impute missing count. Function used in
-[impute_count](impute_count.md).
+[impute_count](https://retoschmucki.github.io/rbms/reference/impute_count.md).
 
 ## Usage
 
@@ -29,12 +29,13 @@ check_pheno(
 
   data.table Object with the all flight curves and relative abundance
   (NM) for the years available for the search as returned by
-  [flight_curve](flight_curve.md).
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md).
 
 - YearCheck:
 
   integer or vector Year to check for nearest flight curve, set
-  internally in [impute_count](impute_count.md).
+  internally in
+  [impute_count](https://retoschmucki.github.io/rbms/reference/impute_count.md).
 
 - YearLimit:
 
@@ -58,7 +59,8 @@ phenology is available.
 
 ## See also
 
-[impute_count](impute_count.md), [flight_curve](flight_curve.md)
+[impute_count](https://retoschmucki.github.io/rbms/reference/impute_count.md),
+[flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
 
 ## Author
 

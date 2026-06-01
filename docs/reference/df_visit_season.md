@@ -1,7 +1,8 @@
-# df_visit_season Link each recorded visit to a corresponding monitoring season, this function is used in [ts_monit_site](ts_monit_site.md)
+# df_visit_season Link each recorded visit to a corresponding monitoring season, this function is used in [ts_monit_site](https://retoschmucki.github.io/rbms/reference/ts_monit_site.md)
 
 df_visit_season Link each recorded visit to a corresponding monitoring
-season, this function is used in [ts_monit_site](ts_monit_site.md)
+season, this function is used in
+[ts_monit_site](https://retoschmucki.github.io/rbms/reference/ts_monit_site.md)
 
 ## Usage
 
@@ -13,8 +14,9 @@ df_visit_season(ts_season, m_visit, DateFormat = "%Y-%m-%d")
 
 - ts_season:
 
-  data.table returned by [ts_monit_season](ts_monit_season.md) with the
-  detail time-series of the monitoring season.
+  data.table returned by
+  [ts_monit_season](https://retoschmucki.github.io/rbms/reference/ts_monit_season.md)
+  with the detail time-series of the monitoring season.
 
 - m_visit:
 
@@ -38,7 +40,7 @@ years (e.g. November to June).
 
 ## See also
 
-[ts_monit_season](ts_monit_season.md)
+[ts_monit_season](https://retoschmucki.github.io/rbms/reference/ts_monit_season.md)
 
 ## Author
 

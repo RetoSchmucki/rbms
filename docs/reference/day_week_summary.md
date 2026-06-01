@@ -39,7 +39,7 @@ over all sites, but summarized with the chosen function.
 
 ## See also
 
-[flight_curve](flight_curve.md)
+[flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
 
 ## Author
 

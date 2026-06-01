@@ -36,7 +36,7 @@ flight_curve_multi(
 - ts_season_count:
 
   data.table Time-series of counts and season information returned by
-  [ts_monit_count_site](ts_monit_count_site.md)
+  [ts_monit_count_site](https://retoschmucki.github.io/rbms/reference/ts_monit_count_site.md)
 
 - NbrSample:
 
@@ -133,7 +133,8 @@ allowing year-specific patterns
 
 ## See also
 
-[fit_bam_multi](fit_bam_multi.md), [flight_curve](flight_curve.md),
+[fit_bam_multi](https://retoschmucki.github.io/rbms/reference/fit_bam_multi.md),
+[flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
 [bam](https://rdrr.io/pkg/mgcv/man/bam.html)
 
 ## Author

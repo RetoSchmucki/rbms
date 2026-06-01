@@ -85,7 +85,8 @@ Since version v.1.1.0, rbms is likely to perform better with species
 having sparse data, potentially resulting in more flight curves and
 indices being computed. This version implements a basic plot method for
 “pheno_curve”, using the object produced by the
-[`flight_curve()`](reference/flight_curve.md) function as an argument.
+[`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+function as an argument.
 
 ``` r
 

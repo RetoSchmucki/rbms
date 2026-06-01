@@ -31,7 +31,8 @@ vector of collated indices per year.
 
 ## See also
 
-[impute_count](impute_count.md), [flight_curve](flight_curve.md)
+[impute_count](https://retoschmucki.github.io/rbms/reference/impute_count.md),
+[flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
 
 ## Author
 

@@ -36,7 +36,7 @@ get_nm(
 - ts_season_count:
 
   data.table Time-series of count and season information returned by
-  [ts_monit_count_site](ts_monit_count_site.md)
+  [ts_monit_count_site](https://retoschmucki.github.io/rbms/reference/ts_monit_count_site.md)
 
 - MinVisit:
 
@@ -55,17 +55,20 @@ get_nm(
 
 - NbrSample:
 
-  integer Value inherited from [flight_curve](flight_curve.md), when set
-  to 'NULL' (default), all site are considered in the GAM model
+  integer Value inherited from
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
+  when set to 'NULL' (default), all site are considered in the GAM model
 
 - GamFamily:
 
-  string Value inherited from [flight_curve](flight_curve.md),
+  string Value inherited from
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
   default='poisson', but can be 'nb' or 'quasipoisson'.
 
 - MaxTrial:
 
-  integer Value inherited from [flight_curve](flight_curve.md),
+  integer Value inherited from
+  [flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
   default=3.
 
 - SpeedGam:
@@ -123,7 +126,7 @@ GAM model. This is provided for all year provided in 'y'.
 
 ## See also
 
-[flight_curve](flight_curve.md),
+[flight_curve](https://retoschmucki.github.io/rbms/reference/flight_curve.md),
 [gam](https://rdrr.io/pkg/mgcv/man/gam.html),
 [bam](https://rdrr.io/pkg/mgcv/man/bam.html)
 

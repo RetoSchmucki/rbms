@@ -1,5 +1,15 @@
+url: https://retoschmucki.github.io/rbms/
+
 template:
   bootstrap: 5
-  params:
-    bootswatch: flatly
-    ganalytics: UA-154857767-2
+  bootswatch: flatly
+  includes:
+    in_header: |
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-RGMB4MGM5T"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-RGMB4MGM5T');
+      </script>

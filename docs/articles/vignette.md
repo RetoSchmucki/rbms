@@ -30,26 +30,26 @@ First, install and load required packages.
 install.packages("remotes") # To install R packages from github
 ```
 
-    ## Installing package into 'C:/Users/retoschm/AppData/Local/Temp/Rtmp0wCWN1/temp_libpath1348649f41ee'
+    ## Installing package into 'C:/Users/retoschm/AppData/Local/Temp/RtmpArXMwa/temp_libpath4e6c197b58fb'
     ## (as 'lib' is unspecified)
 
     ## package 'remotes' successfully unpacked and MD5 sums checked
     ## 
     ## The downloaded binary packages are in
-    ##  C:\Users\retoschm\AppData\Local\Temp\RtmpIHdilw\downloaded_packages
+    ##  C:\Users\retoschm\AppData\Local\Temp\RtmpkbIvGq\downloaded_packages
 
 ``` r
 
 install.packages("ggplot2") # to generate plots in this tutorial
 ```
 
-    ## Installing package into 'C:/Users/retoschm/AppData/Local/Temp/Rtmp0wCWN1/temp_libpath1348649f41ee'
+    ## Installing package into 'C:/Users/retoschm/AppData/Local/Temp/RtmpArXMwa/temp_libpath4e6c197b58fb'
     ## (as 'lib' is unspecified)
 
     ## package 'ggplot2' successfully unpacked and MD5 sums checked
     ## 
     ## The downloaded binary packages are in
-    ##  C:\Users\retoschm\AppData\Local\Temp\RtmpIHdilw\downloaded_packages
+    ##  C:\Users\retoschm\AppData\Local\Temp\RtmpkbIvGq\downloaded_packages
 
 ``` r
 
@@ -60,7 +60,7 @@ install.packages("ggplot2") # to generate plots in this tutorial
 library(rbms)
 ```
 
-    ##  Welcome to rbms, version 1.1.3 
+    ##  Welcome to rbms, version 1.2.1 
     ##  This package has been tested, but is still in active development and feedbacks are welcome
     ##  https://github.com/RetoSchmucki/rbms/issues
 
@@ -185,9 +185,10 @@ ts_season <- rbms::ts_monit_season(ts_date, StartMonth = 4, EndMonth = 9, StartD
 **2.3.** Add site visits to the time-series
 
 Now that the monitoring season has been defined, we use the
-[`ts_monit_site()`](../reference/ts_monit_site.md) function to integrate
-the time-series with the site visits. We use the visit data and link it
-with the time series contained in ts_season object.
+[`ts_monit_site()`](https://retoschmucki.github.io/rbms/reference/ts_monit_site.md)
+function to integrate the time-series with the site visits. We use the
+visit data and link it with the time series contained in ts_season
+object.
 
 ``` r
 
@@ -273,16 +274,17 @@ specified.*
  ts_flight_curve <- rbms::flight_curve(ts_season_count, NbrSample = 300, MinVisit = 5, MinOccur = 3, MinNbrSite = 5, MaxTrial = 4, GamFamily = 'nb', SpeedGam = FALSE, CompltSeason = TRUE, SelectYear = NULL, TimeUnit = 'w')
 ```
 
-    ## Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2026-06-01 11:42:18.181635 -> trial 1
+    ## Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2026-06-01 12:15:39.289845 -> trial 1
 
-    ## Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2026-06-01 11:42:20.283412 -> trial 1
+    ## Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2026-06-01 12:15:40.679939 -> trial 1
 
-    ## Fitting the flight curve spline for species 2 and year 2002 with 87 sites, using gam() : 2026-06-01 11:42:21.080658 -> trial 1
+    ## Fitting the flight curve spline for species 2 and year 2002 with 87 sites, using gam() : 2026-06-01 12:15:41.346121 -> trial 1
 
-    ## Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2026-06-01 11:42:22.741371 -> trial 1
+    ## Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2026-06-01 12:15:42.564324 -> trial 1
 
 We are given a list of 3 elements as an output of the
-[`flight_curve()`](../reference/flight_curve.md) function:
+[`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+function:
 
 - pheno: The standardised phenology curve derived by fitting a GAM
   model, with a cubic spline to the count data;
@@ -323,15 +325,17 @@ values for weeks or days where a site has not been monitored. Together,
 observed and imputed counts are used to compute abundance indices across
 sites. Site indices are then used to calculate annual collated indices.
 
-The [`impute_count()`](../reference/impute_count.md) function uses the
-time season data prepared and saved under ts_season_count, and the
-flight curves in the pheno output of the
-[`flight_curve()`](../reference/flight_curve.md) function. The
-[`impute_count()`](../reference/impute_count.md) function looks for the
-phenology available (using the nearest year) to estimate and input
-missing values. The extent of the search for nearest phenology can be
-limited by setting the YearLimit argument. By default, this is not
-restricted and will look over all years available.
+The
+[`impute_count()`](https://retoschmucki.github.io/rbms/reference/impute_count.md)
+function uses the time season data prepared and saved under
+ts_season_count, and the flight curves in the pheno output of the
+[`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+function. The
+[`impute_count()`](https://retoschmucki.github.io/rbms/reference/impute_count.md)
+function looks for the phenology available (using the nearest year) to
+estimate and input missing values. The extent of the search for nearest
+phenology can be limited by setting the YearLimit argument. By default,
+this is not restricted and will look over all years available.
 
 ``` r
 
@@ -340,20 +344,22 @@ restricted and will look over all years available.
 impt_counts <- rbms::impute_count(ts_season_count=ts_season_count, ts_flight_curve=ts_flight_curve, YearLimit= NULL, TimeUnit='w')
 ```
 
-The [`impute_count()`](../reference/impute_count.md) function produces a
-data.table that includes the following columns: COUNT: The original
-count values. IMPUTED_COUNT: An estimate of the count in the event that
-there is no recording of count (I.E., the original count is NA). The
-imputed count is derived from the flight curve. If the original count is
-present, the imputed count is set as equal to the original count.
-TOTAL_COUNT: The sum of the Imputed count within the site and year.
-SINDEX: The sum of the imputed counts over the sampling season. If the
-flight curve of a specific year is missing, the
-[`impute_count()`](../reference/impute_count.md) function uses the
-nearest phenology found. If none are available within the limit of years
-set by the YearLimit argument, the function will return no SINDEX for
-that specific year. TOTAL_NM: The proportion of the flight curve covered
-by the visits. This is the total count divided by the site index.
+The
+[`impute_count()`](https://retoschmucki.github.io/rbms/reference/impute_count.md)
+function produces a data.table that includes the following columns:
+COUNT: The original count values. IMPUTED_COUNT: An estimate of the
+count in the event that there is no recording of count (I.E., the
+original count is NA). The imputed count is derived from the flight
+curve. If the original count is present, the imputed count is set as
+equal to the original count. TOTAL_COUNT: The sum of the Imputed count
+within the site and year. SINDEX: The sum of the imputed counts over the
+sampling season. If the flight curve of a specific year is missing, the
+[`impute_count()`](https://retoschmucki.github.io/rbms/reference/impute_count.md)
+function uses the nearest phenology found. If none are available within
+the limit of years set by the YearLimit argument, the function will
+return no SINDEX for that specific year. TOTAL_NM: The proportion of the
+flight curve covered by the visits. This is the total count divided by
+the site index.
 
 ``` r
 
@@ -384,14 +390,15 @@ sindex <- rbms::site_index(butterfly_count = impt_counts, MinFC = 0.10)
 ```
 
 From the site indices, estimates of the annual collated indices are made
-using the [`collated_index()`](../reference/collated_index.md) function.
-Collated indices represents the mean total butterfly count expected on a
-BMS transect in a given year. The function fits a Generalised Linear
-Model (GLM) with site and years included as factorial independent
-variables. The proportion of the flight curve is included as a GLM
-weight. When the argument rm_zero is set to TRUE, all sites where the
-species are not observed are filtered, speeding up the fit of the GLM
-without altering the output.
+using the
+[`collated_index()`](https://retoschmucki.github.io/rbms/reference/collated_index.md)
+function. Collated indices represents the mean total butterfly count
+expected on a BMS transect in a given year. The function fits a
+Generalised Linear Model (GLM) with site and years included as factorial
+independent variables. The proportion of the flight curve is included as
+a GLM weight. When the argument rm_zero is set to TRUE, all sites where
+the species are not observed are filtered, speeding up the fit of the
+GLM without altering the output.
 
 ``` r
 
@@ -492,15 +499,16 @@ Collated index.
 
 ##### **6.** Bootstrap confidence interval
 
-the [`boot_sample()`](../reference/boot_sample.md) function can be used
-to compute a confidence interval around the collated indices. A number
-of sites are sampled (randomely, with resampling) a number of times,
-specified by the argument, boot_n. This produces a distribution of the
-annual collated indices, from which we can can derive the confidence
-intervals around the collated indices. In this example, we set
-boot_n. to 200 samples, but for a reliable confidence interval, k should
-be at least 1000. For reproducibility, we use set.seed() to generate a
-repeatable random sample
+the
+[`boot_sample()`](https://retoschmucki.github.io/rbms/reference/boot_sample.md)
+function can be used to compute a confidence interval around the
+collated indices. A number of sites are sampled (randomely, with
+resampling) a number of times, specified by the argument, boot_n. This
+produces a distribution of the annual collated indices, from which we
+can can derive the confidence intervals around the collated indices. In
+this example, we set boot_n. to 200 samples, but for a reliable
+confidence interval, k should be at least 1000. For reproducibility, we
+use set.seed() to generate a repeatable random sample
 
 *NOTE: You should not take large numbers of bootstraps from a dataset
 with a small number of sites, as resampling sites will not introduce new
@@ -512,10 +520,11 @@ set.seed(218795)
 bootsample <- rbms::boot_sample(sindex, boot_n = 200)
 ```
 
-Using the [`collated_index()`](../reference/collated_index.md) function
-in a loop, with bootstrap samples informing the argument `boot_ind`, we
-can now compute the boot_n number of collated indices over the entire
-time-series.
+Using the
+[`collated_index()`](https://retoschmucki.github.io/rbms/reference/collated_index.md)
+function in a loop, with bootstrap samples informing the argument
+`boot_ind`, we can now compute the boot_n number of collated indices
+over the entire time-series.
 
 ``` r
 

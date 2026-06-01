@@ -1,4 +1,5 @@
 template:
+  bootstrap: 5
   params:
     bootswatch: flatly
     ganalytics: UA-154857767-2

@@ -6,7 +6,7 @@
 
 <!-- badges: end -->
 
-`<img style="float: right;" src="rbmshexOR200.png" hspace="20">`
+<img style="float: right;" src="rbmshexOR200.png" hspace="20">
 
 With `rbms`, we aim to facilitate the implementation of statistical and mathematical methods developed for computing relative abundance indices from yearly time series of butterfly counts. These data are characterised by temporal patterns (phenology) that must be accounted for when deriving abundance from a time series of counts.  As a toolbox, we plan to implement more methods to compute and visualise metrics as they develop. The rbms package will provide the option of being coupled and working in line with other tools available and developed by the community (e.g., [rtrim](https://cran.r-project.org/web/packages/rtrim/), [BRCindicators](https://github.com/BiologicalRecordsCentre/BRCindicators)). With the development of the 'rbms' R package, we also provide a tutorial to facilitate its usage and understanding.
 

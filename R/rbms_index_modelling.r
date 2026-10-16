@@ -551,6 +551,8 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 
 #' collated_index
 #' compute a collated index from the site indices, using a Generalized Linear Model.
+#' @details Site-years with NA in \code{sindex_value} (e.g. years where the flight curve failed) are treated as missing
+#' and removed with a warning, as done by \link{site_index}; a site with NA in all years is therefore not part of the sample.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string Species name to be found in the data.
 #' @param sindex_value string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.
@@ -571,6 +573,15 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 
   data <- setDT(data)
   data = data[SPECIES == s_sp, ]
+
+  ## site-years without index (e.g. failed flight curve) are missing, not zero: removed as in site_index()
+  n_na <- data[is.na(get(sindex_value)), .N]
+  if(n_na > 0){
+    warning(paste0(s_sp, ": ", n_na, " site-years with NA in ", sindex_value, " removed before computing the collated index"), call. = FALSE)
+    data <- data[!is.na(get(sindex_value)), ]
+  }
+  if(nrow(data) == 0) stop(paste0("no ", sindex_value, " available for species ", s_sp), call. = FALSE)
+
   y = as.numeric(as.character(unique(data$M_YEAR)))
 
   if(is.null(boot_ind)){
@@ -701,9 +712,24 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 
 #' boot_sample
 #' Generate n bootstrap sample of the monitoring sites to be used for each iteration.
-#' @param data data.table or data.frame Data with all site id.
+#' @details When \code{s_sp} is given, the samples are drawn for that species only, stratified by the occurrence of zeros
+#' at the sites (never zero, some zeros, always zero), and a sample is drawn again, up to \code{max_trial} trials,
+#' when it has fewer than \code{min_year} years or when its years are not linked through the sites with observations
+#' (more groups of years than the original data, see \code{n_components}). A sample still failing after
+#' \code{max_trial} trials is returned as a row of NA.
+#' For reproducible samples, call \code{set.seed()} before \code{boot_sample()}; when looping over species, setting
+#' the seed before each species makes its samples independent of the order or the subset of species processed.
+#' @param data data.table or data.frame Data with all site id, with SPECIES, M_YEAR and \code{sindex_value} when \code{s_sp} is given.
 #' @param boot_n integer The number of bootstrap samples to be generated.
-#' @return A list with site id and bootstrap indices for n bootstrap sample.
+#' @param s_sp string Species for which the bootstrap samples are drawn, default NULL draws among all sites without checks.
+#' @param sindex_value string Name of the site index variable used to define strata and observations, default is "SINDEX".
+#' @param strata logical Stratify the sampling by the occurrence of zeros at the sites, default TRUE.
+#' @param check_link logical Draw again the samples with years not linked through the sites with observations, default TRUE.
+#' @param min_year integer Minimum number of years in a bootstrap sample, default 3.
+#' @param max_trial integer Maximum number of trials to draw a valid bootstrap sample, default 5.
+#' @return A list with site id and bootstrap indices for n bootstrap sample. When \code{s_sp} is given, the list also
+#' contains the species (s_sp), the number of groups of years of the original data (n_comp_0), the site indices per
+#' stratum (strata_ind), the number of trials per sample (n_trial) and the number of failed samples (n_failed).
 #' @keywords bootstrap collated index
 #' @seealso \link{impute_count}, \link{collated_index}
 #' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
@@ -711,17 +737,60 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #' @export boot_sample
 #'
 
-boot_sample <- function(data, boot_n = 1000){
+boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX",
+    strata = TRUE, check_link = TRUE, min_year = 3, max_trial = 5){
 
-  site_id <- unique(data[, SITE_ID])
-  boot_n <- boot_n
-  boot_ind <- matrix(NA, nrow = boot_n, ncol = length(site_id))
+  data <- data.table::as.data.table(data)
+
+  if(is.null(s_sp)){
+    site_id <- unique(data[, SITE_ID])
+    boot_ind <- matrix(NA, nrow = boot_n, ncol = length(site_id))
+
+      for(i in seq_len(boot_n)){
+        boot_ind[i, ] <- sample(seq_len(length(site_id)), replace = TRUE)
+      }
+
+    boot_ind <- list(site_id = site_id, boot_ind = boot_ind)
+    return(boot_ind)
+  }
+
+  dt <- data[SPECIES == s_sp, .(SITE_ID = as.character(SITE_ID), M_YEAR = as.numeric(as.character(M_YEAR)), y = get(sindex_value))]
+  dt <- dt[!is.na(y), ]
+  if(nrow(dt) == 0) stop(paste0("no ", sindex_value, " available for species ", s_sp), call. = FALSE)
+
+  site_id <- unique(dt$SITE_ID)
+  obs <- dt[y > 0, ]
+  n_comp_0 <- n_components(obs$SITE_ID, obs$M_YEAR)
+  if(n_comp_0 > 1) warning(paste0(s_sp, ": the years of the original data form ", n_comp_0,
+                                  " groups not linked through sites with observations, the levels of the groups are not comparable."), call. = FALSE)
+
+  ## strata: 1 = never zero, 2 = some zeros, 3 = always zero (keeps the share of zero sites in each sample)
+  st <- dt[, .(strata = if(!isTRUE(strata) || all(y > 0)) 1L else if(any(y > 0)) 2L else 3L), by = SITE_ID]
+  strata_ind <- split(match(st$SITE_ID, site_id), st$strata)
+
+  boot_ind <- matrix(NA_integer_, nrow = boot_n, ncol = length(site_id))
+  n_trial <- integer(boot_n)
 
     for(i in seq_len(boot_n)){
-      boot_ind[i, ] <- sample(seq_len(length(site_id)), replace = TRUE)
+      for(tr in seq_len(max_trial)){
+        ind <- draw_strata(strata_ind)
+        s_i <- site_id[unique(ind)] # duplicated sites do not change the years or their linkage
+        ok <- dt[SITE_ID %in% s_i, uniqueN(M_YEAR)] >= min_year
+        if(ok && isTRUE(check_link)){
+          o <- obs[SITE_ID %in% s_i, ]
+          ok <- n_components(o$SITE_ID, o$M_YEAR) <= n_comp_0
+        }
+        if(ok) break
+      }
+      n_trial[i] <- tr
+      if(ok) boot_ind[i, ] <- ind
     }
 
-  boot_ind <- list(site_id = site_id, boot_ind = boot_ind)
+  n_failed <- sum(is.na(boot_ind[, 1]))
+  if(n_failed > 0) warning(paste0(s_sp, ": ", n_failed, " of ", boot_n, " bootstrap samples failed after ", max_trial, " trials (NA rows)"), call. = FALSE)
+
+  boot_ind <- list(site_id = site_id, boot_ind = boot_ind, s_sp = s_sp, n_comp_0 = n_comp_0,
+                   strata_ind = strata_ind, n_trial = n_trial, n_failed = n_failed)
   return(boot_ind)
 }
 

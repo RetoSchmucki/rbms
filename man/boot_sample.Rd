@@ -5,19 +5,51 @@
 \title{boot_sample
 Generate n bootstrap sample of the monitoring sites to be used for each iteration.}
 \usage{
-boot_sample(data, boot_n = 1000)
+boot_sample(
+  data,
+  boot_n = 1000,
+  s_sp = NULL,
+  sindex_value = "SINDEX",
+  strata = TRUE,
+  check_link = TRUE,
+  min_year = 3,
+  max_trial = 5
+)
 }
 \arguments{
-\item{data}{data.table or data.frame Data with all site id.}
+\item{data}{data.table or data.frame Data with all site id, with SPECIES, M_YEAR and \code{sindex_value} when \code{s_sp} is given.}
 
 \item{boot_n}{integer The number of bootstrap samples to be generated.}
+
+\item{s_sp}{string Species for which the bootstrap samples are drawn, default NULL draws among all sites without checks.}
+
+\item{sindex_value}{string Name of the site index variable used to define strata and observations, default is "SINDEX".}
+
+\item{strata}{logical Stratify the sampling by the occurrence of zeros at the sites, default TRUE.}
+
+\item{check_link}{logical Draw again the samples with years not linked through the sites with observations, default TRUE.}
+
+\item{min_year}{integer Minimum number of years in a bootstrap sample, default 3.}
+
+\item{max_trial}{integer Maximum number of trials to draw a valid bootstrap sample, default 5.}
 }
 \value{
-A list with site id and bootstrap indices for n bootstrap sample.
+A list with site id and bootstrap indices for n bootstrap sample. When \code{s_sp} is given, the list also
+contains the species (s_sp), the number of groups of years of the original data (n_comp_0), the site indices per
+stratum (strata_ind), the number of trials per sample (n_trial) and the number of failed samples (n_failed).
 }
 \description{
 boot_sample
 Generate n bootstrap sample of the monitoring sites to be used for each iteration.
+}
+\details{
+When \code{s_sp} is given, the samples are drawn for that species only, stratified by the occurrence of zeros
+at the sites (never zero, some zeros, always zero), and a sample is drawn again, up to \code{max_trial} trials,
+when it has fewer than \code{min_year} years or when its years are not linked through the sites with observations
+(more groups of years than the original data, see \code{n_components}). A sample still failing after
+\code{max_trial} trials is returned as a row of NA.
+For reproducible samples, call \code{set.seed()} before \code{boot_sample()}; when looping over species, setting
+the seed before each species makes its samples independent of the order or the subset of species processed.
 }
 \seealso{
 \link{impute_count}, \link{collated_index}

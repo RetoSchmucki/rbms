@@ -37,6 +37,10 @@ a list of two objects, a vector of site, a glm model object, and a vector of col
 collated_index
 compute a collated index from the site indices, using a Generalized Linear Model.
 }
+\details{
+Site-years with NA in \code{sindex_value} (e.g. years where the flight curve failed) are treated as missing
+and removed with a warning, as done by \link{site_index}; a site with NA in all years is therefore not part of the sample.
+}
 \seealso{
 \link{impute_count}, \link{flight_curve}
 }

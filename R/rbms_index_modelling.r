@@ -402,9 +402,25 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @param YearLimit integer Define the span of years (+/- number of year) to look for a flight curve, if NULL no restriction is set.
 #' @param SelectYear integer Select a specific year to compute the flight curve, default=NULL.
 #' @param CompltSeason logical Restrict computation of flight curve for years where the complete season was sampled, default=TRUE.
-#' @param verbose a logical indicating if some “progress report” should be given. 
+#' @param SindexMethod character Method to compute the site index, 'ratio' (default) or 'glm', see details.
+#' @param GlmFit character Fitting of the GLM when SindexMethod = 'glm', 'newton' (default) or 'ipf', see details.
+#' @param verbose a logical indicating if some “progress report” should be given.
 #' @return A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
-#' @details Site indices can be extracted from the data.table returned by this function. The site index is currently computed by adjusting the count by the proportion of the flight curve covered by the visits.
+#' @details Site indices can be extracted from the data.table returned by this function. With SindexMethod = 'ratio', the site index
+#' is computed by adjusting the count by the proportion of the flight curve covered by the visits (TOTAL_COUNT / TOTAL_NM), each site-year
+#' being estimated on its own. With SindexMethod = 'glm', the counts of the time-steps not visited are predicted from a Poisson GLM with site
+#' and year effects and the flight curve as offset, COUNT ~ factor(SITE_ID) + factor(M_YEAR) + offset(log(NM)), and the site index is the sum
+#' of the observed and predicted counts. The GLM borrows the level of the site and the year from the other years and sites, which avoids extreme
+#' site indices when a small part of the flight curve is covered, but assumes no site x year interaction for the time-steps not visited.
+#' Sites where the species was never observed keep the ratio (0).
+#' The GLM is fitted without model matrix, on the counts summed per site-year. With GlmFit = 'newton', the site effects are
+#' concentrated out of the likelihood and Newton steps are made on the year effects only (few iterations); with
+#' GlmFit = 'ipf', iterative proportional fitting is used (more iterations when years are weakly linked). Both give the
+#' estimates of glm(), 'newton' uses 'ipf' if it fails. With 'newton', the year effects of the GLM are returned in the
+#' attribute "glm_year_effect", \code{attr(x, "glm_year_effect")}: log effect relative to the first year of each group of
+#' linked years (LOG_EFFECT), with a quasi-Poisson standard error conditional on the site totals (SE). This is a model-based
+#' annual trend from the counts, a quick check of the collated index, but its SE ignores the variation among sites captured
+#' by the bootstrap.
 #' @keywords site index, flight curve
 #' @seealso \link{flight_curve}
 #' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
@@ -413,9 +429,12 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #'
 
 impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', MultiVisit = 'mean', weekday = 3,
-                         sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE, verbose = TRUE){
+                         sp = NULL, YearLimit= NULL, SelectYear = NULL, CompltSeason = TRUE, SindexMethod = c("ratio", "glm"),
+                         GlmFit = c("newton", "ipf"), verbose = TRUE){
 
         check_package('data.table')
+        SindexMethod <- match.arg(SindexMethod)
+        GlmFit <- match.arg(GlmFit)
 
         if(!is.null(SelectYear)){
           ts_season_count <- ts_season_count[M_YEAR == SelectYear, ]
@@ -469,6 +488,28 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
         sp_count_flight <- merge(sp_count_flight, merge(total_count, total_nm, all.x=TRUE)[, SINDEX := TOTAL_COUNT / TOTAL_NM], all.x = TRUE)
         sp_count_flight[, IMPUTED_COUNT:= COUNT][M_SEASON != 0 & is.na(COUNT), IMPUTED_COUNT := as.integer(round(SINDEX*NM))]
 
+        glm_year_effect <- NULL
+        if(SindexMethod == "glm"){
+          ## site-year level from the Poisson GLM COUNT ~ site + year + offset(log(NM)), fitted on the counts of the
+          ## sites where the species was observed; other site-years keep the ratio (e.g. 0 for sites never observed)
+          obs <- sp_count_flight[M_SEASON != 0 & !is.na(COUNT) & !is.na(NM) & NM > 0, .(M_YEAR, SITE_ID, COUNT, NM)]
+          obs <- obs[SITE_ID %in% obs[, sum(COUNT), by = SITE_ID][V1 > 0, SITE_ID], ]
+
+          if(nrow(obs) > 0){
+            glm_level <- site_year_level(obs$SITE_ID, obs$M_YEAR, obs$COUNT, obs$NM, method = GlmFit)
+            glm_year_effect <- attr(glm_level, "year_effect")
+            obs[, GLM_LEVEL := as.numeric(glm_level)]
+            sp_count_flight <- merge(sp_count_flight, unique(obs[, .(M_YEAR, SITE_ID, GLM_LEVEL)]), by = c("M_YEAR", "SITE_ID"), all.x = TRUE)
+            sp_count_flight[!is.na(GLM_LEVEL) & M_SEASON != 0 & is.na(COUNT), IMPUTED_COUNT := as.integer(round(GLM_LEVEL*NM))]
+            ## SINDEX: observed counts plus counts predicted for the time-steps not visited
+            glm_sindex <- sp_count_flight[!is.na(GLM_LEVEL) & M_SEASON != 0,
+                                          .(SINDEX_GLM = sum(data.table::fifelse(is.na(COUNT), GLM_LEVEL*NM, as.numeric(COUNT)), na.rm = TRUE)),
+                                          by = .(M_YEAR, SITE_ID)]
+            sp_count_flight <- merge(sp_count_flight, glm_sindex, by = c("M_YEAR", "SITE_ID"), all.x = TRUE)
+            sp_count_flight[!is.na(SINDEX_GLM), SINDEX := SINDEX_GLM][, c("GLM_LEVEL", "SINDEX_GLM") := NULL]
+          }
+        }
+
         if(TimeUnit == 'd') {
           sp_count_flight[ , SINDEX := SINDEX / 7]
           week_count <- unique(sp_count_flight[M_SEASON != 0 & !is.na(COUNT), .(M_YEAR, SITE_ID, WEEK)])[ , WEEK_COUNT := 1]
@@ -478,6 +519,8 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
           sp_count_flight[ , WEEK_NM := mean(NM * WEEK_COUNT, na.rm = TRUE), by = .(M_YEAR, SITE_ID, WEEK)][ ,
                                              TOTAL_NM := sum(WEEK_NM, na.rm=TRUE), by = .(M_YEAR, SITE_ID)][ , WEEK_NM := NULL][, WEEK_COUNT := NULL]
         }
+
+        if(!is.null(glm_year_effect)) data.table::setattr(sp_count_flight, "glm_year_effect", glm_year_effect)
 
      return(sp_count_flight)
   }
@@ -509,44 +552,19 @@ site_index <- function(butterfly_count, MinFC = NULL){
 
 
 #' collated_index_old
-#' compute a collated index from the site indices, using a Generalized Linear Model.
-#' @param site_indices data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.
-#' @param GlmWeight vector of weight used in the GLM.
-#' @param GlmFamily family used for the GLM model.
-#' @return a list of three objects, a vector of site, a glm model object, and a vector of collated indices per year.
-#' @keywords annual index
-#' @seealso \link{impute_count}, \link{flight_curve}
+#' Deprecated, use \link{collated_index}. The function is removed and only returns an error; it will be deleted in a
+#' future version.
+#' @param ... not used.
+#' @keywords internal
+#' @seealso \link{collated_index}
 #' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
-#' @import data.table
 #' @export collated_index_old
 #'
 
-collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poisson()){
-      
-      site_indices <- setDT(site_indices)
+collated_index_old <- function(...){
 
-      if(is.null(GlmWeight)){
-        col_mod <- try(speedglm::speedglm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily), silent = TRUE)
-      } else {
-        col_mod <- try(speedglm::speedglm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily, weigth = GlmWeight), silent = TRUE)
-      }
-
-      if(inherits(col_mod,"try-error")){
-        if(is.null(GlmWeight)){
-          col_mod <- try(glm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily), silent = TRUE)
-        } else {
-          col_mod <- try(glm(round(SINDEX) ~ factor(M_YEAR) + factor(SITE_ID) - 1, data = site_indices, family = GlmFamily, weigth = GlmWeight), silent = TRUE)
-        }
-      }
-
-      if(inherits(col_mod,"try-error")) stop('Unable to fit GLM to estimate a collated index')
-
-      yr_coefs = coef(summary(col_index))
-      res <- yr_coefs[grepl("M_YEAR",row.names(yr_coefs)), c("Estimate","Std. Error")]
-
-      res <- list(site = site_indices$SITE_ID, glm_model = col_mod, collated_index = res)
-
-    return(res)
+  .Deprecated("collated_index", package = "rbms")
+  stop("collated_index_old() has been removed, use collated_index()", call. = FALSE)
 }
 
 #' collated_index

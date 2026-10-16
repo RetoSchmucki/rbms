@@ -3,29 +3,23 @@
 \name{collated_index_old}
 \alias{collated_index_old}
 \title{collated_index_old
-compute a collated index from the site indices, using a Generalized Linear Model.}
+Deprecated, use \link{collated_index}. The function is removed and only returns an error; it will be deleted in a
+future version.}
 \usage{
-collated_index_old(site_indices, GlmWeight = NULL, GlmFamily = poisson())
+collated_index_old(...)
 }
 \arguments{
-\item{site_indices}{data.table or data.frame with site indices per year and proportion of flight curve covered by the monitoring.}
-
-\item{GlmWeight}{vector of weight used in the GLM.}
-
-\item{GlmFamily}{family used for the GLM model.}
-}
-\value{
-a list of three objects, a vector of site, a glm model object, and a vector of collated indices per year.
+\item{...}{not used.}
 }
 \description{
 collated_index_old
-compute a collated index from the site indices, using a Generalized Linear Model.
+Deprecated, use \link{collated_index}. The function is removed and only returns an error; it will be deleted in a
+future version.
 }
 \seealso{
-\link{impute_count}, \link{flight_curve}
+\link{collated_index}
 }
 \author{
 Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
-\keyword{annual}
-\keyword{index}
+\keyword{internal}

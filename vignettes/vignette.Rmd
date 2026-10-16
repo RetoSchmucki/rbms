@@ -245,11 +245,16 @@ print(p)
 
 the `boot_sample()` function can be used to compute a confidence interval around the collated indices. A number of sites are sampled (randomely, with resampling) a number of times, specified by the argument, boot_n. This produces a distribution of the annual collated indices, from which  we can can derive the confidence intervals around the collated indices. In this example, we set boot_n. to 200 samples, but for a reliable confidence interval, k should be at least 1000. For reproducibility, we use set.seed() to generate a repeatable random sample
 
+When a species is specified with the argument s_sp, sites are sampled among the sites of that species, stratified by sites with no zero, some zeros and only zeros. A sample with less than min_year years, or with years not linked through sites where the species was observed, is drawn again up to max_trial times. Samples still failing are returned as NA and give a NA collated index. When looping over species, set the seed before each species.
+
+Why linked years matter? The GLM estimates the index of a year relative to the other years through the sites where the species was observed in both years, directly or through other sites and years. When the observations of a sample split the years in two or more groups without a common site, the level of one group can be shifted up and the effects of its sites shifted down by the same amount without changing the fit. The relative level of the groups is not identified, the site and year effects are free to run away and the collated index can take absurd values (e.g. 1e5 to 1e11). Since the original data can also have unlinked years, a sample is only redrawn when it has more groups of years than the original data.
+
 *NOTE: You should not take large numbers of bootstraps from a dataset with a small number of sites, as resampling sites will not introduce new variance.*
 
 ```{r, boot}
 set.seed(218795)
-bootsample <- rbms::boot_sample(sindex, boot_n = 200)
+bootsample <- rbms::boot_sample(sindex, boot_n = 200, s_sp = 2, strata = TRUE, check_link = TRUE, max_trial = 5)
+bootsample$n_failed
 ```
 
 Using the `collated_index()` function in a loop, with bootstrap samples informing the argument `boot_ind`, we can now compute the boot_n number of collated indices over the entire time-series.

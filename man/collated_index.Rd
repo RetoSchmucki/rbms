@@ -40,6 +40,8 @@ compute a collated index from the site indices, using a Generalized Linear Model
 \details{
 Site-years with NA in \code{sindex_value} (e.g. years where the flight curve failed) are treated as missing
 and removed with a warning, as done by \link{site_index}; a site with NA in all years is therefore not part of the sample.
+When \code{boot_ind} was generated for a species with \code{boot_sample(s_sp = )}, \code{s_sp} must be the same species.
+A bootstrap sample that failed in \code{boot_sample()} (NA row) returns NA for the collated index and the number of sites.
 }
 \seealso{
 \link{impute_count}, \link{flight_curve}

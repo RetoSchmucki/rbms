@@ -553,6 +553,8 @@ collated_index_old <- function(site_indices, GlmWeight = NULL, GlmFamily = poiss
 #' compute a collated index from the site indices, using a Generalized Linear Model.
 #' @details Site-years with NA in \code{sindex_value} (e.g. years where the flight curve failed) are treated as missing
 #' and removed with a warning, as done by \link{site_index}; a site with NA in all years is therefore not part of the sample.
+#' When \code{boot_ind} was generated for a species with \code{boot_sample(s_sp = )}, \code{s_sp} must be the same species.
+#' A bootstrap sample that failed in \code{boot_sample()} (NA row) returns NA for the collated index and the number of sites.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string Species name to be found in the data.
 #' @param sindex_value string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.
@@ -597,6 +599,19 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
     bootID <- 0
   }else{
     bootID <- bootID
+  }
+
+  ## bootstrap samples drawn per species with boot_sample(s_sp = ) must match the species modelled
+  if(!is.null(boot_ind$s_sp) && !identical(as.character(boot_ind$s_sp), as.character(s_sp))){
+    stop(paste0("boot_ind was generated for species ", boot_ind$s_sp, ", not for ", s_sp), call. = FALSE)
+  }
+
+  ## bootstrap sample that failed in boot_sample() after max_trial trials (NA row): no index computed
+  if(bootID > 0 && anyNA(boot_ind$boot_ind[bootID, ])){
+    res <- data.table(BOOTi = bootID, M_YEAR = y[order(y)], NSITE = NA_integer_, NSITE_B = NA_integer_,
+                      NSITE_OBS = NA_integer_, COL_INDEX = NA_real_)
+    setkey(res, M_YEAR)
+    return(list(col_index = res, site_id = NA_character_))
   }
 
   if(bootID == 0){

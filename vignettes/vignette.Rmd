@@ -1,7 +1,7 @@
 ---
 title: "Calculating phenology and collated indices with rbms"
-author: "Reto Schmucki (UKCEH) & Dylan Carbone"
-date: "23rd of July 2024"
+author: "Reto Schmucki (UKCEH)"
+date: "17th of October 2026"
 vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEngine{knitr::rmarkdown}

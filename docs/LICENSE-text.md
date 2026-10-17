@@ -1,4 +1,4 @@
 # License
 
-    YEAR: 2022
-    COPYRIGHT HOLDER: Reto Schmucki
+YEAR: 2022\
+COPYRIGHT HOLDER: Reto Schmucki\

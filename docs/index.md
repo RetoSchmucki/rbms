@@ -1,6 +1,6 @@
 # rbms
 
-`<img style="float: right;" src="rbmshexOR200.png" hspace="20">`
+![](rbmshexOR200.png)
 
 With `rbms`, we aim to facilitate the implementation of statistical and
 mathematical methods developed for computing relative abundance indices
@@ -23,15 +23,20 @@ the reproducibility of the work.
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A., Dennis E.B. (2024) rbms: Computing
+Schmucki R., Harrower C.A., Dennis E.B. (2026) rbms: Computing
 generalised abundance indices for butterfly monitoring count data. R
-package version 1.2.0. <https://github.com/RetoSchmucki/rbms>”
+package version 1.3.0. <doi:10.5281/zenodo.12806606>.
+<https://github.com/RetoSchmucki/rbms>
+
+The DOI refers to all versions of rbms and resolves to the latest one.
+In R, `citation("rbms")` gives the citation of the package and of the
+methods it implements, also as BibTeX.
 
 #### The rbms package implements methods from:
 
 - Dennis, E.B., Freeman, S.N., Brereton, T., Roy, D.B., 2013. Indexing
   butterfly abundance whilst accounting for missing counts and
-  variability in seasonal patterns. Methods Ecol Evol 4, 637–645.
+  variability in seasonal pattern. Methods Ecol Evol 4, 637–645.
   <https://doi.org/10.1111/2041-210X.12053>
 - Dennis, E.B., Morgan, B.J.T., Freeman, S.N., Brereton, T.M., Roy,
   D.B., 2016. A generalized abundance index for seasonal invertebrates.
@@ -50,7 +55,7 @@ Once the [R programming system](https://cran.r-project.org/) is
 successfully installed, you can install the `rbms package` from GitHub.
 For this you will need to install the package `devtools` or `remotes`,
 both available on CRAN. Once installed, use the function
-[`devtools::install_github()`](https://remotes.r-lib.org/reference/install_github.html)
+[`devtools::install_github()`](https://devtools.r-lib.org/reference/install-deprecated.html)
 to install the `rbms` package on your system.
 
 > Note that `rbms` is built with R \> 4.0, so you might need to update
@@ -61,17 +66,15 @@ to install the `rbms` package on your system.
 > skills, try the excellent tutorials available at
 > [ourcodingclub](https://ourcodingclub.github.io/) 👍
 
-``` r
-
-if(!requireNamespace("remotes")) install.packages("remotes")
-remotes::install_github("RetoSchmucki/rbms")
-```
+\
+`if``(``!`[`requireNamespace`](https://rdrr.io/r/base/ns-load.html)`(``"remotes"``)``)`` `[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"remotes"``)`\
+`remotes``::`[`install_github`](https://remotes.r-lib.org/reference/install_github.html)`(``"RetoSchmucki/rbms"``)`
 
 #### Get Started
 
 Consult the [tutorial vignettes /
-Articles](https://retoschmucki.github.io/rbms/articles/Get_Started_1.html)
-to learn about `rbms` data format and the workflow how to compute flight
+Articles](https://retoschmucki.github.io/rbms/articles/vignette.html) to
+learn about `rbms` data format and the workflow how to compute flight
 curves, abundance indices, and collated index with a bootstrap
 confidence interval
 
@@ -88,69 +91,67 @@ indices being computed. This version implements a basic plot method for
 [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
 function as an argument.
 
-``` r
-
- # usage or plot method
-library(rbms)
-data(m_visit)
-data(m_count)
-
-ts_date <- rbms::ts_dwmy_table(InitYear = 2000, LastYear = 2003, WeekDay1 = 'monday')
-
-ts_season <- rbms::ts_monit_season(ts_date,
-                        StartMonth = 4,
-                        EndMonth = 9, 
-                        StartDay = 1,
-                        EndDay = NULL,
-                        CompltSeason = TRUE,
-                        Anchor = TRUE,
-                        AnchorLength = 2,
-                        AnchorLag = 2,
-                        TimeUnit = 'w')
-
-ts_season_visit <- rbms::ts_monit_site(ts_season, m_visit)
-
-ts_season_count <- rbms::ts_monit_count_site(ts_season_visit, m_count, sp = 2)
-
-ts_flight_curve <- rbms::flight_curve(ts_season_count, 
-                        NbrSample = 300,
-                        MinVisit = 5,
-                        MinOccur = 3,
-                        MinNbrSite = 5,
-                        MaxTrial = 4,
-                        GamFamily = 'nb',
-                        SpeedGam = FALSE,
-                        CompltSeason = TRUE,
-                        SelectYear = NULL,
-                        TimeUnit = 'w')
-
-## Flight curves are in the "pheno" data.table located within the ts_flight_curve result is a list
-str(ts_flight_curve$pheno)
-
-## Basic plot method to plot flight curve
-plot(ts_flight_curve)
-points(ts_flight_curve, col = 'magenta', pch = 19)
-
- # for a single or multiple years
-plot(ts_flight_curve, year = c(2001, 2002))
-points(ts_flight_curve, year = 2001, col = 'magenta', pch = 19)
-
-# for multiple year curves overlapping on a base year, use the argument BaseYear
-plot(ts_flight_curve, year = 2000, SiteID = 1, col = 'dodgerblue4')
-points(ts_flight_curve, year = 2002, SiteID = 1, BaseYear = 2000, type = 'l', col = 'cyan4')
-points(ts_flight_curve, year = 2001, SiteID = 1, BaseYear = 2000, type = 'l', col = 'orange')
-legend("topright", legend = c("2000", "2001", "2002"), 
-    col = c("dodgerblue4", "cyan4", "orange"), lty = 1,
-    box.lty=0)
-
-# multiple year curves on a time series with different portions per year, use xlim
-plot(ts_flight_curve, year = c(2000), xlim = as.Date(c("2000-01-01", "2002-12-30"), format = "%Y-%m-%d"), SiteID = 1, col = 'dodgerblue4') 
-points(ts_flight_curve, year = 2001, SiteID = 1, type = 'l', col = 'cyan4') 
-points(ts_flight_curve, year = 2002, SiteID = 1, type = 'l', col = 'orange') 
-legend("topright", legend = c("2000", "2001", "2002"), 
-    col = c("dodgerblue4", "cyan4", "orange"), lty = 1, 
-    box.lty=0)
-```
+\
+` ``# usage or plot method`\
+[`library`](https://rdrr.io/r/base/library.html)`(`[`rbms`](https://retoschmucki.github.io/rbms/)`)`\
+[`data`](https://rdrr.io/r/utils/data.html)`(``m_visit``)`\
+[`data`](https://rdrr.io/r/utils/data.html)`(``m_count``)`\
+\
+`ts_date`` ``<-`` ``rbms``::`[`ts_dwmy_table`](https://retoschmucki.github.io/rbms/reference/ts_dwmy_table.md)`(``InitYear ``=`` ``2000``, LastYear ``=`` ``2003``, WeekDay1 ``=`` ``'monday'``)`\
+\
+`ts_season`` ``<-`` ``rbms``::`[`ts_monit_season`](https://retoschmucki.github.io/rbms/reference/ts_monit_season.md)`(``ts_date``,`\
+`                        StartMonth ``=`` ``4``,`\
+`                        EndMonth ``=`` ``9``, `\
+`                        StartDay ``=`` ``1``,`\
+`                        EndDay ``=`` ``NULL``,`\
+`                        CompltSeason ``=`` ``TRUE``,`\
+`                        Anchor ``=`` ``TRUE``,`\
+`                        AnchorLength ``=`` ``2``,`\
+`                        AnchorLag ``=`` ``2``,`\
+`                        TimeUnit ``=`` ``'w'``)`\
+\
+`ts_season_visit`` ``<-`` ``rbms``::`[`ts_monit_site`](https://retoschmucki.github.io/rbms/reference/ts_monit_site.md)`(``ts_season``, ``m_visit``)`\
+\
+`ts_season_count`` ``<-`` ``rbms``::`[`ts_monit_count_site`](https://retoschmucki.github.io/rbms/reference/ts_monit_count_site.md)`(``ts_season_visit``, ``m_count``, sp ``=`` ``2``)`\
+\
+`ts_flight_curve`` ``<-`` ``rbms``::`[`flight_curve`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)`(``ts_season_count``, `\
+`                        NbrSample ``=`` ``300``,`\
+`                        MinVisit ``=`` ``5``,`\
+`                        MinOccur ``=`` ``3``,`\
+`                        MinNbrSite ``=`` ``5``,`\
+`                        MaxTrial ``=`` ``4``,`\
+`                        GamFamily ``=`` ``'nb'``,`\
+`                        SpeedGam ``=`` ``FALSE``,`\
+`                        CompltSeason ``=`` ``TRUE``,`\
+`                        SelectYear ``=`` ``NULL``,`\
+`                        TimeUnit ``=`` ``'w'``)`\
+\
+`## Flight curves are in the "pheno" data.table located within the ts_flight_curve result is a list`\
+[`str`](https://rdrr.io/r/utils/str.html)`(``ts_flight_curve``$``pheno``)`\
+\
+`## Basic plot method to plot flight curve`\
+[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(``ts_flight_curve``)`\
+[`points`](https://rdrr.io/r/graphics/points.html)`(``ts_flight_curve``, col ``=`` ``'magenta'``, pch ``=`` ``19``)`\
+\
+` ``# for a single or multiple years`\
+[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(``ts_flight_curve``, year ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``2001``, ``2002``)``)`\
+[`points`](https://rdrr.io/r/graphics/points.html)`(``ts_flight_curve``, year ``=`` ``2001``, col ``=`` ``'magenta'``, pch ``=`` ``19``)`\
+\
+`# for multiple year curves overlapping on a base year, use the argument BaseYear`\
+[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(``ts_flight_curve``, year ``=`` ``2000``, SiteID ``=`` ``1``, col ``=`` ``'dodgerblue4'``)`\
+[`points`](https://rdrr.io/r/graphics/points.html)`(``ts_flight_curve``, year ``=`` ``2002``, SiteID ``=`` ``1``, BaseYear ``=`` ``2000``, type ``=`` ``'l'``, col ``=`` ``'cyan4'``)`\
+[`points`](https://rdrr.io/r/graphics/points.html)`(``ts_flight_curve``, year ``=`` ``2001``, SiteID ``=`` ``1``, BaseYear ``=`` ``2000``, type ``=`` ``'l'``, col ``=`` ``'orange'``)`\
+[`legend`](https://rdrr.io/r/graphics/legend.html)`(``"topright"``, legend ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"2000"``, ``"2001"``, ``"2002"``)``, `\
+`    col ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"dodgerblue4"``, ``"cyan4"``, ``"orange"``)``, lty ``=`` ``1``,`\
+`    box.lty``=``0``)`\
+\
+`# multiple year curves on a time series with different portions per year, use xlim`\
+[`plot`](https://rdrr.io/r/graphics/plot.default.html)`(``ts_flight_curve``, year ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``2000``)``, xlim ``=`` `[`as.Date`](https://rdrr.io/r/base/as.Date.html)`(`[`c`](https://rdrr.io/r/base/c.html)`(``"2000-01-01"``, ``"2002-12-30"``)``, format ``=`` ``"%Y-%m-%d"``)``, SiteID ``=`` ``1``, col ``=`` ``'dodgerblue4'``)`` `\
+[`points`](https://rdrr.io/r/graphics/points.html)`(``ts_flight_curve``, year ``=`` ``2001``, SiteID ``=`` ``1``, type ``=`` ``'l'``, col ``=`` ``'cyan4'``)`` `\
+[`points`](https://rdrr.io/r/graphics/points.html)`(``ts_flight_curve``, year ``=`` ``2002``, SiteID ``=`` ``1``, type ``=`` ``'l'``, col ``=`` ``'orange'``)`` `\
+[`legend`](https://rdrr.io/r/graphics/legend.html)`(``"topright"``, legend ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"2000"``, ``"2001"``, ``"2002"``)``, `\
+`    col ``=`` `[`c`](https://rdrr.io/r/base/c.html)`(``"dodgerblue4"``, ``"cyan4"``, ``"orange"``)``, lty ``=`` ``1``, `\
+`    box.lty``=``0``)`
 
 #### Reporting Issues
 

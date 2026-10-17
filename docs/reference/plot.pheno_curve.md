@@ -8,12 +8,12 @@ function)
 
 ``` r
 # S3 method for class 'pheno_curve'
-plot(data_x, year = NULL, weekday = 3, SiteID = NULL, ymax = NULL, ...)
+plot(x, year = NULL, weekday = 3, SiteID = NULL, ymax = NULL, ...)
 ```
 
 ## Arguments
 
-- data_x:
+- x:
 
   pheno_curve object which is the outcome of the light_curve() function
 

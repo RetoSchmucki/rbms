@@ -27,7 +27,8 @@ site_index(butterfly_count, MinFC = NULL)
 
 data.table Estimated annual abundance index and the proportion of the
 flight curve covered by the visit - total weekly or daily count over the
-entire monitoring season.
+entire monitoring season. Site-years with a missing or infinite site
+index are removed.
 
 ## See also
 

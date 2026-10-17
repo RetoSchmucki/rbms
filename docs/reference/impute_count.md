@@ -15,6 +15,8 @@ impute_count(
   YearLimit = NULL,
   SelectYear = NULL,
   CompltSeason = TRUE,
+  SindexMethod = c("ratio", "glm"),
+  GlmFit = c("newton", "ipf"),
   verbose = TRUE
 )
 ```
@@ -67,6 +69,16 @@ impute_count(
   logical Restrict computation of flight curve for years where the
   complete season was sampled, default=TRUE.
 
+- SindexMethod:
+
+  character Method to compute the site index, 'ratio' (default) or
+  'glm', see details.
+
+- GlmFit:
+
+  character Fitting of the GLM when SindexMethod = 'glm', 'newton'
+  (default) or 'ipf', see details.
+
 - verbose:
 
   a logical indicating if some “progress report” should be given.
@@ -74,13 +86,37 @@ impute_count(
 ## Value
 
 A data.table based on the entry count data, augmented with site indices
-'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
+'SINDEX' and imputed weekly count 'IMPUTED_COUNT'. SINDEX is NA when the
+visits cover no part of the flight curve (TOTAL_NM = 0, e.g. no flight
+curve available within YearLimit).
 
 ## Details
 
 Site indices can be extracted from the data.table returned by this
-function. The site index is currently computed by adjusting the count by
-the proportion of the flight curve covered by the visits.
+function. With SindexMethod = 'ratio', the site index is computed by
+adjusting the count by the proportion of the flight curve covered by the
+visits (TOTAL_COUNT / TOTAL_NM), each site-year being estimated on its
+own. With SindexMethod = 'glm', the counts of the time-steps not visited
+are predicted from a Poisson GLM with site and year effects and the
+flight curve as offset, COUNT ~ factor(SITE_ID) + factor(M_YEAR) +
+offset(log(NM)), and the site index is the sum of the observed and
+predicted counts. The GLM borrows the level of the site and the year
+from the other years and sites, which avoids extreme site indices when a
+small part of the flight curve is covered, but assumes no site x year
+interaction for the time-steps not visited. Sites where the species was
+never observed keep the ratio (0). The GLM is fitted without model
+matrix, on the counts summed per site-year. With GlmFit = 'newton', the
+site effects are concentrated out of the likelihood and Newton steps are
+made on the year effects only (few iterations); with GlmFit = 'ipf',
+iterative proportional fitting is used (more iterations when years are
+weakly linked). Both give the estimates of glm(), 'newton' uses 'ipf' if
+it fails. With 'newton', the year effects of the GLM are returned in the
+attribute "glm_year_effect", `attr(x, "glm_year_effect")`: log effect
+relative to the first year of each group of linked years (LOG_EFFECT),
+with a quasi-Poisson standard error conditional on the site totals (SE).
+This is a model-based annual trend from the counts, a quick check of the
+collated index, but its SE ignores the variation among sites captured by
+the bootstrap.
 
 ## See also
 

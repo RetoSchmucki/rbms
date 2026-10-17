@@ -16,9 +16,9 @@
 - [`collated_index()`](https://retoschmucki.github.io/rbms/reference/collated_index.md)
   : collated_index compute a collated index from the site indices, using
   a Generalized Linear Model.
-- [`collated_index_old()`](https://retoschmucki.github.io/rbms/reference/collated_index_old.md)
-  : collated_index_old compute a collated index from the site indices,
-  using a Generalized Linear Model.
+- [`collated_index_mixed()`](https://retoschmucki.github.io/rbms/reference/collated_index_mixed.md)
+  : collated_index_mixed compute a collated index from the site indices,
+  using a mixed model with a random site effect.
 - [`day_week_summary()`](https://retoschmucki.github.io/rbms/reference/day_week_summary.md)
   : day_week_summary Summarize the count(s) per day or week using either
   the maximum or the average count when multiple counts (visit) are

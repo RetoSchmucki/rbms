@@ -39,7 +39,7 @@ remotes::install_github("RetoSchmucki/rbms")
 
 #### Get Started
 
-Consult the [tutorial vignettes / Articles](https://retoschmucki.github.io/rbms/articles/Get_Started_1.html) to learn about `rbms` data format and the workflow how to compute flight curves, abundance indices, and collated index with a bootstrap confidence interval
+Consult the [tutorial vignettes / Articles](https://retoschmucki.github.io/rbms/articles/vignette.html) to learn about `rbms` data format and the workflow how to compute flight curves, abundance indices, and collated index with a bootstrap confidence interval
 
 Further documentation is also available through the help function in R or from the [rbms online references](https://retoschmucki.github.io/rbms/reference/index.html)
 

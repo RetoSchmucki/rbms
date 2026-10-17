@@ -1,4 +1,10 @@
 ##==========================================
+## Multi-year flight curve (one bam() with a factor-smooth s(time, year, bs = "fs") + site),
+## moved out of the rbms package on 17.10.2026 for further development (not built with the package).
+## Use: library(rbms); source("develop/flight_curve_multi/fit_bam_multi.r")
+## Comparison with flight_curve(): compare_full_data.R, compare_sparse_year.R (run from the package root).
+##==========================================
+##
 ## Name Convention in the rbms package
 ##
 ##      FUNCTION: ts_snake_function()

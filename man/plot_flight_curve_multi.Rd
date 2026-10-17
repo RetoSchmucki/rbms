@@ -3,64 +3,23 @@
 \name{plot_flight_curve_multi}
 \alias{plot_flight_curve_multi}
 \title{plot_flight_curve_multi
-Plot annual flight curves from multi-year BAM model with each year displayed in a different color.}
+Deprecated, moved to develop/flight_curve_multi/fit_bam_multi.r in the rbms GitHub repository for further development;
+use \link{plot.pheno_curve}. Calling it returns an error with this information.}
 \usage{
-plot_flight_curve_multi(
-  ts_flight_curve_multi,
-  SelectYear = NULL,
-  TimeUnit = "d",
-  weekday = 3,
-  color_palette = "rainbow",
-  add_legend = TRUE,
-  legend_pos = "topright",
-  line_width = 2,
-  ymax = NULL,
-  ylab = "Relative abundance (NM)",
-  xlab = "Date",
-  main = NULL,
-  ...
-)
+plot_flight_curve_multi(...)
 }
 \arguments{
-\item{ts_flight_curve_multi}{pheno_curve object returned by \link{flight_curve_multi} or a data.table with flight curve data.}
-
-\item{SelectYear}{integer or vector of years to plot, default NULL (plot all years).}
-
-\item{TimeUnit}{character Time-step used, 'd' for day or 'w' for week, default 'd'.}
-
-\item{weekday}{Integer for selected day of the week for weekly data, default is 3 (Wednesday). [1-7] where 1 = Monday.}
-
-\item{color_palette}{string Name of color palette to use. Options: "rainbow", "heat", "terrain", "topo", "cm", "viridis", or a vector of color names/hex codes.}
-
-\item{add_legend}{logical Add legend to plot, default TRUE.}
-
-\item{legend_pos}{string Position of legend: "topright", "topleft", "bottomright", "bottomleft", "top", "bottom", "left", "right", default "topright".}
-
-\item{line_width}{numeric Width of lines, default 2.}
-
-\item{ymax}{numeric Maximum value for y-axis, default NULL (auto-scale).}
-
-\item{ylab}{string Label for y-axis, default "Relative abundance (NM)".}
-
-\item{xlab}{string Label for x-axis, default "Date".}
-
-\item{main}{string Main title for plot, default NULL.}
-
-\item{...}{Additional parameters passed to base plot function.}
-}
-\value{
-Returns a base plot with relative abundance (y) over time (x), with each year in a different color.
+\item{...}{not used.}
 }
 \description{
 plot_flight_curve_multi
-Plot annual flight curves from multi-year BAM model with each year displayed in a different color.
+Deprecated, moved to develop/flight_curve_multi/fit_bam_multi.r in the rbms GitHub repository for further development;
+use \link{plot.pheno_curve}. Calling it returns an error with this information.
 }
 \seealso{
-\link{flight_curve_multi}, \link{fit_bam_multi}
+\link{plot.pheno_curve}
 }
 \author{
 Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
-\keyword{curve,}
-\keyword{flight}
-\keyword{visualization}
+\keyword{internal}

@@ -584,6 +584,10 @@ collated_index_old <- function(...){
 #' the group, so each group is a separate series. Fitting all years together (SplitGroup = FALSE, previous versions) gives arbitrary
 #' levels between groups and can distort the trend within a group, because zero counts of sites observed only in another group
 #' enter the fit.
+#' The data cannot relate the levels of separate groups. Comparing them rests on the sites of each group being representative of
+#' the same population. This holds by design when sites are assigned to years at random, e.g. a rotating panel where a random
+#' set of sites is surveyed each year and each site is revisited every few years (each panel then forms a group), but not when
+#' the groups result from site turnover, a change in the scheme or different regions. In that case, the groups are separate series.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string Species name to be found in the data.
 #' @param sindex_value string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.

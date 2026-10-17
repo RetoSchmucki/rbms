@@ -62,6 +62,10 @@ each group is fitted separately on its own years and sites, its index being the 
 the group, so each group is a separate series. Fitting all years together (SplitGroup = FALSE, previous versions) gives arbitrary
 levels between groups and can distort the trend within a group, because zero counts of sites observed only in another group
 enter the fit.
+The data cannot relate the levels of separate groups. Comparing them rests on the sites of each group being representative of
+the same population. This holds by design when sites are assigned to years at random, e.g. a rotating panel where a random
+set of sites is surveyed each year and each site is revisited every few years (each panel then forms a group), but not when
+the groups result from site turnover, a change in the scheme or different regions. In that case, the groups are separate series.
 }
 \seealso{
 \link{impute_count}, \link{flight_curve}

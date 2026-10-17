@@ -169,6 +169,8 @@ TOTAL_COUNT: The sum of the Imputed count within the site and year.
 SINDEX: The sum of the imputed counts over the sampling season. If the flight curve of a specific year is missing, the `impute_count()` function uses the nearest phenology found. If none are available within the limit of years set by the YearLimit argument, the function will return no SINDEX for that specific year.
 TOTAL_NM: The proportion of the flight curve covered by the visits. This is the total count divided by the site index.
 
+By default, the site index is the total count divided by the proportion of the flight curve covered by the visits (SindexMethod = "ratio"), as in the generalized abundance index of Dennis et al. (2016). With SindexMethod = "glm", the counts of the weeks not visited are predicted from a Poisson GLM with site and year effects and the flight curve as offset (Dennis et al. 2013), which avoids extreme site indices when the visits cover a small part of the flight curve. The ratio remains the recommended input for the collated index, which already borrows information across sites and years.
+
 ```{r, impute_year}
 impt_counts_1year <- rbms::impute_count(ts_season_count=ts_season_count, ts_flight_curve=pheno[M_YEAR != 2001, ], YearLimit= 1, TimeUnit='w')
 
@@ -184,6 +186,8 @@ sindex <- rbms::site_index(butterfly_count = impt_counts, MinFC = 0.10)
 ```
 
 From the site indices, estimates of the annual collated indices are made using the `collated_index()` function. Collated indices represents the mean total butterfly count expected on a BMS transect in a given year. The function fits a Generalised Linear Model (GLM) with site and years included as factorial independent variables. The proportion of the flight curve is included as a GLM weight. When the argument rm_zero is set to TRUE, all sites where the species are not observed are filtered, speeding up the fit of the GLM without altering the output.
+
+By default, the GLM is fitted with `glm()`. With GlmFit = "newton" or "ipf", the same model is fitted without building the model matrix and gives the same collated index in a fraction of the time (e.g. 0.2 s instead of 3 minutes with 2000 sites and 20 years), which matters for the bootstrap. With GlmFit = "newton", the output also contains the year effects with their standard error (year_effect). The column GROUP identifies groups of years that are not linked through sites where the species was observed (see section 6).
 
 ```{r, collated_index}
 co_index <- collated_index(data = sindex, s_sp = 2, sindex_value = "SINDEX", glm_weights = TRUE, rm_zero = TRUE)
@@ -249,7 +253,9 @@ When a species is specified with the argument s_sp, sites are sampled among the 
 
 Why strata? With a simple random sample of sites, the number of sites where the species is always present, sometimes present or never observed varies from one sample to the next. Sampling within each stratum keeps their number as in the original data, and so part of the structure of the species distribution across the monitoring sites. The variation between bootstrap samples then reflects the variation among sites of the same type rather than a change in the proportion of occupied sites, which would otherwise widen the confidence interval and, for rare species, increase the risk of a sample without the few sites where the species was observed.
 
-Why linked years matter? The GLM estimates the index of a year relative to the other years through the sites where the species was observed in both years, directly or through other sites and years. When the observations of a sample split the years in two or more groups without a common site, the level of one group can be shifted up and the effects of its sites shifted down by the same amount without changing the fit. The relative level of the groups is not identified, the site and year effects are free to run away and the collated index can take absurd values (e.g. 1e5 to 1e11). Since the original data can also have unlinked years, a sample is only redrawn when it has more groups of years than the original data.
+Why linked years matter? The GLM estimates the index of a year relative to the other years through the sites where the species was observed in both years, directly or through other sites and years. When the observations of a sample split the years in two or more groups without a common site, the level of one group can be shifted up and the effects of its sites shifted down by the same amount without changing the fit. The relative level of the groups is not identified, the site and year effects are free to run away and the collated index can take absurd values (e.g. 1e5 to 1e11). When the original data have unlinked years, `collated_index()` fits each group separately (SplitGroup = TRUE, the column GROUP identifies the groups), and `boot_sample()` stratifies the sites by group and redraws a sample when one of the groups is split or lost.
+
+When can separate groups be compared? The data cannot relate the levels of two groups without a common site. Comparing them assumes that the sites of each group are representative of the same population. This holds by design when sites are assigned to years at random, for example a rotating panel where each site is revisited every five years (each panel is then a group), but not when the groups come from site turnover, a change in the scheme or different regions. In that case, treat the groups as separate series.
 
 *NOTE: You should not take large numbers of bootstraps from a dataset with a small number of sites, as resampling sites will not introduce new variance.*
 
@@ -259,14 +265,14 @@ bootsample <- rbms::boot_sample(sindex, boot_n = 200, s_sp = 2, strata = TRUE, c
 bootsample$n_failed
 ```
 
-Using the `collated_index()` function in a loop, with bootstrap samples informing the argument `boot_ind`, we can now compute the boot_n number of collated indices over the entire time-series.
+Using the `collated_index()` function in a loop, with bootstrap samples informing the argument `boot_ind`, we can now compute the boot_n number of collated indices over the entire time-series. Here we use GlmFit = "newton" to speed up the fits.
 
 ```{r, collated_index_boot, message=FALSE, warning=FALSE}
 co_index <- list()
 
 for(i in c(0,seq_len(dim(bootsample$boot_ind)[1]))){
 
- co_index[[i+1]] <- rbms::collated_index(data = sindex, s_sp = 2, sindex_value = "SINDEX", bootID=i, boot_ind= bootsample, glm_weights=TRUE, rm_zero=TRUE)
+ co_index[[i+1]] <- rbms::collated_index(data = sindex, s_sp = 2, sindex_value = "SINDEX", bootID=i, boot_ind= bootsample, glm_weights=TRUE, rm_zero=TRUE, GlmFit = "newton")
 
 }
 
@@ -353,3 +359,9 @@ if (class(lm_mod)[1] != "try-error") {
 print(p)
 
 ```
+
+##### References
+
+Dennis, E. B., Freeman, S. N., Brereton, T. and Roy, D. B. (2013). Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal pattern. *Methods in Ecology and Evolution*, 4, 637–645. [doi:10.1111/2041-210X.12053](https://doi.org/10.1111/2041-210X.12053)
+
+Dennis, E. B., Morgan, B. J. T., Freeman, S. N., Brereton, T. M. and Roy, D. B. (2016). A generalized abundance index for seasonal invertebrates. *Biometrics*, 72, 1305–1314. [doi:10.1111/biom.12506](https://doi.org/10.1111/biom.12506)

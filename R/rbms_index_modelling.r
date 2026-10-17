@@ -672,28 +672,6 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
       data_boot[ , weights := TOTAL_NM]
     }
 
-    # col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
-    #                   weights = data_boot$weights), silent = TRUE)
-    #   if (inherits(col_index, "try-error")) {
-    #     col_index <- try(speedglm::speedglm(mod_form, data = data_boot, family = poisson(),
-    #                   weights = data_boot$weights, method = "qr"), silent = TRUE)
-    #     if (inherits(col_index, "try-error")) {
-    #       col_index <- try(glm(mod_form, data = data_boot, family = poisson(), 
-    #                   weights = data_boot$weights), silent = TRUE)
-    #         if (inherits(col_index, "try-error")) {
-    #           res <- sum_data[, COL_INDEX := NA]
-    #           return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
-    #         }
-    #     }
-    #  }
-
-# patch for glmmTMB issue
-#    col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = "nbinom1",
-#                      weights = data_boot$weights), silent = TRUE)
-#      if (inherits(col_index, "try-error")) {
-#        col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = poisson(),
-#                      weights = data_boot$weights), silent = TRUE)
-#        if (inherits(col_index, "try-error")) {
     ## years fitted together: each group of linked years separately (SplitGroup = TRUE, always with newton and ipf),
     ## or all years at once (one group, or SplitGroup = FALSE with glm, the former joint fit). Index of a group = prediction
     ## over its sites and years / number of sites with data in its years (all sites of the species when fitted at once)
@@ -726,8 +704,6 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
               res <- merge(sum_data[, COL_INDEX := NA_real_], grp, by = "M_YEAR", all.x = TRUE)
               return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_B, NSITE_OBS, COL_INDEX, GROUP)], site_id = a$SITE_ID, year_effect = NULL))
             }
-#        }
-#     }
         pred_data_boot <- data.table(expand.grid(uID = unique(d_g$uID), M_YEAR = unique(d_g$M_YEAR)))
         pred_data_boot$fitted <- predict(col_index, newdata = pred_data_boot, type = "response")
         co_g <- pred_data_boot[order(M_YEAR), .(COL_INDEX = sum(fitted / len_u[as.character(uID)])/n_site_g), by = M_YEAR]

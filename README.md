@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12806607.svg)](https://doi.org/10.5281/zenodo.12806607)
+[![R-CMD-check](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/RetoSchmucki/rbms/actions/workflows/R-CMD-check.yaml) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12806606.svg)](https://doi.org/10.5281/zenodo.12806606)
 
 <!-- badges: end -->
 
@@ -14,11 +14,13 @@ Although `rbms` implements methods that were developed independently and for whi
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A., Dennis E.B. (2024) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.2.0. https://github.com/RetoSchmucki/rbms"
+Schmucki R., Harrower C.A., Dennis E.B. (2026) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.3.0. doi:10.5281/zenodo.12806606. https://github.com/RetoSchmucki/rbms
+
+The DOI refers to all versions of rbms and resolves to the latest one. In R, `citation("rbms")` gives the citation of the package and of the methods it implements, also as BibTeX.
 
 #### The rbms package implements methods from:
 
-- Dennis, E.B., Freeman, S.N., Brereton, T., Roy, D.B., 2013. Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal patterns. Methods Ecol Evol 4, 637–645. https://doi.org/10.1111/2041-210X.12053
+- Dennis, E.B., Freeman, S.N., Brereton, T., Roy, D.B., 2013. Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal pattern. Methods Ecol Evol 4, 637–645. https://doi.org/10.1111/2041-210X.12053
 - Dennis, E.B., Morgan, B.J.T., Freeman, S.N., Brereton, T.M., Roy, D.B., 2016. A generalized abundance index for seasonal invertebrates. Biom 72, 1305–1314. https://doi.org/10.1111/biom.12506
 - Schmucki, R., Pe’er, G., Roy, D.B., Stefanescu, C., Van Swaay, C.A.M., Oliver, T.H., Kuussaari, M., Van Strien, A.J., Ries, L., Settele, J., Musche, M., Carnicer, J., Schweiger, O., Brereton, T.M., Harpke, A., Heliölä, J., Kühn, E., Julliard, R., 2016. A regionally informed abundance index for supporting integrative analyses across butterfly monitoring schemes. J Appl Ecol 53, 501–510. https://doi.org/10.1111/1365-2664.12561
 

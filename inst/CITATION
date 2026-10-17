@@ -1,12 +1,47 @@
-citHeader("To cite rbms in publications use:")
+citHeader("To cite the rbms package and the methods it implements in publications use:")
 
-citEntry(
-  entry    = "Article",
-  title    = "rbms: Computing generalised abundance indices for butterfly monitoring count data",
-  author   = "Reto Schmucki and Colin A. Harrower and Emily B. Dennis",
-  journal  = "R package version 1.3.0",
-  year     = "2026",
-  doi      = "https://zenodo.org/records/12806607",
-  url      = "https://github.com/RetoSchmucki/rbms",
-  textVersion = paste("Schmucki R., Harrower C.A., Dennis E.B. (2026) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.3.0. https://github.com/RetoSchmucki/rbms")
+bibentry("Manual",
+  title  = "rbms: Computing generalised abundance indices for butterfly monitoring count data",
+  author = c(person("Reto", "Schmucki", comment = c(ORCID = "0000-0003-3064-7553")),
+             person(c("Colin", "A."), "Harrower", comment = c(ORCID = "0000-0001-5070-5293")),
+             person(c("Emily", "B."), "Dennis", comment = c(ORCID = "0000-0003-2692-4415"))),
+  year   = "2026",
+  note   = "R package version 1.3.0",
+  doi    = "10.5281/zenodo.12806606",
+  url    = "https://github.com/RetoSchmucki/rbms"
+)
+
+bibentry("Article",
+  title   = "Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal pattern",
+  author  = "E. B. Dennis and S. N. Freeman and T. Brereton and D. B. Roy",
+  journal = "Methods in Ecology and Evolution",
+  year    = "2013",
+  volume  = "4",
+  number  = "7",
+  pages   = "637--645",
+  doi     = "10.1111/2041-210X.12053"
+)
+
+bibentry("Article",
+  title   = "A generalized abundance index for seasonal invertebrates",
+  author  = "E. B. Dennis and B. J. T. Morgan and S. N. Freeman and T. M. Brereton and D. B. Roy",
+  journal = "Biometrics",
+  year    = "2016",
+  volume  = "72",
+  pages   = "1305--1314",
+  doi     = "10.1111/biom.12506"
+)
+
+bibentry("Article",
+  title   = "A regionally informed abundance index for supporting integrative analyses across butterfly monitoring schemes",
+  author  = c(person("R.", "Schmucki"), person("G.", "Pe'er"), person(c("D.", "B."), "Roy"), person("C.", "Stefanescu"),
+              person(c("C.", "A.", "M."), "Van Swaay"), person(c("T.", "H."), "Oliver"), person("M.", "Kuussaari"),
+              person(c("A.", "J."), "Van Strien"), person("L.", "Ries"), person("J.", "Settele"), person("M.", "Musche"),
+              person("J.", "Carnicer"), person("O.", "Schweiger"), person(c("T.", "M."), "Brereton"), person("A.", "Harpke"),
+              person("J.", "Heliölä"), person("E.", "Kühn"), person("R.", "Julliard")),
+  journal = "Journal of Applied Ecology",
+  year    = "2016",
+  volume  = "53",
+  pages   = "501--510",
+  doi     = "10.1111/1365-2664.12561"
 )

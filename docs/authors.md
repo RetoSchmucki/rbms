@@ -19,13 +19,13 @@ Source:
 Schmucki R, Harrower CA, Dennis EB (2026). *rbms: Computing generalised
 abundance indices for butterfly monitoring count data*.
 [doi:10.5281/zenodo.12806606](https://doi.org/10.5281/zenodo.12806606).
-R package version 1.3.0, <https://github.com/RetoSchmucki/rbms>.
+R package version 1.3.1, <https://github.com/RetoSchmucki/rbms>.
 
 @Manual{,\
   title = {rbms: Computing generalised abundance indices for butterfly monitoring count data},\
   author = {Reto Schmucki and Colin A. Harrower and Emily B. Dennis},\
   year = {2026},\
-  note = {R package version 1.3.0},\
+  note = {R package version 1.3.1},\
   doi = {10.5281/zenodo.12806606},\
   url = {https://github.com/RetoSchmucki/rbms},\
 }

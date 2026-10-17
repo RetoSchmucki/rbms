@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rbms</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,15 +111,14 @@ from genuine Butterfly Monitoring Scheme surveys.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load rbms and ggplot2</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://retoschmucki.github.io/rbms/">rbms</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  Welcome to rbms, version 1.3.0 </span></span>
+<pre><code><span><span class="co">##  Welcome to rbms, version 1.3.1 </span></span>
 <span><span class="co">##  This package has been tested, but is still in active development and feedbacks are welcome</span></span>
 <span><span class="co">##  https://github.com/RetoSchmucki/rbms/issues</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: package 'ggplot2' was built under R version 4.6.1</span></span></code></pre>
 <p>Then load the bundled butterfly monitoring scheme data bundled with
 the rbms package.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_visit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_count</span><span class="op">)</span></span></code></pre></div>
 <p><strong>The header names of the visit and count data need to be
@@ -194,7 +193,7 @@ specify the first day of the week with the WeekDay1 argument as either
 ‘sunday’ or ‘monday’.</p>
 <p><strong>2.1.</strong> First, we initialise a time-series with
 day-week-month-year information.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_date</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_dwmy_table.html">ts_dwmy_table</a></span><span class="op">(</span>InitYear <span class="op">=</span> <span class="fl">2000</span>, LastYear <span class="op">=</span> <span class="fl">2003</span>, WeekDay1 <span class="op">=</span> <span class="st">'monday'</span><span class="op">)</span></span></code></pre></div>
 <p><strong>2.2.</strong> Add the monitoring season to the
 time-series</p>
@@ -210,20 +209,20 @@ ends at zero.</p>
 having an Anchor set to zero might sound wrong, and we are currently
 working on finding an alternative for these cases to represent the
 flight curve of those species better.</em></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_season</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_season.html">ts_monit_season</a></span><span class="op">(</span><span class="va">ts_date</span>, StartMonth <span class="op">=</span> <span class="fl">4</span>, EndMonth <span class="op">=</span> <span class="fl">9</span>, StartDay <span class="op">=</span> <span class="fl">1</span>, EndDay <span class="op">=</span> <span class="cn">NULL</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, Anchor <span class="op">=</span> <span class="cn">TRUE</span>, AnchorLength <span class="op">=</span> <span class="fl">2</span>, AnchorLag <span class="op">=</span> <span class="fl">2</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span></code></pre></div>
 <p><strong>2.3.</strong> Add site visits to the time-series</p>
 <p>Now that the monitoring season has been defined, we use the
 <code><a href="../reference/ts_monit_site.html">ts_monit_site()</a></code> function to integrate the time-series with
 the site visits. We use the visit data and link it with the time series
 contained in ts_season object.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">ts_season</span>, <span class="va">m_visit</span><span class="op">)</span></span></code></pre></div>
 <p><strong>2.4.</strong> Add observed count</p>
 <p>The time-series is next integrated with the count data. Here we must
 specify the focus species in the sp argument, providing either an
 integer (we have used 2 here), or a string.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ts_season_count</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/ts_monit_count_site.html">ts_monit_count_site</a></span><span class="op">(</span><span class="va">ts_season_visit</span>, <span class="va">m_count</span>, sp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p>The resulting <code>data.table</code> object contains zeros and
 positive counts recorded along each BMS transects for species 2, over
@@ -286,7 +285,7 @@ for the GAM model as well as the maximum number of times to try to fit
 the model and the number of samples to use. The later will take a random
 sample from the data set if it contains more sites than the number
 specified.</em></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, NbrSample <span class="op">=</span> <span class="fl">300</span>, MinVisit <span class="op">=</span> <span class="fl">5</span>, MinOccur <span class="op">=</span> <span class="fl">3</span>, MinNbrSite <span class="op">=</span> <span class="fl">5</span>, MaxTrial <span class="op">=</span> <span class="fl">4</span>, GamFamily <span class="op">=</span> <span class="st">'nb'</span>, SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>, CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>, SelectYear <span class="op">=</span> <span class="cn">NULL</span>, TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span></code></pre></div>
 <p>We are given a list of 3 elements as an output of the
 <code><a href="../reference/flight_curve.html">flight_curve()</a></code> function:</p>
@@ -300,7 +299,7 @@ model, with a cubic spline to the count data;</li>
 shape of the annual flight curves, standardised to sum to 1. The
 flight-curves contained in the pheno object can be visualised with the
 following line of codes.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Extract the phenology output</span></span>
 <span><span class="va">pheno</span> <span class="op">&lt;-</span> <span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span></span>
 <span></span>
@@ -339,7 +338,7 @@ pheno output of the <code><a href="../reference/flight_curve.html">flight_curve(
 extent of the search for nearest phenology can be limited by setting the
 YearLimit argument. By default, this is not restricted and will look
 over all years available.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Impute the count estimates</span></span>
 <span><span class="co"># Note that the pheno element is extracted automatically from the ts_flight_curve object</span></span>
 <span><span class="va">impt_counts</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/impute_count.html">impute_count</a></span><span class="op">(</span>ts_season_count<span class="op">=</span><span class="va">ts_season_count</span>, ts_flight_curve<span class="op">=</span><span class="va">ts_flight_curve</span>, YearLimit<span class="op">=</span> <span class="cn">NULL</span>, TimeUnit<span class="op">=</span><span class="st">'w'</span><span class="op">)</span></span></code></pre></div>
@@ -366,11 +365,11 @@ curve as offset (Dennis et al. 2013), which avoids extreme site indices
 when the visits cover a small part of the flight curve. The ratio
 remains the recommended input for the collated index, which already
 borrows information across sites and years.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">impt_counts_1year</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/impute_count.html">impute_count</a></span><span class="op">(</span>ts_season_count<span class="op">=</span><span class="va">ts_season_count</span>, ts_flight_curve<span class="op">=</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">!=</span> <span class="fl">2001</span>, <span class="op">]</span>, YearLimit<span class="op">=</span> <span class="fl">1</span>, TimeUnit<span class="op">=</span><span class="st">'w'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in FUN(X[[i]], ...): We used the flight curve of 2000 to compute</span></span>
 <span><span class="co">## abundance indices for year 2001</span></span></code></pre>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">impt_counts_0year</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/impute_count.html">impute_count</a></span><span class="op">(</span>ts_season_count<span class="op">=</span><span class="va">ts_season_count</span>, ts_flight_curve<span class="op">=</span><span class="va">pheno</span><span class="op">[</span><span class="va">M_YEAR</span> <span class="op">!=</span> <span class="fl">2001</span>, <span class="op">]</span>, YearLimit<span class="op">=</span> <span class="fl">0</span>, TimeUnit<span class="op">=</span><span class="st">'w'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## No reliable flight curve available within a  0  year horizon of 2001</span></span></code></pre>
 </div>
@@ -383,7 +382,7 @@ used to calculate site index for each year and site. Only sites that
 exceed a threshold for the proportional representation of the flight
 curve are included. This threshold is set using the MinFC argument,
 which In this example is 0.10.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sindex</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/site_index.html">site_index</a></span><span class="op">(</span>butterfly_count <span class="op">=</span> <span class="va">impt_counts</span>, MinFC <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span></code></pre></div>
 <p>From the site indices, estimates of the annual collated indices are
 made using the <code><a href="../reference/collated_index.html">collated_index()</a></code> function. Collated indices
@@ -402,7 +401,7 @@ matters for the bootstrap. With GlmFit = “newton”, the output also
 contains the year effects with their standard error (year_effect). The
 column GROUP identifies groups of years that are not linked through
 sites where the species was observed (see section 6).</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">co_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collated_index.html">collated_index</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sindex</span>, s_sp <span class="op">=</span> <span class="fl">2</span>, sindex_value <span class="op">=</span> <span class="st">"SINDEX"</span>, glm_weights <span class="op">=</span> <span class="cn">TRUE</span>, rm_zero <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">co_index</span></span></code></pre></div>
@@ -432,7 +431,7 @@ sites where the species was observed (see section 6).</p>
 <span><span class="co">## $year_effect</span></span>
 <span><span class="co">## NULL</span></span></code></pre>
 <p>The index can be transformed to a log(10) scale.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">co_index</span> <span class="op">&lt;-</span> <span class="va">co_index</span><span class="op">$</span><span class="va">col_index</span></span>
 <span><span class="va">co_index_b</span> <span class="op">&lt;-</span> <span class="va">co_index</span><span class="op">[</span><span class="va">COL_INDEX</span> <span class="op">&gt;</span> <span class="fl">0.0001</span> <span class="op">&amp;</span> <span class="va">COL_INDEX</span> <span class="op">&lt;</span> <span class="fl">100000</span>, <span class="op">]</span></span>
 <span><span class="va">co_index_logInd</span> <span class="op">&lt;-</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fu">.</span><span class="op">(</span><span class="va">M_YEAR</span>, <span class="va">COL_INDEX</span><span class="op">)</span><span class="op">]</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">COL_INDEX</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">M_YEAR</span><span class="op">]</span><span class="op">[</span>, <span class="va">mean_logInd</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">V1</span><span class="op">)</span><span class="op">]</span></span>
@@ -444,7 +443,7 @@ sites where the species was observed (see section 6).</p>
 with time-series average being centered to two
 (i.e. <code>log10(100)</code>) as the standard for British time series
 reporting.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyan4"</span>, <span class="st">"orange"</span>, <span class="st">"orangered2"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## compute the metric used for the graph of the Collated Log-Index centred around 2 (observed, bootstrap sample, credible confidence interval, linear trend)</span></span>
@@ -541,7 +540,7 @@ bootstrap samples.</p>
 <p><em>NOTE: You should not take large numbers of bootstraps from a
 dataset with a small number of sites, as resampling sites will not
 introduce new variance.</em></p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">218795</span><span class="op">)</span></span>
 <span><span class="va">bootsample</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="../reference/boot_sample.html">boot_sample</a></span><span class="op">(</span><span class="va">sindex</span>, boot_n <span class="op">=</span> <span class="fl">200</span>, s_sp <span class="op">=</span> <span class="fl">2</span>, strata <span class="op">=</span> <span class="cn">TRUE</span>, check_link <span class="op">=</span> <span class="cn">TRUE</span>, max_trial <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">bootsample</span><span class="op">$</span><span class="va">n_failed</span></span></code></pre></div>
@@ -550,7 +549,7 @@ introduce new variance.</em></p>
 bootstrap samples informing the argument <code>boot_ind</code>, we can
 now compute the boot_n number of collated indices over the entire
 time-series. Here we use GlmFit = “newton” to speed up the fits.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">co_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">bootsample</span><span class="op">$</span><span class="va">boot_ind</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
@@ -564,7 +563,7 @@ time-series. Here we use GlmFit = “newton” to speed up the fits.</p>
 <p>Annual log indices, as well as their average, are then computed from
 the original sample. To derive confidence intervals, we compute annual
 log indices for each bootstrap sample.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">co_index_b</span> <span class="op">&lt;-</span> <span class="va">co_index</span><span class="op">[</span><span class="va">COL_INDEX</span> <span class="op">&gt;</span> <span class="fl">0.0001</span> <span class="op">&amp;</span> <span class="va">COL_INDEX</span> <span class="op">&lt;</span> <span class="fl">100000</span>, <span class="op">]</span></span>
 <span><span class="va">co_index_logInd</span> <span class="op">&lt;-</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fu">.</span><span class="op">(</span><span class="va">M_YEAR</span>, <span class="va">COL_INDEX</span><span class="op">)</span><span class="op">]</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">COL_INDEX</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">M_YEAR</span><span class="op">]</span><span class="op">[</span>, <span class="va">mean_logInd</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">V1</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
@@ -576,7 +575,7 @@ log indices for each bootstrap sample.</p>
 <span><span class="va">co_index_b</span><span class="op">[</span> , <span class="va">boot_logInd</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">COL_INDEX</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p>From the bootstrap samples, we can derive a 95% Confidence Interval,
 using the corresponding percentiles (i.e., 0.025 and 0.975).</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>M_YEAR <span class="op">=</span> <span class="va">co_index_b</span><span class="op">$</span><span class="va">M_YEAR</span>, LCI <span class="op">=</span> <span class="fl">2</span> <span class="op">+</span> <span class="va">co_index_b</span><span class="op">$</span><span class="va">boot_logInd</span> <span class="op">-</span> <span class="va">co_index_b</span><span class="op">$</span><span class="va">mean_logInd</span><span class="op">)</span></span>
 <span><span class="va">b2</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/data.table.html" class="external-link">data.table</a></span><span class="op">(</span>M_YEAR <span class="op">=</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="va">M_YEAR</span><span class="op">]</span>, LCI<span class="op">=</span> <span class="fl">2</span> <span class="op">+</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="va">logInd</span><span class="op">]</span> <span class="op">-</span> <span class="va">co_index_b</span><span class="op">[</span><span class="va">BOOTi</span> <span class="op">==</span> <span class="fl">0</span>, <span class="va">mean_logInd</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">b5</span> <span class="op">&lt;-</span> <span class="va">b1</span><span class="op">[</span><span class="va">co_index_b</span><span class="op">$</span><span class="va">BOOTi</span> <span class="op">!=</span> <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">LCI</span>, <span class="fl">0.025</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">M_YEAR</span><span class="op">]</span></span>
@@ -654,7 +653,7 @@ expected count on 1 km of transect. With index_sites = “observed”, it is
 averaged only over the sites where the species was observed at least
 once. These choices change the level of the index, not its changes
 between years.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">co_index_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collated_index.html">collated_index</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sindex_len</span>, s_sp <span class="op">=</span> <span class="fl">2</span>, site_length <span class="op">=</span> <span class="st">"LENGTH_KM"</span>, index_sites <span class="op">=</span> <span class="st">"all"</span>, GlmFit <span class="op">=</span> <span class="st">"newton"</span><span class="op">)</span></span></code></pre></div>
 <p>The level matters when indices are combined with weights that use it,
 for example a multi-scheme index of the change in the total population

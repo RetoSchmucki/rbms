@@ -14,7 +14,7 @@ Although `rbms` implements methods that were developed independently and for whi
 
 #### Suggested citation for the rbms package
 
-Schmucki R., Harrower C.A., Dennis E.B. (2026) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.3.0. doi:10.5281/zenodo.12806606. https://github.com/RetoSchmucki/rbms
+Schmucki R., Harrower C.A., Dennis E.B. (2026) rbms: Computing generalised abundance indices for butterfly monitoring count data. R package version 1.3.1. doi:10.5281/zenodo.12806606. https://github.com/RetoSchmucki/rbms
 
 The DOI refers to all versions of rbms and resolves to the latest one. In R, `citation("rbms")` gives the citation of the package and of the methods it implements, also as BibTeX.
 

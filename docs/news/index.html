@@ -12,7 +12,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rbms</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,36 @@
       <small>Source: <a href="https://github.com/RetoSchmucki/rbms/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.3.1" id="rbms-131">rbms 1.3.1<a class="anchor" aria-label="anchor" href="#rbms-131"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-3-1">New features<a class="anchor" aria-label="anchor" href="#new-features-1-3-1"></a></h3>
+<ul><li>
+<code><a href="../reference/flight_curve.html">flight_curve()</a></code> gains <code>parallel</code> and <code>n_cores</code> to fit the flight curves of the years in parallel. The random streams of the workers are seeded from the session, so the result is reproducible with <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-1-3-1">Changes<a class="anchor" aria-label="anchor" href="#changes-1-3-1"></a></h3>
+<ul><li>
+<code><a href="../reference/flight_curve_optimised.html">flight_curve_optimised()</a></code> and <code><a href="../reference/get_nm_optimised.html">get_nm_optimised()</a></code> are deprecated: they gave the same results as <code><a href="../reference/flight_curve.html">flight_curve()</a></code> and <code><a href="../reference/get_nm.html">get_nm()</a></code>, which they now call with a warning.</li>
+<li>
+<code><a href="../reference/flight_curve_multi.html">flight_curve_multi()</a></code>, <code><a href="../reference/fit_bam_multi.html">fit_bam_multi()</a></code> and <code><a href="../reference/plot_flight_curve_multi.html">plot_flight_curve_multi()</a></code> (one <code>bam()</code> model for all years) are removed from the package for further development; they return an error, the previous code is available in rbms 1.3.0.</li>
+<li>
+<code><a href="../reference/flight_curve.html">flight_curve()</a></code> checks all the required columns of <code>ts_season_count</code> (only the first one was checked).</li>
+<li>
+<code><a href="../reference/flight_curve.html">flight_curve()</a></code> with <code>KeepModel = FALSE</code> and <code>KeepModelData = TRUE</code> returns the flight curves and the data (it returned the unformatted list).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-1-3-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-1-3-1"></a></h3>
+<ul><li>Vignette: the installation code is shown but not run, the messages of <code><a href="../reference/flight_curve.html">flight_curve()</a></code> are not printed, <code>linewidth</code> replaces the deprecated <code>size</code> of ggplot2 lines; author and date updated.</li>
+<li>LICENSE year 2022-2026.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="potential-breaking-changes-1-3-1">Potential breaking changes<a class="anchor" aria-label="anchor" href="#potential-breaking-changes-1-3-1"></a></h3>
+<ul><li>Code using <code><a href="../reference/flight_curve_multi.html">flight_curve_multi()</a></code>, <code><a href="../reference/fit_bam_multi.html">fit_bam_multi()</a></code> or <code><a href="../reference/plot_flight_curve_multi.html">plot_flight_curve_multi()</a></code> (exported in 1.3.0) needs rbms 1.3.0, or <code><a href="../reference/flight_curve.html">flight_curve()</a></code>.</li>
+<li>
+<code><a href="../reference/flight_curve.html">flight_curve()</a></code> now stops with a clear message when a required column of <code>ts_season_count</code> is missing.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.0" id="rbms-130">rbms 1.3.0<a class="anchor" aria-label="anchor" href="#rbms-130"></a></h2>
 <div class="section level3">

@@ -25,7 +25,7 @@ the reproducibility of the work.
 
 Schmucki R., Harrower C.A., Dennis E.B. (2026) rbms: Computing
 generalised abundance indices for butterfly monitoring count data. R
-package version 1.3.0. <doi:10.5281/zenodo.12806606>.
+package version 1.3.1. <doi:10.5281/zenodo.12806606>.
 <https://github.com/RetoSchmucki/rbms>
 
 The DOI refers to all versions of rbms and resolves to the latest one.

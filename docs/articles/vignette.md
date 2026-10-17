@@ -36,14 +36,12 @@ First, install and load required packages.
 `# Load rbms and ggplot2`\
 [`library`](https://rdrr.io/r/base/library.html)`(`[`rbms`](https://retoschmucki.github.io/rbms/)`)`
 
-    ##  Welcome to rbms, version 1.3.0 
+    ##  Welcome to rbms, version 1.3.1 
     ##  This package has been tested, but is still in active development and feedbacks are welcome
     ##  https://github.com/RetoSchmucki/rbms/issues
 
 \
 [`library`](https://rdrr.io/r/base/library.html)`(`[`ggplot2`](https://ggplot2.tidyverse.org)`)`
-
-    ## Warning: package 'ggplot2' was built under R version 4.6.1
 
 Then load the bundled butterfly monitoring scheme data bundled with the
 rbms package.

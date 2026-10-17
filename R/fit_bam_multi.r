@@ -1,6 +1,6 @@
 ##==========================================
-## Multi-year flight curve: moved to develop/flight_curve_multi/ in the rbms repository
-## (https://github.com/RetoSchmucki/rbms) for further development.
+## Multi-year flight curve: removed from the package for further development
+## (the previous code is available in rbms 1.3.0).
 ##
 ##      Date:   17.10.2026
 ##
@@ -8,13 +8,13 @@
 
 
 multi_moved <- function(f){
-  stop(paste0(f, "() has been moved out of the rbms package for further development. Use flight_curve(), or source the ",
-              "code from develop/flight_curve_multi/fit_bam_multi.r in https://github.com/RetoSchmucki/rbms"), call. = FALSE)
+  stop(paste0(f, "() has been removed from the rbms package for further development. Use flight_curve(); ",
+              "the previous code is available in rbms 1.3.0."), call. = FALSE)
 }
 
 
 #' flight_curve_multi
-#' Deprecated, moved to develop/flight_curve_multi/fit_bam_multi.r in the rbms GitHub repository for further development;
+#' Deprecated, removed from the package for further development (the previous code is available in rbms 1.3.0);
 #' use \link{flight_curve}. Calling it returns an error with this information.
 #' @param ... not used.
 #' @keywords internal
@@ -27,7 +27,7 @@ flight_curve_multi <- function(...) multi_moved("flight_curve_multi")
 
 
 #' fit_bam_multi
-#' Deprecated, moved to develop/flight_curve_multi/fit_bam_multi.r in the rbms GitHub repository for further development;
+#' Deprecated, removed from the package for further development (the previous code is available in rbms 1.3.0);
 #' use \link{flight_curve}. Calling it returns an error with this information.
 #' @param ... not used.
 #' @keywords internal
@@ -40,7 +40,7 @@ fit_bam_multi <- function(...) multi_moved("fit_bam_multi")
 
 
 #' plot_flight_curve_multi
-#' Deprecated, moved to develop/flight_curve_multi/fit_bam_multi.r in the rbms GitHub repository for further development;
+#' Deprecated, removed from the package for further development (the previous code is available in rbms 1.3.0);
 #' use \link{plot.pheno_curve}. Calling it returns an error with this information.
 #' @param ... not used.
 #' @keywords internal

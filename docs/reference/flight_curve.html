@@ -14,7 +14,7 @@ Compute the annual flight curve from butterfly count data collated across sites.
 
     <a class="navbar-brand me-2" href="../index.html">rbms</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,6 +70,8 @@ Compute the annual flight curve from butterfly count data collated across sites.
 <span>  weekday <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  mod_form <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tp_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  n_cores <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -149,6 +151,17 @@ Compute the annual flight curve from butterfly count data collated across sites.
 
 <dt id="arg-tp-col">tp_col<a class="anchor" aria-label="anchor" href="#arg-tp-col"></a></dt>
 <dd><p>string or vector of string with additional variable used in the gam model, default null.</p></dd>
+
+
+<dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
+<dd><p>logical Fit the flight curves of the years in parallel, default FALSE. Useful with many years and large
+data; with small data, starting the workers can take longer than the fit. The workers load the installed rbms package.
+The random streams of the workers (sampling of NbrSample sites) are seeded from the session, so the result is reproducible
+with <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>, but can differ from the sequential fit when sites are sampled.</p></dd>
+
+
+<dt id="arg-n-cores">n_cores<a class="anchor" aria-label="anchor" href="#arg-n-cores"></a></dt>
+<dd><p>integer Number of cores used with parallel = TRUE, default NULL (all available cores minus one, at most one per year).</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>

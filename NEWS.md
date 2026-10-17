@@ -1,4 +1,4 @@
-# rbms (development version)
+# rbms 1.3.1
 
 ## New features
 
@@ -9,9 +9,8 @@
 
 * `flight_curve_optimised()` and `get_nm_optimised()` are deprecated: they gave the same results as `flight_curve()` and
   `get_nm()`, which they now call with a warning.
-* `flight_curve_multi()`, `fit_bam_multi()` and `plot_flight_curve_multi()` (one `bam()` model for all years) are moved
-  to `develop/flight_curve_multi/` in the GitHub repository for further development, with a comparison with
-  `flight_curve()`; in the package they return an error saying where the code is.
+* `flight_curve_multi()`, `fit_bam_multi()` and `plot_flight_curve_multi()` (one `bam()` model for all years) are removed
+  from the package for further development; they return an error, the previous code is available in rbms 1.3.0.
 * `flight_curve()` checks all the required columns of `ts_season_count` (only the first one was checked).
 * `flight_curve()` with `KeepModel = FALSE` and `KeepModelData = TRUE` returns the flight curves and the data (it returned
   the unformatted list).
@@ -24,8 +23,8 @@
 
 ## Potential breaking changes
 
-* Code using `flight_curve_multi()`, `fit_bam_multi()` or `plot_flight_curve_multi()` (exported in 1.3.0) needs to
-  source `develop/flight_curve_multi/fit_bam_multi.r` from the GitHub repository.
+* Code using `flight_curve_multi()`, `fit_bam_multi()` or `plot_flight_curve_multi()` (exported in 1.3.0) needs rbms 1.3.0,
+  or `flight_curve()`.
 * `flight_curve()` now stops with a clear message when a required column of `ts_season_count` is missing.
 
 # rbms 1.3.0

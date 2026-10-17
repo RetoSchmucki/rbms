@@ -1,5 +1,60 @@
 # Changelog
 
+## rbms 1.3.1
+
+### New features
+
+- [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+  gains `parallel` and `n_cores` to fit the flight curves of the years
+  in parallel. The random streams of the workers are seeded from the
+  session, so the result is reproducible with
+  [`set.seed()`](https://rdrr.io/r/base/Random.html).
+
+### Changes
+
+- [`flight_curve_optimised()`](https://retoschmucki.github.io/rbms/reference/flight_curve_optimised.md)
+  and
+  [`get_nm_optimised()`](https://retoschmucki.github.io/rbms/reference/get_nm_optimised.md)
+  are deprecated: they gave the same results as
+  [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+  and
+  [`get_nm()`](https://retoschmucki.github.io/rbms/reference/get_nm.md),
+  which they now call with a warning.
+- [`flight_curve_multi()`](https://retoschmucki.github.io/rbms/reference/flight_curve_multi.md),
+  [`fit_bam_multi()`](https://retoschmucki.github.io/rbms/reference/fit_bam_multi.md)
+  and
+  [`plot_flight_curve_multi()`](https://retoschmucki.github.io/rbms/reference/plot_flight_curve_multi.md)
+  (one `bam()` model for all years) are removed from the package for
+  further development; they return an error, the previous code is
+  available in rbms 1.3.0.
+- [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+  checks all the required columns of `ts_season_count` (only the first
+  one was checked).
+- [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+  with `KeepModel = FALSE` and `KeepModelData = TRUE` returns the flight
+  curves and the data (it returned the unformatted list).
+
+### Documentation
+
+- Vignette: the installation code is shown but not run, the messages of
+  [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+  are not printed, `linewidth` replaces the deprecated `size` of ggplot2
+  lines; author and date updated.
+- LICENSE year 2022-2026.
+
+### Potential breaking changes
+
+- Code using
+  [`flight_curve_multi()`](https://retoschmucki.github.io/rbms/reference/flight_curve_multi.md),
+  [`fit_bam_multi()`](https://retoschmucki.github.io/rbms/reference/fit_bam_multi.md)
+  or
+  [`plot_flight_curve_multi()`](https://retoschmucki.github.io/rbms/reference/plot_flight_curve_multi.md)
+  (exported in 1.3.0) needs rbms 1.3.0, or
+  [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md).
+- [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
+  now stops with a clear message when a required column of
+  `ts_season_count` is missing.
+
 ## rbms 1.3.0
 
 ### New features

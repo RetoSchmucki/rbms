@@ -26,13 +26,6 @@
 - [`df_visit_season()`](https://retoschmucki.github.io/rbms/reference/df_visit_season.md)
   : df_visit_season Link each recorded visit to a corresponding
   monitoring season, this function is used in ts_monit_site
-- [`fit_bam_multi()`](https://retoschmucki.github.io/rbms/reference/fit_bam_multi.md)
-  : fit_bam_multi Fit a Generalized Additive Model using bam() with
-  factor-smooth interactions to butterfly count data across multiple
-  years simultaneously. This function fits a single model across
-  multiple years using factor-smooth interactions (fs), which allows
-  year-specific smooth terms while sharing information across years.
-  This is more efficient than fitting separate models per year.
 - [`fit_gam()`](https://retoschmucki.github.io/rbms/reference/fit_gam.md)
   : fit_gam fit a Generalized Additive Model to butterfly count data
   along a temporal variable and accounting for site effect when multiple
@@ -40,20 +33,9 @@
 - [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
   : flight_curve Compute the annual flight curve from butterfly count
   data collated across sites.
-- [`flight_curve_multi()`](https://retoschmucki.github.io/rbms/reference/flight_curve_multi.md)
-  : flight_curve_multi Compute flight curves across multiple years
-  simultaneously using a single BAM model with factor-smooth
-  interactions. This is more efficient than fitting separate models per
-  year and can provide better estimates for years with sparse data.
-- [`flight_curve_optimised()`](https://retoschmucki.github.io/rbms/reference/flight_curve_optimised.md)
-  : flight_curve_optimised Optimised version: Compute the annual flight
-  curve from butterfly count data collated across sites.
 - [`get_nm()`](https://retoschmucki.github.io/rbms/reference/get_nm.md)
   : get_nm Compute the normalized flight curve by fitting a spline in a
   Generalized Additive Model for one year 'y' to butterfly count data.
-- [`get_nm_optimised()`](https://retoschmucki.github.io/rbms/reference/get_nm_optimised.md)
-  : get_nm_optimised Optimised version: find the nearest year with a
-  computed flight curve
 - [`get_nny()`](https://retoschmucki.github.io/rbms/reference/get_nny.md)
   : get_nny find the nearest year with a computed flight curve
 - [`impute_count()`](https://retoschmucki.github.io/rbms/reference/impute_count.md)
@@ -70,9 +52,6 @@
   : plot.pheno_curve Generic method to plot the flight curve, where
   values are extracted from a pheno_curve object (outcome of the
   light_curve() function)
-- [`plot_flight_curve_multi()`](https://retoschmucki.github.io/rbms/reference/plot_flight_curve_multi.md)
-  : plot_flight_curve_multi Plot annual flight curves from multi-year
-  BAM model with each year displayed in a different color.
 - [`points(`*`<pheno_curve>`*`)`](https://retoschmucki.github.io/rbms/reference/points.pheno_curve.md)
   : points.pheno_curve Generic method to add points on a plot of the
   flight curve, where values are extracted from a pheno_curve object

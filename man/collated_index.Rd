@@ -12,7 +12,9 @@ collated_index(
   bootID = NULL,
   boot_ind = NULL,
   glm_weights = TRUE,
-  rm_zero = TRUE
+  rm_zero = TRUE,
+  GlmFit = c("glm", "newton", "ipf"),
+  SplitGroup = TRUE
 )
 }
 \arguments{
@@ -29,9 +31,16 @@ collated_index(
 \item{glm_weights}{logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.}
 
 \item{rm_zero}{logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.}
+
+\item{GlmFit}{character Fitting of the GLM, 'glm' (default, \code{glm()}), 'newton' or 'ipf', see details.}
+
+\item{SplitGroup}{logical When the years form groups not linked through sites with observations, fit each group separately
+(default TRUE, the correct method). FALSE fits all years together as in previous versions (glm only), the levels of the
+groups are then arbitrary; 'newton' and 'ipf' always fit the groups separately.}
 }
 \value{
-a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.
+a list with the collated indices per year (col_index), the site ids of the sample (site_id) and, with GlmFit = 'newton',
+the year effects (year_effect, see details), NULL otherwise.
 }
 \description{
 collated_index
@@ -42,6 +51,17 @@ Site-years with NA in \code{sindex_value} (e.g. years where the flight curve fai
 and removed with a warning, as done by \link{site_index}; a site with NA in all years is therefore not part of the sample.
 When \code{boot_ind} was generated for a species with \code{boot_sample(s_sp = )}, \code{s_sp} must be the same species.
 A bootstrap sample that failed in \code{boot_sample()} (NA row) returns NA for the collated index and the number of sites.
+With GlmFit = 'newton' or 'ipf', the same weighted Poisson GLM (site and year effects) is fitted without building the model
+matrix (see \link{impute_count} for the two methods), which is much faster with many sites and gives the same collated index as
+\code{glm()}. With 'newton', year_effect gives per year the log year effect relative to the first year of each group of linked
+years (LOG_EFFECT), i.e. the log of the collated index relative to that year, with its quasi-Poisson standard error (SE), an
+alternative to the bootstrap that ignores the variation among sites. The column GROUP gives the group of years linked through
+sites with observations in the original data (see \link{n_components}), NA for years without observation. When the years form
+more than one group, the collated index is only comparable between years of the same group (warning): with SplitGroup = TRUE,
+each group is fitted separately on its own years and sites, its index being the mean over the sites with data in the years of
+the group, so each group is a separate series. Fitting all years together (SplitGroup = FALSE, previous versions) gives arbitrary
+levels between groups and can distort the trend within a group, because zero counts of sites observed only in another group
+enter the fit.
 }
 \seealso{
 \link{impute_count}, \link{flight_curve}

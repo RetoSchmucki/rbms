@@ -38,7 +38,9 @@ site_year_level(
 \item{maxit}{integer Maximum number of iterations, default 100 for Newton and 10000 for IPF.}
 }
 \value{
-numeric vector The level of the site-year of each count, the fitted count being \code{level * nm}. With Newton,
+numeric vector The level of the site-year of each count, the fitted count being \code{level * nm}. The attribute
+"effects" is a list with the site (site) and year (year) multiplicative effects, named by site and year, level = site x year
+(the scale between them is arbitrary, their product is not). With Newton,
 the attribute "year_effect" is a data.table with, per year, the group of linked years (GROUP), the log year effect
 relative to the first year of the group (LOG_EFFECT, -Inf for years without count), its standard error (SE) scaled
 by the quasi-Poisson dispersion and conditional on the site totals, and the dispersion (DISPERSION).

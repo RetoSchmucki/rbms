@@ -573,6 +573,17 @@ collated_index_old <- function(...){
 #' and removed with a warning, as done by \link{site_index}; a site with NA in all years is therefore not part of the sample.
 #' When \code{boot_ind} was generated for a species with \code{boot_sample(s_sp = )}, \code{s_sp} must be the same species.
 #' A bootstrap sample that failed in \code{boot_sample()} (NA row) returns NA for the collated index and the number of sites.
+#' With GlmFit = 'newton' or 'ipf', the same weighted Poisson GLM (site and year effects) is fitted without building the model
+#' matrix (see \link{impute_count} for the two methods), which is much faster with many sites and gives the same collated index as
+#' \code{glm()}. With 'newton', year_effect gives per year the log year effect relative to the first year of each group of linked
+#' years (LOG_EFFECT), i.e. the log of the collated index relative to that year, with its quasi-Poisson standard error (SE), an
+#' alternative to the bootstrap that ignores the variation among sites. The column GROUP gives the group of years linked through
+#' sites with observations in the original data (see \link{n_components}), NA for years without observation. When the years form
+#' more than one group, the collated index is only comparable between years of the same group (warning): with SplitGroup = TRUE,
+#' each group is fitted separately on its own years and sites, its index being the mean over the sites with data in the years of
+#' the group, so each group is a separate series. Fitting all years together (SplitGroup = FALSE, previous versions) gives arbitrary
+#' levels between groups and can distort the trend within a group, because zero counts of sites observed only in another group
+#' enter the fit.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string Species name to be found in the data.
 #' @param sindex_value string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.
@@ -580,7 +591,12 @@ collated_index_old <- function(...){
 #' @param boot_ind data.table Index of the bootstrap and the site ids of the specific bootstrap sample.
 #' @param glm_weights logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.
 #' @param rm_zero logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.
-#' @return a list of two objects, a vector of site, a glm model object, and a vector of collated indices per year.
+#' @param GlmFit character Fitting of the GLM, 'glm' (default, \code{glm()}), 'newton' or 'ipf', see details.
+#' @param SplitGroup logical When the years form groups not linked through sites with observations, fit each group separately
+#' (default TRUE, the correct method). FALSE fits all years together as in previous versions (glm only), the levels of the
+#' groups are then arbitrary; 'newton' and 'ipf' always fit the groups separately.
+#' @return a list with the collated indices per year (col_index), the site ids of the sample (site_id) and, with GlmFit = 'newton',
+#' the year effects (year_effect, see details), NULL otherwise.
 #' @keywords annual index
 #' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
@@ -588,9 +604,11 @@ collated_index_old <- function(...){
 #' @export collated_index
 #'
 
-collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL, 
-    boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE){
+collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
+    boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE, GlmFit = c("glm", "newton", "ipf"), SplitGroup = TRUE){
 
+  GlmFit <- match.arg(GlmFit)
+  year_effect <- NULL
   data <- setDT(data)
   data = data[SPECIES == s_sp, ]
 
@@ -627,9 +645,9 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
   ## bootstrap sample that failed in boot_sample() after max_trial trials (NA row): no index computed
   if(bootID > 0 && anyNA(boot_ind$boot_ind[bootID, ])){
     res <- data.table(BOOTi = bootID, M_YEAR = y[order(y)], NSITE = NA_integer_, NSITE_B = NA_integer_,
-                      NSITE_OBS = NA_integer_, COL_INDEX = NA_real_)
+                      NSITE_OBS = NA_integer_, COL_INDEX = NA_real_, GROUP = NA_integer_)
     setkey(res, M_YEAR)
-    return(list(col_index = res, site_id = NA_character_))
+    return(list(col_index = res, site_id = NA_character_, year_effect = NULL))
   }
 
   if(bootID == 0){
@@ -652,7 +670,21 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
   data[ , SITE_ID:=as.character(SITE_ID)]
   data[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
 
-  setkey(a, uID); 
+  ## groups of years linked through sites with observations in the original data (see n_components),
+  ## years without observation have no group
+  obs_0 <- data[get(sindex_value) > 0, ]
+  year_group <- if(nrow(obs_0) > 0) year_components(obs_0$SITE_ID, obs_0$M_YEAR) else integer(0)
+  grp <- data.table(M_YEAR = as.numeric(names(year_group)), GROUP = as.integer(year_group))
+  if(bootID == 0 && uniqueN(grp$GROUP) > 1){
+    warning(paste0(s_sp, ": the years form ", uniqueN(grp$GROUP), " groups not linked through sites with observations (",
+                   paste(grp[, paste(range(M_YEAR), collapse = "-"), by = GROUP]$V1, collapse = ", "),
+                   "); the collated index is only comparable between years of the same group, ",
+                   if(isTRUE(SplitGroup) || GlmFit != "glm") "each group is fitted separately (SplitGroup = TRUE)"
+                   else "all years are fitted together (SplitGroup = FALSE) and the levels of the groups are arbitrary, use SplitGroup = TRUE"),
+            call. = FALSE)
+  }
+
+  setkey(a, uID);
   setkey(s_y, uID)
   s_y <- merge(s_y, a, all.x=TRUE)
 
@@ -679,16 +711,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
       data_boot <- data_boot[!uID %in% zero_site, -c("tmpV1")]
     }
 
-    pred_data_boot <- data.table(expand.grid(uID = unique(data_boot$uID), M_YEAR = unique(data_boot$M_YEAR)))
-    #names(pred_data_boot) <- c("uID", "M_YEAR")
-
     if (data_boot[, uniqueN(M_YEAR)] == 1 & data_boot[, uniqueN(SITE_ID)] == 1) warning(paste0(sindex_value, " available for only one site and one year: no collated index computed for ", s_sp, " - ", unique(data_boot$M_YEAR)), call. = FALSE)
-    
-    if (data_boot[, uniqueN(M_YEAR)] == 1) {
-      mod_form <- as.formula(paste0("I(round(", sindex_value, ")) ~ factor(uID) - 1"))
-    } else {
-      mod_form <- as.formula(ifelse(data_boot[, uniqueN(SITE_ID)] > 1, paste0("I(round(", sindex_value, ")) ~ factor(uID) + factor(M_YEAR) - 1"), paste0("I(round(", sindex_value, ")) ~ factor(M_YEAR) - 1")))
-    }
 
     if(!isTRUE(glm_weights)){
       data_boot[ , weights := 1]
@@ -719,27 +742,66 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #        col_index <- try(glmmTMB::glmmTMB(mod_form, data = data_boot, family = poisson(),
 #                      weights = data_boot$weights), silent = TRUE)
 #        if (inherits(col_index, "try-error")) {
-          col_index <- try(glm(mod_form, data = data_boot, family = poisson(), 
-                      weights = data_boot$weights), silent = TRUE)
+    ## years fitted together: each group of linked years separately (SplitGroup = TRUE, always with newton and ipf),
+    ## or all years at once (one group, or SplitGroup = FALSE with glm, the former joint fit). Index of a group = prediction
+    ## over its sites and years / number of sites with data in its years (all sites of the species when fitted at once)
+    if(uniqueN(grp$GROUP) > 1 && (isTRUE(SplitGroup) || GlmFit != "glm")){
+      fit_years <- split(grp$M_YEAR, grp$GROUP)
+    } else {
+      fit_years <- list(`1` = unique(data_boot$M_YEAR))
+    }
+
+    co_index_res <- list()
+    ye <- list()
+    for(g in names(fit_years)){
+      yrs <- fit_years[[g]]
+      d_g <- data_boot[M_YEAR %in% yrs, ]
+      if(nrow(d_g) == 0 || !any(d_g[[sindex_value]] > 0)) next
+      n_site_g <- if(length(fit_years) == 1) length(unique(data$SITE_ID)) else data[M_YEAR %in% yrs, uniqueN(SITE_ID)]
+
+      if(GlmFit == "glm"){
+        if (d_g[, uniqueN(M_YEAR)] == 1) {
+          mod_form <- as.formula(paste0("I(round(", sindex_value, ")) ~ factor(uID) - 1"))
+        } else {
+          mod_form <- as.formula(ifelse(d_g[, uniqueN(SITE_ID)] > 1, paste0("I(round(", sindex_value, ")) ~ factor(uID) + factor(M_YEAR) - 1"), paste0("I(round(", sindex_value, ")) ~ factor(M_YEAR) - 1")))
+        }
+          col_index <- try(glm(mod_form, data = d_g, family = poisson(),
+                      weights = d_g$weights), silent = TRUE)
             if (inherits(col_index, "try-error")) {
-              res <- sum_data[, COL_INDEX := NA]
-              return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_OBS, COL_INDEX)], site_id = a$SITE_ID ))
+              res <- merge(sum_data[, COL_INDEX := NA_real_], grp, by = "M_YEAR", all.x = TRUE)
+              return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_B, NSITE_OBS, COL_INDEX, GROUP)], site_id = a$SITE_ID, year_effect = NULL))
             }
 #        }
 #     }
-
-    pred_data_boot$fitted <- predict(col_index, newdata = pred_data_boot, type = "response")
-
-    co_index_res <- data.table(pred_data_boot)[order(M_YEAR), sum(fitted)/length(unique(data$SITE_ID)), by = M_YEAR]
-    setnames(co_index_res, "V1", "COL_INDEX"); setkey(co_index_res, M_YEAR)
+        pred_data_boot <- data.table(expand.grid(uID = unique(d_g$uID), M_YEAR = unique(d_g$M_YEAR)))
+        pred_data_boot$fitted <- predict(col_index, newdata = pred_data_boot, type = "response")
+        co_g <- pred_data_boot[order(M_YEAR), .(COL_INDEX = sum(fitted)/n_site_g), by = M_YEAR]
+      } else {
+        ## same weighted Poisson GLM fitted without model matrix (weighted counts, weights as flight curve covered):
+        ## prediction over all sites and years = year effect x sum of site effects
+        fit_level <- site_year_level(d_g$uID, d_g$M_YEAR, d_g$weights * round(d_g[[sindex_value]]), d_g$weights, method = GlmFit)
+        eff <- attr(fit_level, "effects")
+        co_g <- data.table(M_YEAR = as.numeric(names(eff$year)), COL_INDEX = eff$year * sum(eff$site) / n_site_g)
+        if(!is.null(attr(fit_level, "year_effect"))){
+          ye[[length(ye) + 1]] <- attr(fit_level, "year_effect")[, M_YEAR := as.numeric(M_YEAR)][, GROUP := NULL]
+        }
+      }
+      co_index_res[[length(co_index_res) + 1]] <- co_g
+    }
+    co_index_res <- if(length(co_index_res) > 0) rbindlist(co_index_res) else data.table(M_YEAR = numeric(0), COL_INDEX = numeric(0))
+    if(length(ye) > 0) year_effect <- merge(rbindlist(ye), grp, by = "M_YEAR", all.x = TRUE)[, .(M_YEAR, GROUP, LOG_EFFECT, SE, DISPERSION)]
+    setkey(co_index_res, M_YEAR)
     res <- merge(sum_data, co_index_res, all.x = TRUE)[is.na(COL_INDEX), COL_INDEX := 0]
 
   } else {
     res <- sum_data[, COL_INDEX := 0]
   }
 
-  return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_B, NSITE_OBS, COL_INDEX)],
-                site_id = a$SITE_ID ))
+  res <- merge(res, grp, by = "M_YEAR", all.x = TRUE)
+  setkey(res, M_YEAR)
+
+  return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_B, NSITE_OBS, COL_INDEX, GROUP)],
+                site_id = a$SITE_ID, year_effect = year_effect))
 }
 
 

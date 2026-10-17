@@ -103,7 +103,9 @@ sum_by <- function(x, g, n){
 #' @param method character Fitting method, "newton" (default) or "ipf".
 #' @param tol numeric Tolerance for convergence, default 1e-8.
 #' @param maxit integer Maximum number of iterations, default 100 for Newton and 10000 for IPF.
-#' @return numeric vector The level of the site-year of each count, the fitted count being \code{level * nm}. With Newton,
+#' @return numeric vector The level of the site-year of each count, the fitted count being \code{level * nm}. The attribute
+#' "effects" is a list with the site (site) and year (year) multiplicative effects, named by site and year, level = site x year
+#' (the scale between them is arbitrary, their product is not). With Newton,
 #' the attribute "year_effect" is a data.table with, per year, the group of linked years (GROUP), the log year effect
 #' relative to the first year of the group (LOG_EFFECT, -Inf for years without count), its standard error (SE) scaled
 #' by the quasi-Poisson dispersion and conditional on the site totals, and the dispersion (DISPERSION).
@@ -117,7 +119,8 @@ site_year_level <- function(site, year, count, nm, method = c("newton", "ipf"), 
   method <- match.arg(method)
 
   ## site x year table: total count (C) and flight curve covered (N)
-  rs <- as.integer(factor(site))
+  fs <- factor(site)
+  rs <- as.integer(fs)
   fy <- factor(year)
   ry <- as.integer(fy)
   n_s <- max(rs)
@@ -160,6 +163,7 @@ site_year_level <- function(site, year, count, nm, method = c("newton", "ipf"), 
   level_sy <- numeric(n_s * n_y)
   level_sy[(sy$s - 1) * n_y + sy$y] <- a[sy$s] * b[sy$y]
   level <- level_sy[(rs - 1) * n_y + ry]
+  data.table::setattr(level, "effects", list(site = stats::setNames(a, levels(fs)), year = stats::setNames(b, levels(fy))))
 
   if(!is.null(year_effect)){
     ## quasi-Poisson dispersion from the counts, scales the standard errors

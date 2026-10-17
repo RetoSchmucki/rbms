@@ -1,19 +1,5 @@
 # rbms 1.3.0
 
-## Potential breaking changes
-
-With the default arguments, the results of the standard workflow (flight curve, imputed counts, site indices, collated
-index and bootstrap) are identical to version 1.2.1. A pipeline is only affected in the following, unlikely cases:
-
-* `collated_index()` returns an additional column `GROUP` in `col_index` and an additional element `year_effect`; code that
-  selects columns by position or binds outputs with `rbind()` may need adjusting (selection by name and
-  `data.table::rbindlist()` are not affected).
-* Data where the years form groups not linked through common sites: the collated index now differs, each group being
-  fitted separately (`SplitGroup = FALSE` gives the previous result, whose levels between groups were arbitrary).
-* Data with NA or infinite site indices: these site-years are now removed; previously an NA site set the collated index
-  to 0 in all years, and `site_index(MinFC = NULL)` kept infinite values.
-* speedglm is no longer installed with rbms; scripts calling `speedglm()` directly need it installed.
-* `collated_index_old()` now returns an error (it did not run in previous versions).
 
 ## New features
 
@@ -50,6 +36,21 @@ index and bootstrap) are identical to version 1.2.1. A pipeline is only affected
 * `collated_index_old()` is deprecated and returns an error, use `collated_index()`.
 * `plot()` and `points()` methods for `pheno_curve` objects: the first argument is now `x`, as in the generics.
 * speedglm is no longer needed; glmmTMB and ggplot2 are suggested.
+
+## Potential breaking changes
+
+With the default arguments, the results of the standard workflow (flight curve, imputed counts, site indices, collated
+index and bootstrap) are identical to version 1.2.1. A pipeline is only affected in the following, unlikely cases:
+
+* `collated_index()` returns an additional column `GROUP` in `col_index` and an additional element `year_effect`; code that
+  selects columns by position or binds outputs with `rbind()` may need adjusting (selection by name and
+  `data.table::rbindlist()` are not affected).
+* Data where the years form groups not linked through common sites: the collated index now differs, each group being
+  fitted separately (`SplitGroup = FALSE` gives the previous result, whose levels between groups were arbitrary).
+* Data with NA or infinite site indices: these site-years are now removed; previously an NA site set the collated index
+  to 0 in all years, and `site_index(MinFC = NULL)` kept infinite values.
+* speedglm is no longer installed with rbms; scripts calling `speedglm()` directly need it installed.
+* `collated_index_old()` now returns an error (it did not run in previous versions).
 
 ## Documentation
 

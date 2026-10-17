@@ -1,6 +1,13 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-/develop/
+^develop$
+^docs$
+^data-raw$
+^_pkgdown\.yml$
+^ablelogo\.xcf$
+^rbmshexOR200\.png$
+^bash\.exe\.stackdump$
+^\.Rhistory$
 ^\.github$
 ^doc$
 ^Meta$

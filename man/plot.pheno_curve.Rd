@@ -5,10 +5,10 @@
 \title{plot.pheno_curve
 Generic method to plot the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)}
 \usage{
-\method{plot}{pheno_curve}(data_x, year = NULL, weekday = 3, SiteID = NULL, ymax = NULL, ...)
+\method{plot}{pheno_curve}(x, year = NULL, weekday = 3, SiteID = NULL, ymax = NULL, ...)
 }
 \arguments{
-\item{data_x}{pheno_curve object which is the outcome of the light_curve() function}
+\item{x}{pheno_curve object which is the outcome of the light_curve() function}
 
 \item{year}{integer or vector for the year(s) to be displayed (e.g. 2015 or c(2000, 2001)), default is NULL.}
 

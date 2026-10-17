@@ -1,6 +1,6 @@
 #' plot.pheno_curve
 #' Generic method to plot the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)
-#' @param data_x pheno_curve object which is the outcome of the light_curve() function
+#' @param x pheno_curve object which is the outcome of the light_curve() function
 #' @param year integer or vector for the year(s) to be displayed (e.g. 2015 or c(2000, 2001)), default is NULL.
 #' @param weekday weekday to be used for date in weekly count, where 1 refers to Monday, default is 3 (Wednesday)
 #' @param SiteID integer or string to ID the site to display, default the first site is displayed.
@@ -11,7 +11,9 @@
 #' @export
 #'
 
-plot.pheno_curve <- function(data_x, year = NULL, weekday = 3, SiteID = NULL, ymax = NULL, ...) {
+plot.pheno_curve <- function(x, year = NULL, weekday = 3, SiteID = NULL, ymax = NULL, ...) {
+
+    data_x <- x
 
     if ("DAY" %in% names(data_x$pheno)) {
         data_x$pheno[, DATE := data.table::as.IDate(as.Date(paste(YEAR, MONTH, DAY, sep = "-")))]
@@ -77,7 +79,7 @@ plot.pheno_curve <- function(data_x, year = NULL, weekday = 3, SiteID = NULL, ym
 
 #' points.pheno_curve
 #' Generic method to add points on a plot of the flight curve, where values are extracted from a pheno_curve object (outcome of the light_curve() function)
-#' @param data_x pheno_curve object which is the outcome of the light_curve() function
+#' @param x pheno_curve object which is the outcome of the light_curve() function
 #' @param year integer or vector for the year(s) to be displayed (e.g. 2015 or c(2000, 2001)), default is NULL.
 #' @param weekday weekday to be used for date in weekly count, where 1 refers to Monday, default is 3 (Wednesday)
 #' @param SiteID integer or string to ID the site to display, default the first site is displayed.
@@ -89,7 +91,9 @@ plot.pheno_curve <- function(data_x, year = NULL, weekday = 3, SiteID = NULL, ym
 #' @export
 #'
 
-points.pheno_curve <- function(data_x, year = NULL, weekday = 3, SiteID = NULL, BaseYear = NULL, ...) {
+points.pheno_curve <- function(x, year = NULL, weekday = 3, SiteID = NULL, BaseYear = NULL, ...) {
+
+    data_x <- x
 
     if ("DAY" %in% names(data_x$pheno)) {
         data_x$pheno[, DATE := data.table::as.IDate(as.Date(paste(YEAR, MONTH, DAY, sep = "-"), format = "%Y-%m-%d"))]

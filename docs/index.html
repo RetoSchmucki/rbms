@@ -102,76 +102,10 @@
 <p>Consult the <a href="https://retoschmucki.github.io/rbms/articles/vignette.html">tutorial vignettes / Articles</a> to learn about <code>rbms</code> data format and the workflow how to compute flight curves, abundance indices, and collated index with a bootstrap confidence interval</p>
 <p>Further documentation is also available through the help function in R or from the <a href="https://retoschmucki.github.io/rbms/reference/index.html">rbms online references</a></p>
 </div>
-<div class="section level3">
-<h3 id="development">Development<a class="anchor" aria-label="anchor" href="#development"></a>
-</h3>
-<p>Since version v.1.1.0, rbms is likely to perform better with species having sparse data, potentially resulting in more flight curves and indices being computed. This version implements a basic plot method for “pheno_curve”, using the object produced by the <code><a href="reference/flight_curve.html">flight_curve()</a></code> function as an argument.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span> <span class="co"># usage or plot method</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://retoschmucki.github.io/rbms/">rbms</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_visit</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">m_count</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ts_date</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_dwmy_table.html">ts_dwmy_table</a></span><span class="op">(</span>InitYear <span class="op">=</span> <span class="fl">2000</span>, LastYear <span class="op">=</span> <span class="fl">2003</span>, WeekDay1 <span class="op">=</span> <span class="st">'monday'</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ts_season</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_monit_season.html">ts_monit_season</a></span><span class="op">(</span><span class="va">ts_date</span>,</span>
-<span>                        StartMonth <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                        EndMonth <span class="op">=</span> <span class="fl">9</span>, </span>
-<span>                        StartDay <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                        EndDay <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                        CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                        Anchor <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                        AnchorLength <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                        AnchorLag <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                        TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ts_season_visit</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_monit_site.html">ts_monit_site</a></span><span class="op">(</span><span class="va">ts_season</span>, <span class="va">m_visit</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ts_season_count</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/ts_monit_count_site.html">ts_monit_count_site</a></span><span class="op">(</span><span class="va">ts_season_visit</span>, <span class="va">m_count</span>, sp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ts_flight_curve</span> <span class="op">&lt;-</span> <span class="fu">rbms</span><span class="fu">::</span><span class="fu"><a href="reference/flight_curve.html">flight_curve</a></span><span class="op">(</span><span class="va">ts_season_count</span>, </span>
-<span>                        NbrSample <span class="op">=</span> <span class="fl">300</span>,</span>
-<span>                        MinVisit <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>                        MinOccur <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                        MinNbrSite <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>                        MaxTrial <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>                        GamFamily <span class="op">=</span> <span class="st">'nb'</span>,</span>
-<span>                        SpeedGam <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                        CompltSeason <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                        SelectYear <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                        TimeUnit <span class="op">=</span> <span class="st">'w'</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Flight curves are in the "pheno" data.table located within the ts_flight_curve result is a list</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">$</span><span class="va">pheno</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Basic plot method to plot flight curve</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span>
-<span></span>
-<span> <span class="co"># for a single or multiple years</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2001</span>, <span class="fl">2002</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2001</span>, col <span class="op">=</span> <span class="st">'magenta'</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># for multiple year curves overlapping on a base year, use the argument BaseYear</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2000</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, col <span class="op">=</span> <span class="st">'dodgerblue4'</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, BaseYear <span class="op">=</span> <span class="fl">2000</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'cyan4'</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2001</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, BaseYear <span class="op">=</span> <span class="fl">2000</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2000"</span>, <span class="st">"2001"</span>, <span class="st">"2002"</span><span class="op">)</span>, </span>
-<span>    col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"cyan4"</span>, <span class="st">"orange"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    box.lty<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># multiple year curves on a time series with different portions per year, use xlim</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2000-01-01"</span>, <span class="st">"2002-12-30"</span><span class="op">)</span>, format <span class="op">=</span> <span class="st">"%Y-%m-%d"</span><span class="op">)</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, col <span class="op">=</span> <span class="st">'dodgerblue4'</span><span class="op">)</span> </span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2001</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'cyan4'</span><span class="op">)</span> </span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">ts_flight_curve</span>, year <span class="op">=</span> <span class="fl">2002</span>, SiteID <span class="op">=</span> <span class="fl">1</span>, type <span class="op">=</span> <span class="st">'l'</span>, col <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span> </span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2000"</span>, <span class="st">"2001"</span>, <span class="st">"2002"</span><span class="op">)</span>, </span>
-<span>    col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"cyan4"</span>, <span class="st">"orange"</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>    box.lty<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="reporting-issues">Reporting Issues<a class="anchor" aria-label="anchor" href="#reporting-issues"></a>
 </h4>
 <p>For reporting issues related to this package or workflow, please visit the issue and before opening a new one, see if your problem is not already in the list reported <a href="https://github.com/RetoSchmucki/rbms/issues" class="external-link">issues here</a></p>
-</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

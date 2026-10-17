@@ -3,7 +3,7 @@
 \name{index_sample_data}
 \alias{index_sample_data}
 \title{index_sample_data
-Data of a species for a collated index: site-years with NA in \code{sindex_value} removed (warning), the sites of the
+Data of a species for a collated index: site-years with NA or infinite \code{sindex_value} removed (warning), the sites of the
 original data or of the bootstrap sample \code{bootID} (each draw of a site with its own uID), the groups of years linked
 through sites with observations in the original data, and the number of sites per year. Used by \link{collated_index}
 and \link{collated_index_mixed}.}
@@ -26,7 +26,7 @@ failed in \link{boot_sample} (NA row), the output of the collated index with NA 
 }
 \description{
 index_sample_data
-Data of a species for a collated index: site-years with NA in \code{sindex_value} removed (warning), the sites of the
+Data of a species for a collated index: site-years with NA or infinite \code{sindex_value} removed (warning), the sites of the
 original data or of the bootstrap sample \code{bootID} (each draw of a site with its own uID), the groups of years linked
 through sites with observations in the original data, and the number of sites per year. Used by \link{collated_index}
 and \link{collated_index_mixed}.

@@ -251,7 +251,7 @@ newton_year <- function(sy, C_s, C_y, n_s, n_y, tol = 1e-8, maxit = 100){
 
 
 #' index_sample_data
-#' Data of a species for a collated index: site-years with NA in \code{sindex_value} removed (warning), the sites of the
+#' Data of a species for a collated index: site-years with NA or infinite \code{sindex_value} removed (warning), the sites of the
 #' original data or of the bootstrap sample \code{bootID} (each draw of a site with its own uID), the groups of years linked
 #' through sites with observations in the original data, and the number of sites per year. Used by \link{collated_index}
 #' and \link{collated_index_mixed}.
@@ -269,10 +269,10 @@ index_sample_data <- function(data, s_sp, sindex_value = "SINDEX", bootID = NULL
   data = data[SPECIES == s_sp, ]
 
   ## site-years without index (e.g. failed flight curve) are missing, not zero: removed as in site_index()
-  n_na <- data[is.na(get(sindex_value)), .N]
+  n_na <- data[!is.finite(get(sindex_value)), .N]
   if(n_na > 0){
-    warning(paste0(s_sp, ": ", n_na, " site-years with NA in ", sindex_value, " removed before computing the collated index"), call. = FALSE)
-    data <- data[!is.na(get(sindex_value)), ]
+    warning(paste0(s_sp, ": ", n_na, " site-years with NA or infinite ", sindex_value, " removed before computing the collated index"), call. = FALSE)
+    data <- data[is.finite(get(sindex_value)), ]
   }
   if(nrow(data) == 0) stop(paste0("no ", sindex_value, " available for species ", s_sp), call. = FALSE)
 

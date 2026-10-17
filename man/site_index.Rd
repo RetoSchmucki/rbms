@@ -14,6 +14,7 @@ site_index(butterfly_count, MinFC = NULL)
 }
 \value{
 data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
+Site-years with a missing or infinite site index are removed.
 }
 \description{
 site_index

@@ -406,6 +406,7 @@ check_pheno <- function(sp_count_flight, ts_flight_curve, YearCheck, YearLimit, 
 #' @param GlmFit character Fitting of the GLM when SindexMethod = 'glm', 'newton' (default) or 'ipf', see details.
 #' @param verbose a logical indicating if some “progress report” should be given.
 #' @return A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
+#' SINDEX is NA when the visits cover no part of the flight curve (TOTAL_NM = 0, e.g. no flight curve available within YearLimit).
 #' @details Site indices can be extracted from the data.table returned by this function. With SindexMethod = 'ratio', the site index
 #' is computed by adjusting the count by the proportion of the flight curve covered by the visits (TOTAL_COUNT / TOTAL_NM), each site-year
 #' being estimated on its own. With SindexMethod = 'glm', the counts of the time-steps not visited are predicted from a Poisson GLM with site
@@ -485,7 +486,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
         setkey(total_nm, M_YEAR, SITE_ID)
         setkey(sp_count_flight, M_YEAR, SITE_ID)
 
-        sp_count_flight <- merge(sp_count_flight, merge(total_count, total_nm, all.x=TRUE)[, SINDEX := TOTAL_COUNT / TOTAL_NM], all.x = TRUE)
+        sp_count_flight <- merge(sp_count_flight, merge(total_count, total_nm, all.x=TRUE)[, SINDEX := TOTAL_COUNT / TOTAL_NM][TOTAL_NM == 0, SINDEX := NA_real_], all.x = TRUE)
         sp_count_flight[, IMPUTED_COUNT:= COUNT][M_SEASON != 0 & is.na(COUNT), IMPUTED_COUNT := as.integer(round(SINDEX*NM))]
 
         glm_year_effect <- NULL
@@ -531,6 +532,7 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
 #' @param butterfly_count data.table Observed and imputed weekly or daily counts and the estimated total counts (SINDEX) computed by the function impute_count().
 #' @param MinFC numeric Value between 0 and 1 to define the threshold for the proportion of the flight curve covered by the visits, if NULL all site-year available indices are returned.
 #' @return data.table Estimated annual abundance index and the proportion of the flight curve covered by the visit - total weekly or daily count over the entire monitoring season.
+#' Site-years with a missing or infinite site index are removed.
 #' @keywords butterfly count
 #' @seealso \link{impute_count}, \link{flight_curve}
 #' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
@@ -541,10 +543,10 @@ impute_count <- function(ts_season_count, ts_flight_curve, TimeUnit = 'd', Multi
 site_index <- function(butterfly_count, MinFC = NULL){
 
       if(is.null(MinFC)){
-        sindex <- unique(butterfly_count[!is.na(SINDEX), .(SPECIES, SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
+        sindex <- unique(butterfly_count[is.finite(SINDEX), .(SPECIES, SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
       } else {
         if(!MinFC >= 0 & MinFC <= 1) stop('MinFC must be between 0 and 1, or NULL')
-        sindex <- unique(butterfly_count[!is.na(SINDEX) & TOTAL_NM >= MinFC, .(SPECIES, SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
+        sindex <- unique(butterfly_count[is.finite(SINDEX) & TOTAL_NM >= MinFC, .(SPECIES, SITE_ID, M_YEAR, TOTAL_NM, SINDEX)])
       }
 
     return(sindex)
@@ -569,7 +571,7 @@ collated_index_old <- function(...){
 
 #' collated_index
 #' compute a collated index from the site indices, using a Generalized Linear Model.
-#' @details Site-years with NA in \code{sindex_value} (e.g. years where the flight curve failed) are treated as missing
+#' @details Site-years with NA or infinite \code{sindex_value} (e.g. years where the flight curve failed) are treated as missing
 #' and removed with a warning, as done by \link{site_index}; a site with NA in all years is therefore not part of the sample.
 #' When \code{boot_ind} was generated for a species with \code{boot_sample(s_sp = )}, \code{s_sp} must be the same species.
 #' A bootstrap sample that failed in \code{boot_sample()} (NA row) returns NA for the collated index and the number of sites.
@@ -988,7 +990,7 @@ boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX
   }
 
   dt <- data[SPECIES == s_sp, .(SITE_ID = as.character(SITE_ID), M_YEAR = as.numeric(as.character(M_YEAR)), SVALUE = get(sindex_value))]
-  dt <- dt[!is.na(SVALUE), ]
+  dt <- dt[is.finite(SVALUE), ]
   if(nrow(dt) == 0) stop(paste0("no ", sindex_value, " available for species ", s_sp), call. = FALSE)
 
   site_id <- unique(dt$SITE_ID)

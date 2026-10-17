@@ -46,6 +46,7 @@ impute_count(
 }
 \value{
 A data.table based on the entry count data, augmented with site indices 'SINDEX' and imputed weekly count 'IMPUTED_COUNT'.
+SINDEX is NA when the visits cover no part of the flight curve (TOTAL_NM = 0, e.g. no flight curve available within YearLimit).
 }
 \description{
 impute_count

@@ -25,14 +25,16 @@ The data used in this vignette are bundled within the package and are from genui
 ## 1. Setup
 
 First, install and load required packages.
-```{r data}
+```{r install, eval = FALSE}
 # Install required packages
 install.packages("remotes") # To install R packages from github
 install.packages("ggplot2") # to generate plots in this tutorial
 
 # Install rbms from github
-# remotes::install_github("https://github.com/RetoSchmucki/rbms.git")
+remotes::install_github("RetoSchmucki/rbms")
+```
 
+```{r data, warning = FALSE}
 # Load rbms and ggplot2
 library(rbms)
 library(ggplot2)
@@ -121,7 +123,7 @@ we can compute the flight curve for each year by using the `flight_curve` functi
 
 *You will also have to define some parameters for the distribution for the GAM model as well as the maximum number of times to try to fit the model and the number of samples to use. The later will take a random sample from the data set if it contains more sites than the number specified.*
 
-```{r flight_curve}
+```{r flight_curve, message = FALSE}
  ts_flight_curve <- rbms::flight_curve(ts_season_count, NbrSample = 300, MinVisit = 5, MinOccur = 3, MinNbrSite = 5, MaxTrial = 4, GamFamily = 'nb', SpeedGam = FALSE, CompltSeason = TRUE, SelectYear = NULL, TimeUnit = 'w')
 ```
 
@@ -225,7 +227,7 @@ p <- ggplot(b2, aes(x = M_YEAR)) +
             fill = "white", alpha = 0.2) +
   # Adding the lines and points for non-missing LCI values
   geom_line(data = subset(b2, !is.na(LCI)), aes(y = LCI), linetype = "dashed", color = "grey70") +
-  geom_line(aes(y = LCI), size = 1.3, color = col_pal[1]) +
+  geom_line(aes(y = LCI), linewidth = 1.3, color = col_pal[1]) +
   geom_point(data = subset(b2, !is.na(LCI)), aes(y = LCI), color = col_pal[1], shape = 19) +
   # Adding the horizontal line
   geom_hline(yintercept = 2, linetype = "dashed") +
@@ -238,7 +240,7 @@ p <- ggplot(b2, aes(x = M_YEAR)) +
 
 # Adding the regression line if lm_mod is not a try-error
 if (class(lm_mod)[1] != "try-error") {
-  p <- p + geom_line(aes(y = as.numeric(predict(lm_mod, newdata = b2, type = "response"))), color = "maroon4", size = 1.5, linetype = "solid")
+  p <- p + geom_line(aes(y = as.numeric(predict(lm_mod, newdata = b2, type = "response"))), color = "maroon4", linewidth = 1.5, linetype = "solid")
 }
 
 # show the plot
@@ -332,10 +334,10 @@ p <- ggplot(b2, aes(x = M_YEAR)) +
             fill = "white", alpha = 0.2) +
   # Adding the segments
   geom_segment(data = segments_df, aes(x = x0, y = y0, xend = x1, yend = y1),
-               color = col_pal[2], size = 2) +
+               color = col_pal[2], linewidth = 2) +
   # Adding the lines and points for non-missing LCI values
   geom_line(data = subset(b2, !is.na(LCI)), aes(y = LCI), linetype = "dashed", color = "grey70") +
-  geom_line(aes(y = LCI), size = 1.3, color = col_pal[1]) +
+  geom_line(aes(y = LCI), linewidth = 1.3, color = col_pal[1]) +
   geom_point(data = subset(b2, !is.na(LCI)), aes(y = LCI), color = col_pal[1], shape = 19) +
   # Adding the horizontal line
   geom_hline(yintercept = 2, linetype = "dashed") +
@@ -352,7 +354,7 @@ p <- ggplot(b2, aes(x = M_YEAR)) +
 
 # Adding the regression line if lm_mod is not a try-error
 if (class(lm_mod)[1] != "try-error") {
-  p <- p + geom_line(aes(y = as.numeric(predict(lm_mod, newdata = b2, type = "response"))), color = "maroon4", size = 1.5, linetype = "solid")
+  p <- p + geom_line(aes(y = as.numeric(predict(lm_mod, newdata = b2, type = "response"))), color = "maroon4", linewidth = 1.5, linetype = "solid")
 }
 
 # Print the plot

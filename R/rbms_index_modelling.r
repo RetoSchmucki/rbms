@@ -215,7 +215,12 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 #' @param weekday Integer for selected day of the week for weekly summary, default is 3 (Wednesday). [1-7] where 1 = Monday.
 #' @param mod_form string with formula to be passed to the gam model, default null.
 #' @param tp_col string or vector of string with additional variable used in the gam model, default null.
-#' @param verbose a logical indicating if some “progress report” should be given. 
+#' @param parallel logical Fit the flight curves of the years in parallel, default FALSE. Useful with many years and large
+#' data; with small data, starting the workers can take longer than the fit. The workers load the installed rbms package.
+#' The random streams of the workers (sampling of NbrSample sites) are seeded from the session, so the result is reproducible
+#' with \code{set.seed()}, but can differ from the sequential fit when sites are sampled.
+#' @param n_cores integer Number of cores used with parallel = TRUE, default NULL (all available cores minus one, at most one per year).
+#' @param verbose a logical indicating if some “progress report” should be given.
 #' @param ... Additional parameters passed to gam or bam function from the \link[mgcv]{gam} package.
 #' @return A list with three objects, i) **pheno**: a vector with annual flight curves \code{f_pheno} with expected relative abundance, normalize to sum to one over a full season,
 #'         ii) **model**: a list of the resulting gam models \code{f_model} fitted on the count data for each year and iii) **data**: a data.table with the data used to fit the GAM model.
@@ -231,7 +236,8 @@ get_nm <- function(y, ts_season_count, MinVisit, MinOccur, MinNbrSite, NbrSample
 flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccur = 2, MinNbrSite = 1, MaxTrial = 3,
                          GamFamily = 'poisson', CompltSeason = TRUE, SelectYear = NULL, SpeedGam = TRUE,
                          OptiGam = TRUE, KeepModel = TRUE, KeepModelData = TRUE, TimeUnit = 'd', 
-                         MultiVisit = "mean", weekday = 3, mod_form = NULL, tp_col = NULL, verbose = TRUE, ...) {
+                         MultiVisit = "mean", weekday = 3, mod_form = NULL, tp_col = NULL, parallel = FALSE, n_cores = NULL,
+                         verbose = TRUE, ...) {
 
 
         check_package('data.table')
@@ -242,7 +248,7 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
         }
 
         col_name <- c("COMPLT_SEASON", "M_YEAR", "SITE_ID", "SPECIES", "DATE", "WEEK", "WEEK_DAY", "DAY_SINCE", "WEEK_SINCE", "M_SEASON", "COUNT", "ANCHOR")
-        check_names(ts_season_count, ifelse(is.null(tp_col), col_name, c(col_name, tp_col)))
+        check_names(ts_season_count, if(is.null(tp_col)) col_name else c(col_name, tp_col))
 
         if(isTRUE(CompltSeason)){
             ts_season_count <- ts_season_count[COMPLT_SEASON == 1, ]
@@ -279,26 +285,41 @@ flight_curve <- function(ts_season_count, NbrSample = 100, MinVisit = 3, MinOccu
           }
         }
 
+        if(isTRUE(parallel) && length(year_series) > 1){
+          ## years fitted in parallel on n_cores workers (each worker loads the installed rbms); the random streams of
+          ## the workers (NbrSample sampling) are seeded from the session, so set.seed() makes the result reproducible
+          check_package('parallel')
+          if(is.null(n_cores)) n_cores <- max(1, parallel::detectCores() - 1)
+          n_cores <- min(n_cores, length(year_series))
+          if(verbose) message(paste("Fitting", length(year_series), "flight curves in parallel on", n_cores, "cores"))
+          cl <- parallel::makeCluster(n_cores)
+          on.exit(parallel::stopCluster(cl), add = TRUE)
+          parallel::clusterSetRNGStream(cl, iseed = sample.int(.Machine$integer.max, 1))
+          if(!all(unlist(parallel::clusterEvalQ(cl, requireNamespace("rbms", quietly = TRUE))))){
+            stop("parallel = TRUE requires the rbms package to be installed, the workers load the installed version", call. = FALSE)
+          }
+          result_fc <- parallel::parLapply(cl, year_series, rbms::get_nm, ts_season_count = ts_season_count, MinVisit = MinVisit,
+                                           MinOccur = MinOccur, MinNbrSite = MinNbrSite, NbrSample = NbrSample, GamFamily = GamFamily,
+                                           MaxTrial = MaxTrial, SpeedGam = SpeedGam, OptiGam = OptiGam, TimeUnit = TimeUnit,
+                                           MultiVisit = MultiVisit, weekday = weekday, mod_form = mod_form, tp_col = tp_col,
+                                           verbose = verbose, ...)
+        } else {
         result_fc <- lapply(year_series, get_nm, ts_season_count = ts_season_count, MinVisit = MinVisit, MinOccur = MinOccur, MinNbrSite = MinNbrSite,
                                                   NbrSample = NbrSample, GamFamily = GamFamily, MaxTrial = MaxTrial, SpeedGam = SpeedGam,
                                                   OptiGam = OptiGam, TimeUnit = TimeUnit, MultiVisit = MultiVisit, weekday = weekday, mod_form = mod_form,
-                                                  tp_col = tp_col, verbose = verbose, ...) 
+                                                  tp_col = tp_col, verbose = verbose, ...)
+        }
 
         result_fcurve <- data.table::rbindlist(lapply(result_fc, function(x) x$f_curve), fill = TRUE)
-        result_fdata <- data.table::rbindlist(lapply(result_fc, function(x) x$f_data), fill = TRUE)
-        result_fmodel <- lapply(result_fc, function(x) x$f_model)
 
-        if(!isTRUE(KeepModelData) & !isTRUE(KeepModel)){
-          result_fc <- list(pheno = result_fcurve)
+        result_out <- list(pheno = result_fcurve)
+        if(isTRUE(KeepModel)){
+          result_out$model <- lapply(result_fc, function(x) x$f_model)
         }
-
-        if(!isTRUE(KeepModelData) & isTRUE(KeepModel)){
-          result_fc <- list(pheno = result_fcurve, model = result_fmodel)
+        if(isTRUE(KeepModelData)){
+          result_out$data <- data.table::rbindlist(lapply(result_fc, function(x) x$f_data), fill = TRUE)
         }
-
-        if(isTRUE(KeepModelData) & isTRUE(KeepModel)){
-          result_fc <- list(pheno = result_fcurve, model = result_fmodel, data = result_fdata)
-        }
+        result_fc <- result_out
     class(result_fc) <- "pheno_curve"
     return(result_fc)
 }
@@ -565,7 +586,7 @@ site_index <- function(butterfly_count, MinFC = NULL){
 
 collated_index_old <- function(...){
 
-  .Deprecated("collated_index", package = "rbms")
+  .Deprecated("collated_index", package = "rbms", msg = "collated_index_old() is deprecated, use collated_index().")
   stop("collated_index_old() has been removed, use collated_index()", call. = FALSE)
 }
 

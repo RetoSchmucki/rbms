@@ -26,30 +26,12 @@ First, install and load required packages.
 
 \
 `# Install required packages`\
-[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"remotes"``)`` ``# To install R packages from github`
-
-    ## Installing package into 'C:/Users/retoschm/AppData/Local/Temp/RtmpMnK61w/temp_libpath2a9c3217608a'
-    ## (as 'lib' is unspecified)
-
-    ## package 'remotes' successfully unpacked and MD5 sums checked
-    ## 
-    ## The downloaded binary packages are in
-    ##  C:\Users\retoschm\AppData\Local\Temp\RtmpsvhVxR\downloaded_packages
-
-\
-[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"ggplot2"``)`` ``# to generate plots in this tutorial`
-
-    ## Installing package into 'C:/Users/retoschm/AppData/Local/Temp/RtmpMnK61w/temp_libpath2a9c3217608a'
-    ## (as 'lib' is unspecified)
-
-    ## package 'ggplot2' successfully unpacked and MD5 sums checked
-    ## 
-    ## The downloaded binary packages are in
-    ##  C:\Users\retoschm\AppData\Local\Temp\RtmpsvhVxR\downloaded_packages
-
+[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"remotes"``)`` ``# To install R packages from github`\
+[`install.packages`](https://rdrr.io/r/utils/install.packages.html)`(``"ggplot2"``)`` ``# to generate plots in this tutorial`\
 \
 `# Install rbms from github`\
-`# remotes::install_github("https://github.com/RetoSchmucki/rbms.git")`\
+`remotes``::`[`install_github`](https://remotes.r-lib.org/reference/install_github.html)`(``"RetoSchmucki/rbms"``)`
+
 \
 `# Load rbms and ggplot2`\
 [`library`](https://rdrr.io/r/base/library.html)`(`[`rbms`](https://retoschmucki.github.io/rbms/)`)`
@@ -254,14 +236,6 @@ specified.*
 \
 ` ``ts_flight_curve`` ``<-`` ``rbms``::`[`flight_curve`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)`(``ts_season_count``, NbrSample ``=`` ``300``, MinVisit ``=`` ``5``, MinOccur ``=`` ``3``, MinNbrSite ``=`` ``5``, MaxTrial ``=`` ``4``, GamFamily ``=`` ``'nb'``, SpeedGam ``=`` ``FALSE``, CompltSeason ``=`` ``TRUE``, SelectYear ``=`` ``NULL``, TimeUnit ``=`` ``'w'``)`
 
-    ## Fitting the flight curve spline for species 2 and year 2000 with 76 sites, using gam() : 2026-10-17 19:52:11.980377 -> trial 1
-
-    ## Fitting the flight curve spline for species 2 and year 2001 with 76 sites, using gam() : 2026-10-17 19:52:13.726099 -> trial 1
-
-    ## Fitting the flight curve spline for species 2 and year 2002 with 87 sites, using gam() : 2026-10-17 19:52:14.372556 -> trial 1
-
-    ## Fitting the flight curve spline for species 2 and year 2003 with 103 sites, using gam() : 2026-10-17 19:52:15.477939 -> trial 1
-
 We are given a list of 3 elements as an output of the
 [`flight_curve()`](https://retoschmucki.github.io/rbms/reference/flight_curve.md)
 function:
@@ -452,7 +426,7 @@ standard for British time series reporting.
 `            fill ``=`` ``"white"``, alpha ``=`` ``0.2``)`` ``+`\
 `  ``# Adding the lines and points for non-missing LCI values`\
 `  `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(``data ``=`` `[`subset`](https://rdrr.io/r/base/subset.html)`(``b2``, ``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``LCI``)``)``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, linetype ``=`` ``"dashed"``, color ``=`` ``"grey70"``)`` ``+`\
-`  `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, size ``=`` ``1.3``, color ``=`` ``col_pal``[``1``]``)`` ``+`\
+`  `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, linewidth ``=`` ``1.3``, color ``=`` ``col_pal``[``1``]``)`` ``+`\
 `  `[`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)`(``data ``=`` `[`subset`](https://rdrr.io/r/base/subset.html)`(``b2``, ``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``LCI``)``)``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, color ``=`` ``col_pal``[``1``]``, shape ``=`` ``19``)`` ``+`\
 `  ``# Adding the horizontal line`\
 `  `[`geom_hline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(``yintercept ``=`` ``2``, linetype ``=`` ``"dashed"``)`` ``+`\
@@ -461,18 +435,11 @@ standard for British time series reporting.
 `  `[`scale_x_continuous`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)`(``breaks ``=`` ``b2``$``M_YEAR``)`` ``+`\
 `  `[`theme_minimal`](https://ggplot2.tidyverse.org/reference/ggtheme.html)`(``)`` ``+`\
 `  ``# Making the y-axis appear as a black line`\
-`  `[`theme`](https://ggplot2.tidyverse.org/reference/theme.html)`(``axis.line.y ``=`` `[`element_line`](https://ggplot2.tidyverse.org/reference/element.html)`(``color ``=`` ``"black"``)``)`
-
-    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ## ℹ Please use `linewidth` instead.
-    ## This warning is displayed once per session.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
-
+`  `[`theme`](https://ggplot2.tidyverse.org/reference/theme.html)`(``axis.line.y ``=`` `[`element_line`](https://ggplot2.tidyverse.org/reference/element.html)`(``color ``=`` ``"black"``)``)`\
 \
 `# Adding the regression line if lm_mod is not a try-error`\
 `if`` ``(`[`class`](https://rdrr.io/r/base/class.html)`(``lm_mod``)``[``1``]`` ``!=`` ``"try-error"``)`` ``{`\
-`  ``p`` ``<-`` ``p`` ``+`` `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` `[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(`[`predict`](https://rdrr.io/r/stats/predict.html)`(``lm_mod``, newdata ``=`` ``b2``, type ``=`` ``"response"``)``)``)``, color ``=`` ``"maroon4"``, size ``=`` ``1.5``, linetype ``=`` ``"solid"``)`\
+`  ``p`` ``<-`` ``p`` ``+`` `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` `[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(`[`predict`](https://rdrr.io/r/stats/predict.html)`(``lm_mod``, newdata ``=`` ``b2``, type ``=`` ``"response"``)``)``)``, color ``=`` ``"maroon4"``, linewidth ``=`` ``1.5``, linetype ``=`` ``"solid"``)`\
 `}`\
 \
 `# show the plot`\
@@ -625,10 +592,10 @@ using the corresponding percentiles (i.e., 0.025 and 0.975).
 `            fill ``=`` ``"white"``, alpha ``=`` ``0.2``)`` ``+`\
 `  ``# Adding the segments`\
 `  `[`geom_segment`](https://ggplot2.tidyverse.org/reference/geom_segment.html)`(``data ``=`` ``segments_df``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``x ``=`` ``x0``, y ``=`` ``y0``, xend ``=`` ``x1``, yend ``=`` ``y1``)``,`\
-`               color ``=`` ``col_pal``[``2``]``, size ``=`` ``2``)`` ``+`\
+`               color ``=`` ``col_pal``[``2``]``, linewidth ``=`` ``2``)`` ``+`\
 `  ``# Adding the lines and points for non-missing LCI values`\
 `  `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(``data ``=`` `[`subset`](https://rdrr.io/r/base/subset.html)`(``b2``, ``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``LCI``)``)``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, linetype ``=`` ``"dashed"``, color ``=`` ``"grey70"``)`` ``+`\
-`  `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, size ``=`` ``1.3``, color ``=`` ``col_pal``[``1``]``)`` ``+`\
+`  `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, linewidth ``=`` ``1.3``, color ``=`` ``col_pal``[``1``]``)`` ``+`\
 `  `[`geom_point`](https://ggplot2.tidyverse.org/reference/geom_point.html)`(``data ``=`` `[`subset`](https://rdrr.io/r/base/subset.html)`(``b2``, ``!`[`is.na`](https://rdrr.io/r/base/NA.html)`(``LCI``)``)``, `[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` ``LCI``)``, color ``=`` ``col_pal``[``1``]``, shape ``=`` ``19``)`` ``+`\
 `  ``# Adding the horizontal line`\
 `  `[`geom_hline`](https://ggplot2.tidyverse.org/reference/geom_abline.html)`(``yintercept ``=`` ``2``, linetype ``=`` ``"dashed"``)`` ``+`\
@@ -645,7 +612,7 @@ using the corresponding percentiles (i.e., 0.025 and 0.975).
 \
 `# Adding the regression line if lm_mod is not a try-error`\
 `if`` ``(`[`class`](https://rdrr.io/r/base/class.html)`(``lm_mod``)``[``1``]`` ``!=`` ``"try-error"``)`` ``{`\
-`  ``p`` ``<-`` ``p`` ``+`` `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` `[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(`[`predict`](https://rdrr.io/r/stats/predict.html)`(``lm_mod``, newdata ``=`` ``b2``, type ``=`` ``"response"``)``)``)``, color ``=`` ``"maroon4"``, size ``=`` ``1.5``, linetype ``=`` ``"solid"``)`\
+`  ``p`` ``<-`` ``p`` ``+`` `[`geom_line`](https://ggplot2.tidyverse.org/reference/geom_path.html)`(`[`aes`](https://ggplot2.tidyverse.org/reference/aes.html)`(``y ``=`` `[`as.numeric`](https://rdrr.io/r/base/numeric.html)`(`[`predict`](https://rdrr.io/r/stats/predict.html)`(``lm_mod``, newdata ``=`` ``b2``, type ``=`` ``"response"``)``)``)``, color ``=`` ``"maroon4"``, linewidth ``=`` ``1.5``, linetype ``=`` ``"solid"``)`\
 `}`\
 \
 `# Print the plot`\

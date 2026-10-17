@@ -1,3 +1,25 @@
+# rbms (development version)
+
+## New features
+
+* `flight_curve()` gains `parallel` and `n_cores` to fit the flight curves of the years in parallel. The random streams
+  of the workers are seeded from the session, so the result is reproducible with `set.seed()`.
+
+## Changes
+
+* `flight_curve_optimised()` and `get_nm_optimised()` are deprecated: they gave the same results as `flight_curve()` and
+  `get_nm()`, which they now call with a warning.
+* `flight_curve()` and `flight_curve_multi()` check all the required columns of `ts_season_count` (only the first one was
+  checked).
+* `flight_curve()` with `KeepModel = FALSE` and `KeepModelData = TRUE` returns the flight curves and the data (it returned
+  the unformatted list).
+
+## Documentation
+
+* Vignette: the installation code is shown but not run, the messages of `flight_curve()` are not printed, `linewidth`
+  replaces the deprecated `size` of ggplot2 lines; author and date updated.
+* LICENSE year 2022-2026.
+
 # rbms 1.3.0
 
 

@@ -3,71 +3,24 @@
 \name{get_nm_optimised}
 \alias{get_nm_optimised}
 \title{get_nm_optimised
-Optimised version: find the nearest year with a computed flight curve}
+Deprecated, use \link{get_nm}. The arguments are passed to \link{get_nm}; it will be removed in a future version.}
 \usage{
-get_nm_optimised(
-  y,
-  ts_season_count,
-  MinVisit,
-  MinOccur,
-  MinNbrSite,
-  NbrSample,
-  GamFamily,
-  MaxTrial,
-  SpeedGam,
-  OptiGam,
-  TimeUnit,
-  MultiVisit,
-  weekday,
-  mod_form,
-  tp_col,
-  verbose = TRUE,
-  ...
-)
+get_nm_optimised(...)
 }
 \arguments{
-\item{y}{integer Year for which to compute the flight curve.}
-
-\item{ts_season_count}{data.table Time-series of count and season information (pre-processed).}
-
-\item{MinVisit}{integer The minimum number of visits required.}
-
-\item{MinOccur}{integer The minimum number of positive records.}
-
-\item{MinNbrSite}{integer The minimum number of sites required.}
-
-\item{NbrSample}{integer Maximum number of sites to sample.}
-
-\item{GamFamily}{string Distribution family for GAM.}
-
-\item{MaxTrial}{integer Maximum number of trials.}
-
-\item{SpeedGam}{logical Use bam instead of gam.}
-
-\item{OptiGam}{logical Optimize choice between bam and gam.}
-
-\item{TimeUnit}{character Time unit 'd' or 'w'.}
-
-\item{MultiVisit}{string Aggregation function.}
-
-\item{weekday}{integer Weekday selection.}
-
-\item{mod_form}{string Model formula.}
-
-\item{tp_col}{string Temporal column name.}
-
-\item{verbose}{logical Verbose output.}
-
-\item{...}{Additional parameters.}
+\item{...}{Arguments passed to \link{get_nm}.}
 }
 \value{
-A list with flight curve data, model, and input data.
+See \link{get_nm}.
 }
 \description{
 get_nm_optimised
-Optimised version: find the nearest year with a computed flight curve
+Deprecated, use \link{get_nm}. The arguments are passed to \link{get_nm}; it will be removed in a future version.
+}
+\seealso{
+\link{get_nm}
 }
 \author{
 Reto Schmucki - \email{retoshm@ceh.ac.uk}
 }
-\keyword{gam}
+\keyword{internal}

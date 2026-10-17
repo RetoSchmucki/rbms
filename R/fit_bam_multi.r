@@ -227,7 +227,7 @@ flight_curve_multi <- function(ts_season_count, NbrSample = 100, MinVisit = 3, M
 
   col_name <- c("COMPLT_SEASON", "M_YEAR", "SITE_ID", "SPECIES", "DATE", "WEEK",
                 "WEEK_DAY", "DAY_SINCE", "WEEK_SINCE", "M_SEASON", "COUNT", "ANCHOR")
-  check_names(ts_season_count, ifelse(is.null(tp_col), col_name, c(col_name, tp_col)))
+  check_names(ts_season_count, if(is.null(tp_col)) col_name else c(col_name, tp_col))
 
   # Filter for complete seasons if required
   if(isTRUE(CompltSeason)){

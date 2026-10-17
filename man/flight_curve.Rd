@@ -24,6 +24,8 @@ flight_curve(
   weekday = 3,
   mod_form = NULL,
   tp_col = NULL,
+  parallel = FALSE,
+  n_cores = NULL,
   verbose = TRUE,
   ...
 )
@@ -64,6 +66,13 @@ flight_curve(
 \item{mod_form}{string with formula to be passed to the gam model, default null.}
 
 \item{tp_col}{string or vector of string with additional variable used in the gam model, default null.}
+
+\item{parallel}{logical Fit the flight curves of the years in parallel, default FALSE. Useful with many years and large
+data; with small data, starting the workers can take longer than the fit. The workers load the installed rbms package.
+The random streams of the workers (sampling of NbrSample sites) are seeded from the session, so the result is reproducible
+with \code{set.seed()}, but can differ from the sequential fit when sites are sampled.}
+
+\item{n_cores}{integer Number of cores used with parallel = TRUE, default NULL (all available cores minus one, at most one per year).}
 
 \item{verbose}{a logical indicating if some “progress report” should be given.}
 

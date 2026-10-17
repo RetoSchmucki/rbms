@@ -10,5 +10,7 @@ utils::globalVariables(c(
   "SITE_SUM", "SITE_YEAR_SUM", "SPECIES", "START_END", "STRATA", "SVALUE", "S_IDX",
   "TOTAL_COUNT", "TOTAL_NM", "V1", "WDAY", "WEEK", "WEEK_COUNT", "WEEK_DAY", "WEEK_NM",
   "WEEK_SINCE", "YEAR", "Y_IDX", "ZERO", "maxCOUNT", "meanCOUNT", "occurN", "tmpV1",
-  "trimDAYNO", "trimWEEKNO", "uID", "visitN"
+  "trimDAYNO", "trimWEEKNO", "uID", "visitN", "RESP", "YEAR_F", "SITE_F", "weights",
+  "HABITAT", "HAB_F", "N_HAB", "N_SITE", "WEIGHT", "S_EXP", "INDEX", "U",
+  "SITE_LENGTH", "LOG_LENGTH", "N_L"
 ))

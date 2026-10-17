@@ -248,3 +248,119 @@ newton_year <- function(sy, C_s, C_y, n_s, n_y, tol = 1e-8, maxit = 100){
 
   list(b = exp(beta), year_effect = data.table::data.table(GROUP = group, LOG_EFFECT = beta, SE = se))
 }
+
+
+#' index_sample_data
+#' Data of a species for a collated index: site-years with NA in \code{sindex_value} removed (warning), the sites of the
+#' original data or of the bootstrap sample \code{bootID} (each draw of a site with its own uID), the groups of years linked
+#' through sites with observations in the original data, and the number of sites per year. Used by \link{collated_index}
+#' and \link{collated_index_mixed}.
+#' @param data,s_sp,sindex_value,bootID,boot_ind see \link{collated_index}.
+#' @return list with the species data (data), bootID, the sites of the sample (a: uID, SITE_ID), the group of each year
+#' (grp), the data of the sample (data_boot) and the number of sites per year (sum_data); or, for a bootstrap sample that
+#' failed in \link{boot_sample} (NA row), the output of the collated index with NA (failed).
+#' @keywords internal
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
+#'
+
+index_sample_data <- function(data, s_sp, sindex_value = "SINDEX", bootID = NULL, boot_ind = NULL){
+
+  data <- setDT(data)
+  data = data[SPECIES == s_sp, ]
+
+  ## site-years without index (e.g. failed flight curve) are missing, not zero: removed as in site_index()
+  n_na <- data[is.na(get(sindex_value)), .N]
+  if(n_na > 0){
+    warning(paste0(s_sp, ": ", n_na, " site-years with NA in ", sindex_value, " removed before computing the collated index"), call. = FALSE)
+    data <- data[!is.na(get(sindex_value)), ]
+  }
+  if(nrow(data) == 0) stop(paste0("no ", sindex_value, " available for species ", s_sp), call. = FALSE)
+
+  y = as.numeric(as.character(unique(data$M_YEAR)))
+
+  if(is.null(boot_ind)){
+    site_id_ <- unique(data[, SITE_ID])
+    boot_ind_ <- matrix(NA, nrow = 1, ncol = length(site_id_))
+    boot_ind_[1, ] <- seq_len(length(site_id_))
+    boot_ind <- list(site_id = site_id_, boot_ind = boot_ind_)
+  }
+
+  if(is.null(bootID)){
+    bootID <- 0
+  }
+
+  ## bootstrap samples drawn per species with boot_sample(s_sp = ) must match the species modelled
+  if(!is.null(boot_ind$s_sp) && !identical(as.character(boot_ind$s_sp), as.character(s_sp))){
+    stop(paste0("boot_ind was generated for species ", boot_ind$s_sp, ", not for ", s_sp), call. = FALSE)
+  }
+
+  ## bootstrap sample that failed in boot_sample() after max_trial trials (NA row): no index computed
+  if(bootID > 0 && anyNA(boot_ind$boot_ind[bootID, ])){
+    res <- data.table(BOOTi = bootID, M_YEAR = y[order(y)], NSITE = NA_integer_, NSITE_B = NA_integer_,
+                      NSITE_OBS = NA_integer_, COL_INDEX = NA_real_, GROUP = NA_integer_)
+    setkey(res, M_YEAR)
+    return(list(failed = list(col_index = res, site_id = NA_character_, year_effect = NULL)))
+  }
+
+  if(bootID == 0){
+    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID+1, ]))),
+     SITE_ID = as.character(boot_ind$site_id[seq_along(boot_ind$boot_ind[bootID+1, ])]))
+  } else {
+    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID, ]))),
+     SITE_ID = as.character(boot_ind$site_id[boot_ind$boot_ind[bootID, ]]))
+  }
+
+  s_y <- data.table(expand.grid(uID = a$uID, M_YEAR = y[order(y)]))
+  s_y[ , uID:=as.character(uID)]
+  s_y[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
+  data[ , SITE_ID:=as.character(SITE_ID)]
+  data[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
+
+  ## groups of years linked through sites with observations in the original data (see n_components),
+  ## years without observation have no group
+  obs_0 <- data[get(sindex_value) > 0, ]
+  year_group <- if(nrow(obs_0) > 0) year_components(obs_0$SITE_ID, obs_0$M_YEAR) else integer(0)
+  grp <- data.table(M_YEAR = as.numeric(names(year_group)), GROUP = as.integer(year_group))
+
+  setkey(a, uID)
+  setkey(s_y, uID)
+  s_y <- merge(s_y, a, all.x=TRUE)
+
+  setkey(s_y, SITE_ID, M_YEAR); setkey(data, SITE_ID, M_YEAR)
+
+  if(sindex_value != 'SINDEX'){
+    data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)][, (sindex_value) := data[, get(sindex_value)]])
+    } else {
+    data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)])
+    }
+
+  sum_data <- data.table( BOOTi = bootID,
+                          M_YEAR = y[order(y)],
+                          NSITE = data_boot[, uniqueN(uID), by = M_YEAR][order(M_YEAR), V1],
+                          NSITE_B = data_boot[, uniqueN(SITE_ID), by = M_YEAR][order(M_YEAR), V1],
+                          NSITE_OBS = data_boot[, sum(get(sindex_value)>0), by = M_YEAR][order(M_YEAR), V1])
+
+  setkey(sum_data, M_YEAR)
+
+  list(data = data, bootID = bootID, a = a, grp = grp, data_boot = data_boot, sum_data = sum_data, failed = NULL)
+}
+
+
+#' site_length_map
+#' Length of each site (transect) from a column of the data, checked to be positive, not NA and constant within site.
+#' @param data data.table Data of a species with SITE_ID.
+#' @param site_length string Name of the column with the length of the site (km).
+#' @return data.table with SITE_ID and SITE_LENGTH.
+#' @keywords internal
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
+#'
+
+site_length_map <- function(data, site_length){
+
+  if(!site_length %in% names(data)) stop(paste0("column ", site_length, " not found in data"), call. = FALSE)
+  lm_ <- data.table(SITE_ID = as.character(data$SITE_ID), SITE_LENGTH = as.numeric(data[[site_length]]))[
+    , .(N_L = uniqueN(SITE_LENGTH), SITE_LENGTH = SITE_LENGTH[1]), by = SITE_ID]
+  if(any(lm_$N_L > 1)) stop(paste0(site_length, " must be constant within site"), call. = FALSE)
+  if(any(is.na(lm_$SITE_LENGTH) | lm_$SITE_LENGTH <= 0)) stop(paste0(site_length, " must be positive and not NA (length in km)"), call. = FALSE)
+  lm_[, .(SITE_ID, SITE_LENGTH)]
+}

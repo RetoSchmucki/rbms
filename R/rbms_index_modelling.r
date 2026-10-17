@@ -588,6 +588,7 @@ collated_index_old <- function(...){
 #' the same population. This holds by design when sites are assigned to years at random, e.g. a rotating panel where a random
 #' set of sites is surveyed each year and each site is revisited every few years (each panel then forms a group), but not when
 #' the groups result from site turnover, a change in the scheme or different regions. In that case, the groups are separate series.
+#' For randomised designs, \link{collated_index_mixed} links the groups through a random site effect.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string Species name to be found in the data.
 #' @param sindex_value string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.
@@ -596,6 +597,12 @@ collated_index_old <- function(...){
 #' @param glm_weights logical Use the proportion of the flight curve sampled as weight for the collated index, if FALSE the function uses equal weights.
 #' @param rm_zero logical Remove the sites where species was not observed to speed-up the fit of the GLM without altering the output, default TRUE.
 #' @param GlmFit character Fitting of the GLM, 'glm' (default, \code{glm()}), 'newton' or 'ipf', see details.
+#' @param site_length string Name of a column of \code{data} with the length of each site (transect) in km, constant within
+#' site, default NULL. With a length, the collated index is the expected count on 1 km of transect (the site effects are
+#' divided by the length of the site), otherwise the expected count per site.
+#' @param index_sites character Sites the collated index is averaged over: "all" (default) all sites monitored for the species,
+#' the sites where it was never observed counting as zero (mean over the monitored area), or "observed" only the sites where the
+#' species was observed at least once (mean over the occupied sites).
 #' @param SplitGroup logical When the years form groups not linked through sites with observations, fit each group separately
 #' (default TRUE, the correct method). FALSE fits all years together as in previous versions (glm only), the levels of the
 #' groups are then arbitrary; 'newton' and 'ipf' always fit the groups separately.
@@ -609,104 +616,40 @@ collated_index_old <- function(...){
 #'
 
 collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
-    boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE, GlmFit = c("glm", "newton", "ipf"), SplitGroup = TRUE){
+    boot_ind=NULL, glm_weights=TRUE, rm_zero=TRUE, GlmFit = c("glm", "newton", "ipf"), SplitGroup = TRUE,
+    site_length = NULL, index_sites = c("all", "observed")){
 
   GlmFit <- match.arg(GlmFit)
+  index_sites <- match.arg(index_sites)
   year_effect <- NULL
-  data <- setDT(data)
-  data = data[SPECIES == s_sp, ]
 
-  ## site-years without index (e.g. failed flight curve) are missing, not zero: removed as in site_index()
-  n_na <- data[is.na(get(sindex_value)), .N]
-  if(n_na > 0){
-    warning(paste0(s_sp, ": ", n_na, " site-years with NA in ", sindex_value, " removed before computing the collated index"), call. = FALSE)
-    data <- data[!is.na(get(sindex_value)), ]
-  }
-  if(nrow(data) == 0) stop(paste0("no ", sindex_value, " available for species ", s_sp), call. = FALSE)
+  ## species data, bootstrap sample and groups of linked years (see index_sample_data)
+  prep <- index_sample_data(data, s_sp, sindex_value, bootID, boot_ind)
+  if(!is.null(prep$failed)) return(prep$failed)
+  data <- prep$data
+  bootID <- prep$bootID
+  a <- prep$a
+  grp <- prep$grp
+  data_boot <- prep$data_boot
+  sum_data <- prep$sum_data
 
-  y = as.numeric(as.character(unique(data$M_YEAR)))
-
-  if(is.null(boot_ind)){
-    site_id_ <- unique(data[, SITE_ID])
-    boot_ind_ <- matrix(NA, nrow = 1, ncol = length(site_id_))
-    boot_ind_[1, ] <- seq_len(length(site_id_))
-    boot_ind <- list(site_id = site_id_, boot_ind = boot_ind_)
+  ## length of each site of the sample (km), to scale the expected index of each site to 1 km of transect
+  if(!is.null(site_length)){
+    len_u <- merge(a, site_length_map(data, site_length), by = "SITE_ID", all.x = TRUE)
+    len_u <- stats::setNames(len_u$SITE_LENGTH, len_u$uID)
   } else {
-    boot_ind = boot_ind
+    len_u <- stats::setNames(rep(1, nrow(a)), a$uID)
   }
 
-  if(is.null(bootID)){
-    bootID <- 0
-  }else{
-    bootID <- bootID
-  }
-
-  ## bootstrap samples drawn per species with boot_sample(s_sp = ) must match the species modelled
-  if(!is.null(boot_ind$s_sp) && !identical(as.character(boot_ind$s_sp), as.character(s_sp))){
-    stop(paste0("boot_ind was generated for species ", boot_ind$s_sp, ", not for ", s_sp), call. = FALSE)
-  }
-
-  ## bootstrap sample that failed in boot_sample() after max_trial trials (NA row): no index computed
-  if(bootID > 0 && anyNA(boot_ind$boot_ind[bootID, ])){
-    res <- data.table(BOOTi = bootID, M_YEAR = y[order(y)], NSITE = NA_integer_, NSITE_B = NA_integer_,
-                      NSITE_OBS = NA_integer_, COL_INDEX = NA_real_, GROUP = NA_integer_)
-    setkey(res, M_YEAR)
-    return(list(col_index = res, site_id = NA_character_, year_effect = NULL))
-  }
-
-  if(bootID == 0){
-    if(is.null(boot_ind)){
-    a <- data.table(uID = as.character(paste0("s_",seq_len(data[, uniqueN(SITE_ID)]))),
-     SITE_ID = as.character(unique(data[, SITE_ID])))
-    }else{
-    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID+1, ]))),
-     SITE_ID = as.character(boot_ind$site_id[seq_along(boot_ind$boot_ind[bootID+1, ])]))
-    }
-  } else {
-    a <- data.table(uID = as.character(paste0("s_",seq_along(boot_ind$boot_ind[bootID, ]))),
-     SITE_ID = as.character(boot_ind$site_id[boot_ind$boot_ind[bootID, ]]))
-  }
-
-  s_y <- data.table(expand.grid(uID = a$uID, M_YEAR = y[order(y)]))
-  # names(s_y) <- c("uID", "M_YEAR")
-  s_y[ , uID:=as.character(uID)]
-  s_y[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
-  data[ , SITE_ID:=as.character(SITE_ID)]
-  data[ , M_YEAR:=as.numeric(as.character(M_YEAR))]
-
-  ## groups of years linked through sites with observations in the original data (see n_components),
-  ## years without observation have no group
-  obs_0 <- data[get(sindex_value) > 0, ]
-  year_group <- if(nrow(obs_0) > 0) year_components(obs_0$SITE_ID, obs_0$M_YEAR) else integer(0)
-  grp <- data.table(M_YEAR = as.numeric(names(year_group)), GROUP = as.integer(year_group))
   if(bootID == 0 && uniqueN(grp$GROUP) > 1){
     warning(paste0(s_sp, ": the years form ", uniqueN(grp$GROUP), " groups not linked through sites with observations (",
                    paste(grp[, paste(range(M_YEAR), collapse = "-"), by = GROUP]$V1, collapse = ", "),
                    "); the collated index is only comparable between years of the same group, ",
                    if(isTRUE(SplitGroup) || GlmFit != "glm") "each group is fitted separately (SplitGroup = TRUE)"
-                   else "all years are fitted together (SplitGroup = FALSE) and the levels of the groups are arbitrary, use SplitGroup = TRUE"),
+                   else "all years are fitted together (SplitGroup = FALSE) and the levels of the groups are arbitrary, use SplitGroup = TRUE",
+                   "; if sites were assigned to years at random, see collated_index_mixed()"),
             call. = FALSE)
   }
-
-  setkey(a, uID);
-  setkey(s_y, uID)
-  s_y <- merge(s_y, a, all.x=TRUE)
-
-  setkey(s_y, SITE_ID, M_YEAR); setkey(data, SITE_ID, M_YEAR)
-
-  if(sindex_value != 'SINDEX'){
-    data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)][, (sindex_value) := data[, get(sindex_value)]])
-    } else {
-    data_boot <- merge(s_y, data[ , .(SITE_ID, M_YEAR, SINDEX, TOTAL_NM)])
-    }
-
-  sum_data <- data.table( BOOTi = bootID,
-                          M_YEAR = y[order(y)],
-                          NSITE = data_boot[, uniqueN(uID), by = M_YEAR][order(M_YEAR), V1],
-                          NSITE_B = data_boot[, uniqueN(SITE_ID), by = M_YEAR][order(M_YEAR), V1],
-                          NSITE_OBS = data_boot[, sum(get(sindex_value)>0), by = M_YEAR][order(M_YEAR), V1])
-
-  setkey(sum_data, M_YEAR)
 
   if(nrow(sum_data[NSITE_OBS > 0,]) != 0){
 
@@ -761,7 +704,10 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
       yrs <- fit_years[[g]]
       d_g <- data_boot[M_YEAR %in% yrs, ]
       if(nrow(d_g) == 0 || !any(d_g[[sindex_value]] > 0)) next
-      n_site_g <- if(length(fit_years) == 1) length(unique(data$SITE_ID)) else data[M_YEAR %in% yrs, uniqueN(SITE_ID)]
+      ## number of sites the index is averaged over: all sites monitored (with data in the years of the group), or only the
+      ## sites where the species was observed (index_sites = "observed"), from the original data
+      d_n <- if(length(fit_years) == 1) data else data[M_YEAR %in% yrs, ]
+      n_site_g <- if(index_sites == "all") d_n[, uniqueN(SITE_ID)] else d_n[get(sindex_value) > 0, uniqueN(SITE_ID)]
 
       if(GlmFit == "glm"){
         if (d_g[, uniqueN(M_YEAR)] == 1) {
@@ -779,13 +725,13 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #     }
         pred_data_boot <- data.table(expand.grid(uID = unique(d_g$uID), M_YEAR = unique(d_g$M_YEAR)))
         pred_data_boot$fitted <- predict(col_index, newdata = pred_data_boot, type = "response")
-        co_g <- pred_data_boot[order(M_YEAR), .(COL_INDEX = sum(fitted)/n_site_g), by = M_YEAR]
+        co_g <- pred_data_boot[order(M_YEAR), .(COL_INDEX = sum(fitted / len_u[as.character(uID)])/n_site_g), by = M_YEAR]
       } else {
         ## same weighted Poisson GLM fitted without model matrix (weighted counts, weights as flight curve covered):
         ## prediction over all sites and years = year effect x sum of site effects
         fit_level <- site_year_level(d_g$uID, d_g$M_YEAR, d_g$weights * round(d_g[[sindex_value]]), d_g$weights, method = GlmFit)
         eff <- attr(fit_level, "effects")
-        co_g <- data.table(M_YEAR = as.numeric(names(eff$year)), COL_INDEX = eff$year * sum(eff$site) / n_site_g)
+        co_g <- data.table(M_YEAR = as.numeric(names(eff$year)), COL_INDEX = eff$year * sum(eff$site / len_u[names(eff$site)]) / n_site_g)
         if(!is.null(attr(fit_level, "year_effect"))){
           ye[[length(ye) + 1]] <- attr(fit_level, "year_effect")[, M_YEAR := as.numeric(M_YEAR)][, GROUP := NULL]
         }
@@ -809,6 +755,183 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 }
 
 
+#' collated_index_mixed
+#' compute a collated index from the site indices, using a mixed model with a random site effect.
+#' @details The model is the GLM of \link{collated_index} with the site effect as a random effect,
+#' round(SINDEX) ~ 0 + factor(M_YEAR) + (1 | site), weighted by the proportion of the flight curve sampled (TOTAL_NM), fitted
+#' with \code{glmmTMB::glmmTMB()} (package glmmTMB required). The collated index is defined as in \link{collated_index}, the
+#' expected index summed over the sites of the sample and divided by the number of sites of the species,
+#' exp(year effect) x sum(exp(site effects)) / number of sites, using the predicted site effects.
+#' The random site effect assumes that the sites are a sample of one population of sites. It links years that are not linked
+#' through sites with observations (column GROUP), which is valid when the sites of all groups are representative of the same
+#' population, e.g. sites assigned to years at random in a rotating panel. With linked years, the index is close to
+#' \link{collated_index}, the site effects being shrunk towards their mean. The bootstrap is used as in \link{collated_index},
+#' with \code{bootID} and \code{boot_ind} from \link{boot_sample}.
+#' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
+#' @param s_sp string Species name to be found in the data.
+#' @param sindex_value string Name of the response variable, default is "SINDEX".
+#' @param bootID integer Identify the n^th bootstrap.
+#' @param boot_ind list Bootstrap samples from \link{boot_sample}.
+#' @param glm_weights logical Use the proportion of the flight curve sampled as weight, if FALSE the function uses equal weights.
+#' @param rm_zero logical Remove the sites where the species was not observed, default TRUE (they contribute 0 to the index,
+#' but are not used to estimate the distribution of the site effects).
+#' @param family character Distribution of the counts, 'poisson' (default) or 'nbinom2' (negative binomial). With 'poisson',
+#' the index matches \link{collated_index} for linked years and its level (mean count per site) is not biased by overdispersion;
+#' 'nbinom2' weights the counts differently, which can give a more precise trend but a lower level of the index.
+#' @param habitat string Name of a column of \code{data} with the habitat (or stratum) of each site, constant within site,
+#' default NULL (no habitat). The habitat is a fixed effect of the model, the site effects being the deviation of each site
+#' from the mean of its habitat (sites representative of their habitat, e.g. sampled at random within habitat strata).
+#' @param habitat_weights Weights of the habitats in the collated index: NULL (default) proportional to the number of sites of
+#' each habitat (the mean over all sites, as in \link{collated_index}), "equal" (each habitat counts equally), or a numeric vector
+#' named by habitat, e.g. the share of each habitat in the area of the region for a design stratified by habitat (normalised to sum 1).
+#' @param site_length string Name of a column of \code{data} with the length of each site (transect) in km, constant within
+#' site, default NULL. With a length, log(length) is an offset of the model and the collated index is the expected count on
+#' 1 km of transect, otherwise the expected count per site.
+#' @param index_sites character Sites the collated index is averaged over: "all" (default) all sites monitored for the species,
+#' the sites where it was never observed counting as zero, or "observed" only the sites where the species was observed at least
+#' once (habitats without such site are then left out of the index and the weights of the other habitats normalised).
+#' @return a list with the collated indices per year (col_index, same columns as \link{collated_index}), the site ids of the
+#' sample (site_id), the year effects (year_effect: log effect relative to the first year, LOG_EFFECT, and its standard error, SE),
+#' the model parameters (model: family, standard deviation of the site effects, size of the negative binomial, convergence) and,
+#' with \code{habitat}, the index of each habitat (habitat_index: number of sites, weight and index per habitat and year;
+#' the collated index is the weighted sum of the habitat indices).
+#' @keywords annual index
+#' @seealso \link{collated_index}, \link{boot_sample}
+#' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
+#' @import data.table
+#' @export collated_index_mixed
+#'
+
+collated_index_mixed <- function(data, s_sp, sindex_value = "SINDEX", bootID = NULL, boot_ind = NULL,
+    glm_weights = TRUE, rm_zero = TRUE, family = c("poisson", "nbinom2"), habitat = NULL, habitat_weights = NULL,
+    site_length = NULL, index_sites = c("all", "observed")){
+
+  family <- match.arg(family)
+  index_sites <- match.arg(index_sites)
+  check_package("glmmTMB")
+  year_effect <- NULL
+  model <- NULL
+  habitat_index <- NULL
+
+  prep <- index_sample_data(data, s_sp, sindex_value, bootID, boot_ind)
+  if(!is.null(prep$failed)) return(c(prep$failed, list(model = NULL)))
+  data <- prep$data
+  bootID <- prep$bootID
+  a <- prep$a
+  grp <- prep$grp
+  data_boot <- prep$data_boot
+  sum_data <- prep$sum_data
+
+  if(bootID == 0 && uniqueN(grp$GROUP) > 1){
+    warning(paste0(s_sp, ": the years form ", uniqueN(grp$GROUP), " groups not linked through sites with observations (",
+                   paste(grp[, paste(range(M_YEAR), collapse = "-"), by = GROUP]$V1, collapse = ", "),
+                   "); they are linked through the random site effect, which assumes that the sites of all groups are ",
+                   "representative of the same population (e.g. sites assigned to years at random)"), call. = FALSE)
+  }
+
+  ## habitat of each site (constant within site) and weight of each habitat in the index
+  if(!is.null(habitat)){
+    if(!habitat %in% names(data)) stop(paste0("column ", habitat, " not found in data"), call. = FALSE)
+    hab <- data.table(SITE_ID = data$SITE_ID, HABITAT = as.character(data[[habitat]]))[
+      , .(N_HAB = uniqueN(HABITAT), HABITAT = HABITAT[1]), by = SITE_ID]
+    if(any(hab$N_HAB > 1)) stop(paste0(habitat, " must be constant within site, not the case for ",
+                                       paste(utils::head(hab[N_HAB > 1, SITE_ID], 5), collapse = ", ")), call. = FALSE)
+    hab[, N_HAB := NULL]
+  } else {
+    hab <- data[, .(HABITAT = "all"), by = SITE_ID]
+  }
+  ## sites the index is averaged over: all sites monitored, or only the sites where the species was observed
+  ## (all sites stay in the model, only the averaging changes)
+  idx_sites <- if(index_sites == "observed") data[get(sindex_value) > 0, unique(SITE_ID)] else hab$SITE_ID
+  n_hab <- hab[SITE_ID %in% idx_sites, .(N_SITE = .N), by = HABITAT][order(HABITAT)]
+  if(is.null(habitat_weights)){
+    n_hab[, WEIGHT := N_SITE / sum(N_SITE)]
+  } else if(identical(habitat_weights, "equal")){
+    n_hab[, WEIGHT := 1 / .N]
+  } else {
+    if(!is.numeric(habitat_weights) || is.null(names(habitat_weights)) || !all(n_hab$HABITAT %in% names(habitat_weights))){
+      stop(paste0("habitat_weights must be NULL, \"equal\" or a numeric vector named by habitat (", paste(n_hab$HABITAT, collapse = ", "), ")"),
+           call. = FALSE)
+    }
+    if(any(!names(habitat_weights) %in% n_hab$HABITAT) && bootID == 0){
+      warning(paste0("habitat_weights of habitats without site of ", s_sp, " ignored: ",
+                     paste(setdiff(names(habitat_weights), n_hab$HABITAT), collapse = ", ")), call. = FALSE)
+    }
+    n_hab[, WEIGHT := habitat_weights[HABITAT] / sum(habitat_weights[HABITAT])]
+  }
+  data_boot <- merge(data_boot, hab, by = "SITE_ID")
+  ## length of the site (km) as offset: the site effects and the index are then per km of transect
+  if(!is.null(site_length)){
+    data_boot <- merge(data_boot, site_length_map(data, site_length), by = "SITE_ID")
+    data_boot[ , LOG_LENGTH := log(SITE_LENGTH)]
+  }
+
+  res <- sum_data[, COL_INDEX := 0]
+
+  if(nrow(sum_data[NSITE_OBS > 0,]) != 0){
+
+    if(isTRUE(rm_zero)){
+      zero_site <- data_boot[ , tmpV1:=sum(SINDEX>0), uID][tmpV1==0, uID]
+      data_boot <- data_boot[!uID %in% zero_site, -c("tmpV1")]
+    }
+    data_boot[ , weights := if(isTRUE(glm_weights)) TOTAL_NM else 1]
+    data_boot[ , RESP := round(get(sindex_value))]
+    data_boot[ , YEAR_F := factor(M_YEAR)]
+    data_boot[ , SITE_F := factor(uID)]
+    data_boot[ , HAB_F := factor(HABITAT)]
+
+    n_year <- nlevels(data_boot$YEAR_F)
+    n_site <- nlevels(data_boot$SITE_F)
+    f <- paste("RESP ~", if(n_year > 1) "0 + YEAR_F" else "1", if(nlevels(data_boot$HAB_F) > 1) "+ HAB_F" else "",
+               if(n_site > 1) "+ (1 | SITE_F)" else "", if(!is.null(site_length)) "+ offset(LOG_LENGTH)" else "")
+    fam <- if(family == "nbinom2") glmmTMB::nbinom2() else stats::poisson()
+
+    m <- try(suppressWarnings(glmmTMB::glmmTMB(stats::as.formula(f), data = data_boot, family = fam, weights = weights)), silent = TRUE)
+
+    if(inherits(m, "try-error") || !isTRUE(m$fit$convergence == 0)){
+      warning(paste0(s_sp, ": the mixed model did not converge", if(bootID > 0) paste0(" (bootstrap ", bootID, ")"), ", no index computed"),
+              call. = FALSE)
+      res <- sum_data[, COL_INDEX := NA_real_]
+    } else {
+      beta <- glmmTMB::fixef(m)$cond
+      i_y <- if(n_year > 1) grep("^YEAR_F", names(beta)) else which(names(beta) == "(Intercept)")
+      yrs <- if(n_year > 1) as.numeric(sub("YEAR_F", "", names(beta)[i_y])) else as.numeric(levels(data_boot$YEAR_F))
+      g <- stats::setNames(c(0, beta[grep("^HAB_F", names(beta))]), levels(data_boot$HAB_F))
+      st_u <- unique(data_boot[, .(SITE_F, SITE_ID, HABITAT)])[order(SITE_F)]
+      st_u[, U := if(n_site > 1) glmmTMB::ranef(m)$cond$SITE_F[as.character(SITE_F), 1] else 0]
+      st_u <- st_u[SITE_ID %in% idx_sites, ]
+
+      ## index per habitat: expected index summed over its sites of the sample / number of sites of the habitat,
+      ## collated index: weighted mean of the habitats (with weights by sites: the mean over all sites)
+      s_exp <- st_u[, .(S_EXP = sum(exp(g[HABITAT] + U))), by = HABITAT]
+      habitat_index <- merge(CJ(M_YEAR = yrs, HABITAT = n_hab$HABITAT), n_hab, by = "HABITAT")
+      habitat_index <- merge(habitat_index, s_exp, by = "HABITAT", all.x = TRUE)[is.na(S_EXP), S_EXP := 0]
+      habitat_index[, INDEX := exp(beta[i_y][match(M_YEAR, yrs)]) * S_EXP / N_SITE]
+      co_index_res <- habitat_index[, .(COL_INDEX = sum(WEIGHT * INDEX)), by = M_YEAR]
+      habitat_index <- habitat_index[order(M_YEAR, HABITAT), .(M_YEAR, HABITAT, N_SITE, WEIGHT, INDEX)]
+      setkey(co_index_res, M_YEAR)
+      res <- merge(sum_data[, -c("COL_INDEX")], co_index_res, all.x = TRUE)[is.na(COL_INDEX), COL_INDEX := 0]
+
+      ## log year effects relative to the first year with their standard error
+      V <- stats::vcov(m)$cond[i_y, i_y, drop = FALSE]
+      year_effect <- data.table(M_YEAR = yrs, LOG_EFFECT = beta[i_y] - beta[i_y][1],
+                                SE = sqrt(pmax(diag(V) + V[1, 1] - 2 * V[1, ], 0)))
+      year_effect <- merge(year_effect, grp, by = "M_YEAR", all.x = TRUE)[, .(M_YEAR, GROUP, LOG_EFFECT, SE)]
+      vc <- glmmTMB::VarCorr(m)$cond
+      model <- list(family = family, site_sd = if(n_site > 1) attr(vc$SITE_F, "stddev")[[1]] else NA_real_,
+                    nb_size = if(family == "nbinom2") stats::sigma(m) else NA_real_, convergence = m$fit$convergence)
+    }
+  }
+
+  res <- merge(res, grp, by = "M_YEAR", all.x = TRUE)
+  setkey(res, M_YEAR)
+
+  return(list(col_index = res[ , .(BOOTi, M_YEAR, NSITE, NSITE_B, NSITE_OBS, COL_INDEX, GROUP)],
+              site_id = a$SITE_ID, year_effect = year_effect, model = model,
+              habitat_index = if(!is.null(habitat)) habitat_index else NULL))
+}
+
+
 #' boot_sample
 #' Generate n bootstrap sample of the monitoring sites to be used for each iteration.
 #' @details When \code{s_sp} is given, the samples are drawn for that species only, stratified by the occurrence of zeros
@@ -826,6 +949,9 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #' @param s_sp string Species for which the bootstrap samples are drawn, default NULL draws among all sites without checks.
 #' @param sindex_value string Name of the site index variable used to define strata and observations, default is "SINDEX".
 #' @param strata logical Stratify the sampling by the occurrence of zeros at the sites and by group of linked years, default TRUE.
+#' @param habitat string Name of a column of \code{data} with the habitat (or stratum) of each site, constant within site,
+#' default NULL. The habitat is crossed with the strata, so each sample keeps the number of sites of each habitat (design
+#' stratified by habitat, see \link{collated_index_mixed}).
 #' @param check_link logical Draw again the samples where a group of linked years is split or lost, default TRUE.
 #' @param min_year integer Minimum number of years in a bootstrap sample, default 3.
 #' @param max_trial integer Maximum number of trials to draw a valid bootstrap sample, default 5.
@@ -841,7 +967,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #'
 
 boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX",
-    strata = TRUE, check_link = TRUE, min_year = 3, max_trial = 5){
+    strata = TRUE, check_link = TRUE, min_year = 3, max_trial = 5, habitat = NULL){
 
   data <- data.table::as.data.table(data)
 
@@ -884,6 +1010,16 @@ boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX
   st <- dt[, .(ZERO = if(all(SVALUE > 0)) 1L else if(any(SVALUE > 0)) 2L else 3L), by = SITE_ID]
   st <- merge(st, site_group, by = "SITE_ID", sort = FALSE)
   st[, STRATA := if(isTRUE(strata)) paste(GROUP, ZERO, sep = "_") else "1"]
+  ## habitat (site-level column): crossed with the strata, keeps the number of sites of each habitat in each sample
+  if(!is.null(habitat)){
+    if(!habitat %in% names(data)) stop(paste0("column ", habitat, " not found in data"), call. = FALSE)
+    hab <- data.table(SITE_ID = as.character(data$SITE_ID), HABITAT = as.character(data[[habitat]]))[data$SPECIES == s_sp, ][
+      , .(N_HAB = uniqueN(HABITAT), HABITAT = HABITAT[1]), by = SITE_ID]
+    if(any(hab$N_HAB > 1)) stop(paste0(habitat, " must be constant within site"), call. = FALSE)
+    st <- merge(st, hab[, .(SITE_ID, HABITAT)], by = "SITE_ID", sort = FALSE)
+    st[, STRATA := paste(STRATA, HABITAT, sep = "_")]
+    site_group <- merge(site_group, hab[, .(SITE_ID, HABITAT)], by = "SITE_ID", all.x = TRUE)
+  }
   strata_ind <- split(match(st$SITE_ID, site_id), st$STRATA)
 
   boot_ind <- matrix(NA_integer_, nrow = boot_n, ncol = length(site_id))

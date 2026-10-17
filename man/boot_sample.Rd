@@ -13,7 +13,8 @@ boot_sample(
   strata = TRUE,
   check_link = TRUE,
   min_year = 3,
-  max_trial = 5
+  max_trial = 5,
+  habitat = NULL
 )
 }
 \arguments{
@@ -32,6 +33,10 @@ boot_sample(
 \item{min_year}{integer Minimum number of years in a bootstrap sample, default 3.}
 
 \item{max_trial}{integer Maximum number of trials to draw a valid bootstrap sample, default 5.}
+
+\item{habitat}{string Name of a column of \code{data} with the habitat (or stratum) of each site, constant within site,
+default NULL. The habitat is crossed with the strata, so each sample keeps the number of sites of each habitat (design
+stratified by habitat, see \link{collated_index_mixed}).}
 }
 \value{
 A list with site id and bootstrap indices for n bootstrap sample. When \code{s_sp} is given, the list also

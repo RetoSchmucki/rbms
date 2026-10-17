@@ -14,7 +14,9 @@ collated_index(
   glm_weights = TRUE,
   rm_zero = TRUE,
   GlmFit = c("glm", "newton", "ipf"),
-  SplitGroup = TRUE
+  SplitGroup = TRUE,
+  site_length = NULL,
+  index_sites = c("all", "observed")
 )
 }
 \arguments{
@@ -37,6 +39,14 @@ collated_index(
 \item{SplitGroup}{logical When the years form groups not linked through sites with observations, fit each group separately
 (default TRUE, the correct method). FALSE fits all years together as in previous versions (glm only), the levels of the
 groups are then arbitrary; 'newton' and 'ipf' always fit the groups separately.}
+
+\item{site_length}{string Name of a column of \code{data} with the length of each site (transect) in km, constant within
+site, default NULL. With a length, the collated index is the expected count on 1 km of transect (the site effects are
+divided by the length of the site), otherwise the expected count per site.}
+
+\item{index_sites}{character Sites the collated index is averaged over: "all" (default) all sites monitored for the species,
+the sites where it was never observed counting as zero (mean over the monitored area), or "observed" only the sites where the
+species was observed at least once (mean over the occupied sites).}
 }
 \value{
 a list with the collated indices per year (col_index), the site ids of the sample (site_id) and, with GlmFit = 'newton',
@@ -66,6 +76,7 @@ The data cannot relate the levels of separate groups. Comparing them rests on th
 the same population. This holds by design when sites are assigned to years at random, e.g. a rotating panel where a random
 set of sites is surveyed each year and each site is revisited every few years (each panel then forms a group), but not when
 the groups result from site turnover, a change in the scheme or different regions. In that case, the groups are separate series.
+For randomised designs, \link{collated_index_mixed} links the groups through a random site effect.
 }
 \seealso{
 \link{impute_count}, \link{flight_curve}

@@ -8,7 +8,7 @@ Newton steps on the concentrated likelihood of the year effects, see \link{site_
 newton_year(sy, C_s, C_y, n_s, n_y, tol = 1e-08, maxit = 100)
 }
 \arguments{
-\item{sy}{data.table Site-year table with site (s), year (y), count (C) and flight curve covered (N).}
+\item{sy}{data.table Site-year table with site (S_IDX), year (Y_IDX), count (C_SY) and flight curve covered (N_SY).}
 
 \item{C_s, C_y}{numeric Total count per site and per year.}
 

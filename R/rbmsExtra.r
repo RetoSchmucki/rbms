@@ -125,9 +125,9 @@ site_year_level <- function(site, year, count, nm, method = c("newton", "ipf"), 
   ry <- as.integer(fy)
   n_s <- max(rs)
   n_y <- nlevels(fy)
-  sy <- data.table::data.table(s = rs, y = ry, C = count, N = nm)[, .(C = sum(C), N = sum(N)), by = .(s, y)]
-  C_s <- sum_by(sy$C, sy$s, n_s)
-  C_y <- sum_by(sy$C, sy$y, n_y)
+  sy <- data.table::data.table(S_IDX = rs, Y_IDX = ry, C_SY = count, N_SY = nm)[, .(C_SY = sum(C_SY), N_SY = sum(N_SY)), by = .(S_IDX, Y_IDX)]
+  C_s <- sum_by(sy$C_SY, sy$S_IDX, n_s)
+  C_y <- sum_by(sy$C_SY, sy$Y_IDX, n_y)
 
   b <- NULL
   year_effect <- NULL
@@ -146,10 +146,10 @@ site_year_level <- function(site, year, count, nm, method = c("newton", "ipf"), 
     b <- rep(1, n_y)
     level <- rep(1, nrow(sy))
     for(it in seq_len(if(is.null(maxit)) 10000 else maxit)){
-      a <- C_s / sum_by(b[sy$y] * sy$N, sy$s, n_s)
+      a <- C_s / sum_by(b[sy$Y_IDX] * sy$N_SY, sy$S_IDX, n_s)
       a[!is.finite(a)] <- 0
-      b <- C_y / sum_by(a[sy$s] * sy$N, sy$y, n_y)
-      new <- a[sy$s] * b[sy$y]
+      b <- C_y / sum_by(a[sy$S_IDX] * sy$N_SY, sy$Y_IDX, n_y)
+      new <- a[sy$S_IDX] * b[sy$Y_IDX]
       conv <- max(abs(new - level) / pmax(new, 1e-10)) < tol
       level <- new
       if(conv) break
@@ -158,10 +158,10 @@ site_year_level <- function(site, year, count, nm, method = c("newton", "ipf"), 
   }
 
   ## site effects in closed form given the year effects, level of each site-year
-  a <- C_s / sum_by(b[sy$y] * sy$N, sy$s, n_s)
+  a <- C_s / sum_by(b[sy$Y_IDX] * sy$N_SY, sy$S_IDX, n_s)
   a[!is.finite(a)] <- 0
   level_sy <- numeric(n_s * n_y)
-  level_sy[(sy$s - 1) * n_y + sy$y] <- a[sy$s] * b[sy$y]
+  level_sy[(sy$S_IDX - 1) * n_y + sy$Y_IDX] <- a[sy$S_IDX] * b[sy$Y_IDX]
   level <- level_sy[(rs - 1) * n_y + ry]
   data.table::setattr(level, "effects", list(site = stats::setNames(a, levels(fs)), year = stats::setNames(b, levels(fy))))
 
@@ -180,7 +180,7 @@ site_year_level <- function(site, year, count, nm, method = c("newton", "ipf"), 
 
 #' newton_year
 #' Newton steps on the concentrated likelihood of the year effects, see \link{site_year_level}.
-#' @param sy data.table Site-year table with site (s), year (y), count (C) and flight curve covered (N).
+#' @param sy data.table Site-year table with site (S_IDX), year (Y_IDX), count (C_SY) and flight curve covered (N_SY).
 #' @param C_s,C_y numeric Total count per site and per year.
 #' @param n_s,n_y integer Number of sites and years.
 #' @param tol numeric Tolerance on the gradient, relative to the largest year total.
@@ -194,13 +194,13 @@ site_year_level <- function(site, year, count, nm, method = c("newton", "ipf"), 
 newton_year <- function(sy, C_s, C_y, n_s, n_y, tol = 1e-8, maxit = 100){
 
   active <- C_y > 0
-  d <- sy[active[y], ]
+  d <- sy[active[Y_IDX], ]
   if(nrow(d) == 0) stop("no count")
 
   ## one reference year (log effect 0) per group of years linked through sites with counts
   group <- rep(NA_integer_, n_y)
-  pos <- d[C > 0, ]
-  group[active] <- year_components(pos$s, pos$y)[as.character(which(active))]
+  pos <- d[C_SY > 0, ]
+  group[active] <- year_components(pos$S_IDX, pos$Y_IDX)[as.character(which(active))]
   ref <- active & !duplicated(group) & !is.na(group)
   free <- active & !ref
 
@@ -208,16 +208,16 @@ newton_year <- function(sy, C_s, C_y, n_s, n_y, tol = 1e-8, maxit = 100){
   beta[!active] <- -Inf
 
   loglik <- function(beta){
-    D <- sum_by(exp(beta[d$y]) * d$N, d$s, n_s)
-    sum(d$C * beta[d$y]) - sum((C_s * log(D))[C_s > 0])
+    D <- sum_by(exp(beta[d$Y_IDX]) * d$N_SY, d$S_IDX, n_s)
+    sum(d$C_SY * beta[d$Y_IDX]) - sum((C_s * log(D))[C_s > 0])
   }
   neg_hessian <- function(beta){
-    e <- exp(beta[d$y]) * d$N
-    D <- sum_by(e, d$s, n_s)
-    p <- e / D[d$s]                     # share of the site total expected in the year
-    fit_y <- sum_by(C_s[d$s] * p, d$y, n_y)
+    e <- exp(beta[d$Y_IDX]) * d$N_SY
+    D <- sum_by(e, d$S_IDX, n_s)
+    p <- e / D[d$S_IDX]                     # share of the site total expected in the year
+    fit_y <- sum_by(C_s[d$S_IDX] * p, d$Y_IDX, n_y)
     P <- matrix(0, n_s, n_y)
-    P[cbind(d$s, d$y)] <- sqrt(C_s[d$s]) * p
+    P[cbind(d$S_IDX, d$Y_IDX)] <- sqrt(C_s[d$S_IDX]) * p
     list(g = C_y - fit_y, H = diag(fit_y, n_y) - crossprod(P))
   }
 

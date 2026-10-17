@@ -853,12 +853,12 @@ boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX
     return(boot_ind)
   }
 
-  dt <- data[SPECIES == s_sp, .(SITE_ID = as.character(SITE_ID), M_YEAR = as.numeric(as.character(M_YEAR)), y = get(sindex_value))]
-  dt <- dt[!is.na(y), ]
+  dt <- data[SPECIES == s_sp, .(SITE_ID = as.character(SITE_ID), M_YEAR = as.numeric(as.character(M_YEAR)), SVALUE = get(sindex_value))]
+  dt <- dt[!is.na(SVALUE), ]
   if(nrow(dt) == 0) stop(paste0("no ", sindex_value, " available for species ", s_sp), call. = FALSE)
 
   site_id <- unique(dt$SITE_ID)
-  obs <- dt[y > 0, ]
+  obs <- dt[SVALUE > 0, ]
   n_comp_0 <- n_components(obs$SITE_ID, obs$M_YEAR)
 
   ## groups of years linked through sites with observations (see n_components); a site with observations belongs to
@@ -871,16 +871,16 @@ boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX
                    "); the samples are stratified by group and each group must remain linked in each sample."), call. = FALSE)
   }
   site_group <- merge(dt, year_group, by = "M_YEAR", all.x = TRUE)[, .(GROUP = {
-    g <- if(any(y > 0)) GROUP[y > 0] else GROUP[!is.na(GROUP)]
+    g <- if(any(SVALUE > 0)) GROUP[SVALUE > 0] else GROUP[!is.na(GROUP)]
     if(length(g) == 0) NA_integer_ else as.integer(names(which.max(table(g))))}), by = SITE_ID]
   if(uniqueN(year_group$GROUP) <= 1) site_group[, GROUP := 1L]
 
   ## strata: group x zero pattern, 1 = never zero, 2 = some zeros, 3 = always zero (keeps the number of sites of each
   ## group and the share of zero sites in each sample); with one group, the zero pattern only
-  st <- dt[, .(zero = if(all(y > 0)) 1L else if(any(y > 0)) 2L else 3L), by = SITE_ID]
+  st <- dt[, .(ZERO = if(all(SVALUE > 0)) 1L else if(any(SVALUE > 0)) 2L else 3L), by = SITE_ID]
   st <- merge(st, site_group, by = "SITE_ID", sort = FALSE)
-  st[, strata := if(isTRUE(strata)) paste(GROUP, zero, sep = "_") else "1"]
-  strata_ind <- split(match(st$SITE_ID, site_id), st$strata)
+  st[, STRATA := if(isTRUE(strata)) paste(GROUP, ZERO, sep = "_") else "1"]
+  strata_ind <- split(match(st$SITE_ID, site_id), st$STRATA)
 
   boot_ind <- matrix(NA_integer_, nrow = boot_n, ncol = length(site_id))
   n_trial <- integer(boot_n)

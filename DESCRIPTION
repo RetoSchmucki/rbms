@@ -26,10 +26,12 @@ BugReports: https://github.com/RetoSchmucki/rbms/issues
 LazyData: true
 Imports:
 	mgcv,
-	data.table
+	data.table,
+	utils
 Encoding: UTF-8
-Suggests: 
+Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggplot2
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

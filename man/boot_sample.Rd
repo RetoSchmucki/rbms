@@ -25,9 +25,9 @@ boot_sample(
 
 \item{sindex_value}{string Name of the site index variable used to define strata and observations, default is "SINDEX".}
 
-\item{strata}{logical Stratify the sampling by the occurrence of zeros at the sites, default TRUE.}
+\item{strata}{logical Stratify the sampling by the occurrence of zeros at the sites and by group of linked years, default TRUE.}
 
-\item{check_link}{logical Draw again the samples with years not linked through the sites with observations, default TRUE.}
+\item{check_link}{logical Draw again the samples where a group of linked years is split or lost, default TRUE.}
 
 \item{min_year}{integer Minimum number of years in a bootstrap sample, default 3.}
 
@@ -36,7 +36,8 @@ boot_sample(
 \value{
 A list with site id and bootstrap indices for n bootstrap sample. When \code{s_sp} is given, the list also
 contains the species (s_sp), the number of groups of years of the original data (n_comp_0), the site indices per
-stratum (strata_ind), the number of trials per sample (n_trial) and the number of failed samples (n_failed).
+stratum (strata_ind, named group_zero pattern), the group of each year (year_group) and of each site (site_group),
+the number of trials per sample (n_trial) and the number of failed samples (n_failed).
 }
 \description{
 boot_sample
@@ -46,8 +47,11 @@ Generate n bootstrap sample of the monitoring sites to be used for each iteratio
 When \code{s_sp} is given, the samples are drawn for that species only, stratified by the occurrence of zeros
 at the sites (never zero, some zeros, always zero), and a sample is drawn again, up to \code{max_trial} trials,
 when it has fewer than \code{min_year} years or when its years are not linked through the sites with observations
-(more groups of years than the original data, see \code{n_components}). A sample still failing after
-\code{max_trial} trials is returned as a row of NA.
+(see \code{n_components}). A sample still failing after \code{max_trial} trials is returned as a row of NA.
+When the years of the original data form several groups not linked through sites with observations (see
+\link{collated_index}), the strata are crossed with the groups (a site with observations belongs to one group, a site
+never observed to the group of most of its years), so each sample keeps the number of sites of each group, and each group
+must remain linked in the sample (not split or lost). With one group, this is the stratification by zeros only.
 For reproducible samples, call \code{set.seed()} before \code{boot_sample()}; when looping over species, setting
 the seed before each species makes its samples independent of the order or the subset of species processed.
 }

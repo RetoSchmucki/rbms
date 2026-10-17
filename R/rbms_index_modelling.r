@@ -810,21 +810,25 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #' @details When \code{s_sp} is given, the samples are drawn for that species only, stratified by the occurrence of zeros
 #' at the sites (never zero, some zeros, always zero), and a sample is drawn again, up to \code{max_trial} trials,
 #' when it has fewer than \code{min_year} years or when its years are not linked through the sites with observations
-#' (more groups of years than the original data, see \code{n_components}). A sample still failing after
-#' \code{max_trial} trials is returned as a row of NA.
+#' (see \code{n_components}). A sample still failing after \code{max_trial} trials is returned as a row of NA.
+#' When the years of the original data form several groups not linked through sites with observations (see
+#' \link{collated_index}), the strata are crossed with the groups (a site with observations belongs to one group, a site
+#' never observed to the group of most of its years), so each sample keeps the number of sites of each group, and each group
+#' must remain linked in the sample (not split or lost). With one group, this is the stratification by zeros only.
 #' For reproducible samples, call \code{set.seed()} before \code{boot_sample()}; when looping over species, setting
 #' the seed before each species makes its samples independent of the order or the subset of species processed.
 #' @param data data.table or data.frame Data with all site id, with SPECIES, M_YEAR and \code{sindex_value} when \code{s_sp} is given.
 #' @param boot_n integer The number of bootstrap samples to be generated.
 #' @param s_sp string Species for which the bootstrap samples are drawn, default NULL draws among all sites without checks.
 #' @param sindex_value string Name of the site index variable used to define strata and observations, default is "SINDEX".
-#' @param strata logical Stratify the sampling by the occurrence of zeros at the sites, default TRUE.
-#' @param check_link logical Draw again the samples with years not linked through the sites with observations, default TRUE.
+#' @param strata logical Stratify the sampling by the occurrence of zeros at the sites and by group of linked years, default TRUE.
+#' @param check_link logical Draw again the samples where a group of linked years is split or lost, default TRUE.
 #' @param min_year integer Minimum number of years in a bootstrap sample, default 3.
 #' @param max_trial integer Maximum number of trials to draw a valid bootstrap sample, default 5.
 #' @return A list with site id and bootstrap indices for n bootstrap sample. When \code{s_sp} is given, the list also
 #' contains the species (s_sp), the number of groups of years of the original data (n_comp_0), the site indices per
-#' stratum (strata_ind), the number of trials per sample (n_trial) and the number of failed samples (n_failed).
+#' stratum (strata_ind, named group_zero pattern), the group of each year (year_group) and of each site (site_group),
+#' the number of trials per sample (n_trial) and the number of failed samples (n_failed).
 #' @keywords bootstrap collated index
 #' @seealso \link{impute_count}, \link{collated_index}
 #' @author Reto Schmucki - \email{retoshm@@ceh.ac.uk}
@@ -856,11 +860,26 @@ boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX
   site_id <- unique(dt$SITE_ID)
   obs <- dt[y > 0, ]
   n_comp_0 <- n_components(obs$SITE_ID, obs$M_YEAR)
-  if(n_comp_0 > 1) warning(paste0(s_sp, ": the years of the original data form ", n_comp_0,
-                                  " groups not linked through sites with observations, the levels of the groups are not comparable."), call. = FALSE)
 
-  ## strata: 1 = never zero, 2 = some zeros, 3 = always zero (keeps the share of zero sites in each sample)
-  st <- dt[, .(strata = if(!isTRUE(strata) || all(y > 0)) 1L else if(any(y > 0)) 2L else 3L), by = SITE_ID]
+  ## groups of years linked through sites with observations (see n_components); a site with observations belongs to
+  ## one group, a site never observed to the group of most of its years (years without observation have no group)
+  year_group <- if(nrow(obs) > 0) year_components(obs$SITE_ID, obs$M_YEAR) else integer(0)
+  year_group <- data.table(M_YEAR = as.numeric(names(year_group)), GROUP = as.integer(year_group))
+  if(n_comp_0 > 1 && is.finite(n_comp_0)){
+    warning(paste0(s_sp, ": the years of the original data form ", n_comp_0, " groups not linked through sites with observations (",
+                   paste(year_group[, paste(range(M_YEAR), collapse = "-"), by = GROUP]$V1, collapse = ", "),
+                   "); the samples are stratified by group and each group must remain linked in each sample."), call. = FALSE)
+  }
+  site_group <- merge(dt, year_group, by = "M_YEAR", all.x = TRUE)[, .(GROUP = {
+    g <- if(any(y > 0)) GROUP[y > 0] else GROUP[!is.na(GROUP)]
+    if(length(g) == 0) NA_integer_ else as.integer(names(which.max(table(g))))}), by = SITE_ID]
+  if(uniqueN(year_group$GROUP) <= 1) site_group[, GROUP := 1L]
+
+  ## strata: group x zero pattern, 1 = never zero, 2 = some zeros, 3 = always zero (keeps the number of sites of each
+  ## group and the share of zero sites in each sample); with one group, the zero pattern only
+  st <- dt[, .(zero = if(all(y > 0)) 1L else if(any(y > 0)) 2L else 3L), by = SITE_ID]
+  st <- merge(st, site_group, by = "SITE_ID", sort = FALSE)
+  st[, strata := if(isTRUE(strata)) paste(GROUP, zero, sep = "_") else "1"]
   strata_ind <- split(match(st$SITE_ID, site_id), st$strata)
 
   boot_ind <- matrix(NA_integer_, nrow = boot_n, ncol = length(site_id))
@@ -872,8 +891,12 @@ boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX
         s_i <- site_id[unique(ind)] # duplicated sites do not change the years or their linkage
         ok <- dt[SITE_ID %in% s_i, uniqueN(M_YEAR)] >= min_year
         if(ok && isTRUE(check_link)){
+          ## each group of the original data must remain linked (one group) in the sample, not split or lost
           o <- obs[SITE_ID %in% s_i, ]
-          ok <- n_components(o$SITE_ID, o$M_YEAR) <= n_comp_0
+          for(g in unique(year_group$GROUP)){
+            o_g <- o[M_YEAR %in% year_group[GROUP == g, M_YEAR], ]
+            if(n_components(o_g$SITE_ID, o_g$M_YEAR) != 1){ ok <- FALSE; break }
+          }
         }
         if(ok) break
       }
@@ -885,7 +908,8 @@ boot_sample <- function(data, boot_n = 1000, s_sp = NULL, sindex_value = "SINDEX
   if(n_failed > 0) warning(paste0(s_sp, ": ", n_failed, " of ", boot_n, " bootstrap samples failed after ", max_trial, " trials (NA rows)"), call. = FALSE)
 
   boot_ind <- list(site_id = site_id, boot_ind = boot_ind, s_sp = s_sp, n_comp_0 = n_comp_0,
-                   strata_ind = strata_ind, n_trial = n_trial, n_failed = n_failed)
+                   strata_ind = strata_ind, year_group = year_group, site_group = site_group[match(site_id, SITE_ID), ],
+                   n_trial = n_trial, n_failed = n_failed)
   return(boot_ind)
 }
 

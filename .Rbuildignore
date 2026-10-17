@@ -6,7 +6,6 @@
 ^_pkgdown\.yml$
 ^ablelogo\.xcf$
 ^rbmshexOR200\.png$
-^bash\.exe\.stackdump$
 ^\.Rhistory$
 ^\.github$
 ^doc$

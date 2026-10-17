@@ -18,3 +18,4 @@ inst/doc
 >>>>>>> aaef9acd866713c677bf5699831e99702140c015
 /doc/
 /Meta/
+*.stackdump

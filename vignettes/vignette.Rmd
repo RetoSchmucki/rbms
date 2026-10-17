@@ -360,6 +360,16 @@ print(p)
 
 ```
 
+##### **7.** Collated index as a density
+
+By default, the collated index is the expected count per site, averaged over all sites monitored for the species, the sites where it was never observed counting as zero. With the argument site_length (a column with the length of each transect in km), the index is the expected count on 1 km of transect. With index_sites = "observed", it is averaged only over the sites where the species was observed at least once. These choices change the level of the index, not its changes between years.
+
+```{r, density, eval = FALSE}
+co_index_km <- collated_index(data = sindex_len, s_sp = 2, site_length = "LENGTH_KM", index_sites = "all", GlmFit = "newton")
+```
+
+The level matters when indices are combined with weights that use it, for example a multi-scheme index of the change in the total population within a region, where each scheme is weighted by its area times its density. The density must then refer to the same area as the weight. When the range of the species covers only part of the area of the monitored sites, "all" underestimates the density within the range (the sites outside the range count as zero) and "observed" overestimates it (the sites within the range where the species was not seen are left out). In this case, compute the density per km over the transects within the area used for the weight (e.g. the distribution of the species within the area of the scheme), by selecting these sites in the data and using index_sites = "all". With weights based on area only, the multi-scheme index assumes the same density in all schemes, and a large scheme where the species is found on a few sites can dominate the index.
+
 ##### References
 
 Dennis, E. B., Freeman, S. N., Brereton, T. and Roy, D. B. (2013). Indexing butterfly abundance whilst accounting for missing counts and variability in seasonal pattern. *Methods in Ecology and Evolution*, 4, 637–645. [doi:10.1111/2041-210X.12053](https://doi.org/10.1111/2041-210X.12053)

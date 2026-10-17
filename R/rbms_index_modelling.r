@@ -589,6 +589,9 @@ collated_index_old <- function(...){
 #' set of sites is surveyed each year and each site is revisited every few years (each panel then forms a group), but not when
 #' the groups result from site turnover, a change in the scheme or different regions. In that case, the groups are separate series.
 #' For randomised designs, \link{collated_index_mixed} links the groups through a random site effect.
+#' The level of the collated index depends on the sites it is averaged over (\code{index_sites}) and on the length of the
+#' transects (\code{site_length}), its changes between years do not. When the level is used as a density, e.g. to weight schemes
+#' by their population in a multi-scheme index, see the section "Collated index as a density" of \code{vignette("vignette", package = "rbms")}.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string Species name to be found in the data.
 #' @param sindex_value string Name of the response variable to be used the computation of the collated index, default is "SINDEX", but could be other standardized values.
@@ -767,6 +770,7 @@ collated_index <- function(data, s_sp, sindex_value = "SINDEX", bootID=NULL,
 #' population, e.g. sites assigned to years at random in a rotating panel. With linked years, the index is close to
 #' \link{collated_index}, the site effects being shrunk towards their mean. The bootstrap is used as in \link{collated_index},
 #' with \code{bootID} and \code{boot_ind} from \link{boot_sample}.
+#' When the index is used as a density, see the section "Collated index as a density" of \code{vignette("vignette", package = "rbms")}.
 #' @param data data.table or data.frame Site indices per year and proportion of flight curve covered by the monitoring.
 #' @param s_sp string Species name to be found in the data.
 #' @param sindex_value string Name of the response variable, default is "SINDEX".

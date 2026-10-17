@@ -78,6 +78,7 @@ through sites with observations (column GROUP), which is valid when the sites of
 population, e.g. sites assigned to years at random in a rotating panel. With linked years, the index is close to
 \link{collated_index}, the site effects being shrunk towards their mean. The bootstrap is used as in \link{collated_index},
 with \code{bootID} and \code{boot_ind} from \link{boot_sample}.
+When the index is used as a density, see the section "Collated index as a density" of \code{vignette("vignette", package = "rbms")}.
 }
 \seealso{
 \link{collated_index}, \link{boot_sample}

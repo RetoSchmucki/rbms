@@ -77,6 +77,9 @@ the same population. This holds by design when sites are assigned to years at ra
 set of sites is surveyed each year and each site is revisited every few years (each panel then forms a group), but not when
 the groups result from site turnover, a change in the scheme or different regions. In that case, the groups are separate series.
 For randomised designs, \link{collated_index_mixed} links the groups through a random site effect.
+The level of the collated index depends on the sites it is averaged over (\code{index_sites}) and on the length of the
+transects (\code{site_length}), its changes between years do not. When the level is used as a density, e.g. to weight schemes
+by their population in a multi-scheme index, see the section "Collated index as a density" of \code{vignette("vignette", package = "rbms")}.
 }
 \seealso{
 \link{impute_count}, \link{flight_curve}
